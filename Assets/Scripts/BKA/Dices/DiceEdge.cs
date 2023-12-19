@@ -6,14 +6,27 @@ namespace BKA.Dices
     {
         public bool CheckEnvironment()
         {
-            var leftRay = Physics.SphereCast(transform.position, 0.25f, -transform.right, out _, 5,
-                LayerMask.NameToLayer($"Environment"));
-            var rightRay = Physics.SphereCast(transform.position, 0.25f, transform.right, out _, 5,
-                LayerMask.NameToLayer($"Environment"));
-            var middleRay = Physics.SphereCast(transform.position, 0.25f, transform.up, out _, 5,
-                LayerMask.NameToLayer($"Environment"));
+            var leftRay = Physics.Raycast(transform.position, -transform.right + transform.up, out _, 5,
+                LayerMask.GetMask("Environment"));
+            Debug.DrawRay(transform.position, -transform.right + transform.up, Color.blue, 0.5f);
 
-            return leftRay || rightRay || middleRay;
+            var upRay = Physics.Raycast(transform.position, -transform.forward + transform.up, out _, 5,
+                LayerMask.GetMask("Environment"));
+            Debug.DrawRay(transform.position, -transform.forward + transform.up, Color.blue, 0.5f);
+
+            var downRay = Physics.Raycast(transform.position, transform.forward + transform.up, out _, 5,
+                LayerMask.GetMask("Environment"));
+            Debug.DrawRay(transform.position, transform.forward + transform.up, Color.blue, 0.5f);
+
+            var rightRay = Physics.Raycast(transform.position, transform.right + transform.up, out _, 5,
+                LayerMask.GetMask("Environment"));
+            Debug.DrawRay(transform.position, transform.right + transform.up, Color.blue, 0.5f);
+
+            var middleRay = Physics.Raycast(transform.position, transform.up, out _, 5,
+                LayerMask.GetMask("Environment"));
+            Debug.DrawRay(transform.position, transform.up, Color.blue, 0.5f);
+
+            return leftRay || rightRay || middleRay || upRay || downRay;
         }
     }
 }

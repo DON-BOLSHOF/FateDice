@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2850347307215428844}
   - component: {fileID: 4588127521226216731}
   - component: {fileID: 4216986934005080710}
+  - component: {fileID: 2885634404479835741}
   m_Layer: 0
   m_Name: Edge4
   m_TagString: Untagged
@@ -83,6 +84,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1041329450647692246}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2885634404479835741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041329450647692246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e988d4181d3ba0648aad9502dbd658e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4006751866616911063
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,6 +107,7 @@ GameObject:
   - component: {fileID: 6639312612727954437}
   - component: {fileID: 7722737435354070617}
   - component: {fileID: 1701764428585819385}
+  - component: {fileID: 8722589081707585213}
   m_Layer: 0
   m_Name: Edge1
   m_TagString: Untagged
@@ -166,6 +180,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4006751866616911063}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &8722589081707585213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4006751866616911063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e988d4181d3ba0648aad9502dbd658e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4812929365948213645
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +203,7 @@ GameObject:
   - component: {fileID: 3858279795182246701}
   - component: {fileID: 1015026763585480440}
   - component: {fileID: 6812414399510431938}
+  - component: {fileID: 941490828253881644}
   m_Layer: 0
   m_Name: Edge5
   m_TagString: Untagged
@@ -249,6 +276,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4812929365948213645}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &941490828253881644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4812929365948213645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e988d4181d3ba0648aad9502dbd658e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5147670654292012063
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +299,7 @@ GameObject:
   - component: {fileID: 5418162456449497840}
   - component: {fileID: 7937626865109791642}
   - component: {fileID: 6085627630540922450}
+  - component: {fileID: 9189765983999011491}
   m_Layer: 0
   m_Name: Edge6
   m_TagString: Untagged
@@ -332,6 +372,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5147670654292012063}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &9189765983999011491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5147670654292012063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e988d4181d3ba0648aad9502dbd658e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5693687384644592653
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,6 +395,7 @@ GameObject:
   - component: {fileID: 9202434536088346991}
   - component: {fileID: 6298966863686260561}
   - component: {fileID: 7670953047479789919}
+  - component: {fileID: 4865305685845330198}
   m_Layer: 0
   m_Name: Edge2
   m_TagString: Untagged
@@ -415,6 +468,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5693687384644592653}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &4865305685845330198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5693687384644592653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e988d4181d3ba0648aad9502dbd658e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8097582225579117215
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +509,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8097582225579117215}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.6509178, y: -0.77084255, z: -1.4429849}
   m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 1
@@ -567,6 +632,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be348f3245424d8ca8e1844cf86bc6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <_diceEdges>k__BackingField:
+  - {fileID: 8722589081707585213}
+  - {fileID: 4865305685845330198}
+  - {fileID: 8577246484492778513}
+  - {fileID: 2885634404479835741}
+  - {fileID: 941490828253881644}
+  - {fileID: 9189765983999011491}
 --- !u!1 &9201469015892311209
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,6 +650,7 @@ GameObject:
   - component: {fileID: 5162333559363728383}
   - component: {fileID: 1140976647421236752}
   - component: {fileID: 6023159499832226337}
+  - component: {fileID: 8577246484492778513}
   m_Layer: 0
   m_Name: Edge3
   m_TagString: Untagged
@@ -650,3 +723,15 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9201469015892311209}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &8577246484492778513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9201469015892311209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e988d4181d3ba0648aad9502dbd658e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
