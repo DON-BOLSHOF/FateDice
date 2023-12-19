@@ -10,6 +10,7 @@ namespace BKA.Dices
         public abstract Rigidbody Rigidbody { get; protected set; }
         public abstract DiceAttribute[] DiceAttributes { get; protected set; }
         protected abstract int FixedAttributesValue { get; }
+        protected abstract DiceEdge[] _diceEdges { get; set;}
 
         public void ModifyAttributes(DiceAttribute[] diceAttributes)
         {
