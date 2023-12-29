@@ -1,19 +1,20 @@
+using System;
+using BKA.Characters;
 using UnityEngine;
 
 namespace BKA
 {
     public class FightHandler : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        private Character[] _firstPack;
+        private Character[] _secondPack;
+
+        private void Start()
         {
-        
         }
 
-        // Update is called once per frame
-        void Update()
+        public void DynamicInit(Character[] teammates, Character[] enemy)
         {
-        
         }
     }
 }

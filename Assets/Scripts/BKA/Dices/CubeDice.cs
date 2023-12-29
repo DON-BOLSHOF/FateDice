@@ -6,8 +6,8 @@ namespace BKA.Dices
 {
     public class CubeDice : DiceObject
     {
-        [field:SerializeField] protected override DiceEdge[] _diceEdges { get; set; }
-        protected override int FixedAttributesValue { get; } = 6;
+        [field: SerializeField] protected override DiceEdge[] _diceEdges { get; set; }
+        protected override int FixedAttributesValue => 6;
         public override Rigidbody Rigidbody { get; protected set; }
         public override DiceAttribute[] DiceAttributes { get; protected set; }
 
@@ -22,7 +22,8 @@ namespace BKA.Dices
             {
                 foreach (var diceEdge in _diceEdges)
                 {
-                    Debug.Log(diceEdge.CheckEnvironment());
+                    if (diceEdge.CheckNotCrossEnvironment())
+                        Debug.Log(diceEdge.name);
                 }
             }
         }

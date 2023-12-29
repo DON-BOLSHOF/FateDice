@@ -4,7 +4,12 @@ namespace BKA.Dices
 {
     public class DiceEdge : MonoBehaviour
     {
-        public bool CheckEnvironment()
+        public bool CheckNotCrossEnvironment()
+        {
+            return !CheckCrossEnvironment();
+        }
+
+        public bool CheckCrossEnvironment()
         {
             var leftRay = Physics.Raycast(transform.position, -transform.right + transform.up, out _, 5,
                 LayerMask.GetMask("Environment"));
