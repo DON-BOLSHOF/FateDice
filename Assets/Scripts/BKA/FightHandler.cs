@@ -1,20 +1,22 @@
 using System;
-using BKA.Characters;
+using BKA.Units;
 using UnityEngine;
 
 namespace BKA
 {
     public class FightHandler : MonoBehaviour
     {
-        private Character[] _firstPack;
-        private Character[] _secondPack;
+        private UnitDefinition[] _firstPack;
+        private UnitDefinition[] _secondPack;
 
         private void Start()
         {
         }
 
-        public void DynamicInit(Character[] teammates, Character[] enemy)
+        public void DynamicInit(UnitDefinition[] teammates, UnitDefinition[] enemy)
         {
+            _firstPack = teammates;
+            _secondPack = enemy;
         }
     }
 }

@@ -8,11 +8,11 @@ namespace BKA.Dices
     public abstract class DiceObject : MonoBehaviour
     {
         public abstract Rigidbody Rigidbody { get; protected set; }
-        public abstract DiceAttribute[] DiceAttributes { get; protected set; }
+        public abstract DiceAction[] DiceAttributes { get; protected set; }
         protected abstract int FixedAttributesValue { get; }
         protected abstract DiceEdge[] _diceEdges { get; set;}
 
-        public void ModifyAttributes(DiceAttribute[] diceAttributes)
+        public void ModifyAttributes(DiceAction[] diceAttributes)
         {
             if (diceAttributes.Length != FixedAttributesValue)
             {

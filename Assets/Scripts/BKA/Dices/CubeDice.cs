@@ -9,7 +9,7 @@ namespace BKA.Dices
         [field: SerializeField] protected override DiceEdge[] _diceEdges { get; set; }
         protected override int FixedAttributesValue => 6;
         public override Rigidbody Rigidbody { get; protected set; }
-        public override DiceAttribute[] DiceAttributes { get; protected set; }
+        public override DiceAction[] DiceAttributes { get; protected set; }
 
         private void Start()
         {

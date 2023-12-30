@@ -1,4 +1,5 @@
 ﻿using System;
+using BKA.Units;
 using UniRx;
 using UnityEngine;
 
@@ -16,9 +17,27 @@ namespace BKA.UI
         private void Awake()
         {
             if (_characterPanels.Length > MaximumPanels) 
-                throw new ArgumentException("too huge count of characters");
+                throw new ArgumentException("too huge count of charactersPanels");
         }
-        
-        
+
+
+        public void DynamicInit(UnitDefinition[] characters)
+        {
+            if (characters.Length > _characterPanels.Length)
+                throw new ArgumentException("too huge count of characters");
+
+            var iterator = 0;
+            
+            for (; iterator < characters.Length; iterator++)
+            {
+                _characterPanels[iterator].gameObject.SetActive(true);
+                _characterPanels[iterator].Fulfill(characters[iterator]);
+            }
+
+            for (; iterator < _characterPanels.Length; iterator++)
+            {
+                _characterPanels[iterator].gameObject.SetActive(false);
+            }
+        }
     }
 }

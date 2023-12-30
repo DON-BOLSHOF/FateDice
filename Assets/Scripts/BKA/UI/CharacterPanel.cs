@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using BKA.Units;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace BKA.UI
@@ -8,5 +9,10 @@ namespace BKA.UI
         [SerializeField] private Image _portrait;
         [SerializeField] private Image _attribute;
         [SerializeField] private HealthWidget _healthWidget;
+
+        public void Fulfill(UnitDefinition unitDefinition)
+        {
+            
+        }
     }
 }

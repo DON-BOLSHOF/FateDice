@@ -1,6 +1,6 @@
 ﻿using System;
-using BKA.Characters;
 using BKA.UI;
+using BKA.Units;
 using UnityEngine;
 using Zenject;
 
@@ -11,9 +11,13 @@ namespace BKA
         [SerializeField] private CharacterBoarderHandler _characterBoarderHandler;
         [SerializeField] private FightHandler _fightHandler;
 
-        public BattleEntryPoint([InjectOptional] Character[] teammates,[InjectOptional] Character[] enemy)
+        [InjectOptional(Id = "Teammates")] private UnitDefinition[] _teammates;
+        [InjectOptional(Id = "Enemies")] private UnitDefinition[] _enemy;
+        
+        private void Start()
         {
-            _fightHandler.DynamicInit(teammates, enemy);
+            _characterBoarderHandler.DynamicInit(_teammates, _enemy);
+            _fightHandler.DynamicInit(_teammates, _enemy);
         }
     }
 }
