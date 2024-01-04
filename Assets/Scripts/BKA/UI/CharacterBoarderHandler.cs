@@ -8,7 +8,7 @@ namespace BKA.UI
        [SerializeField] private CharacterBoarder _leftBoarder;
        [SerializeField] private CharacterBoarder _rightBoarder;
 
-       public void DynamicInit(UnitDefinition[] teammates, UnitDefinition[] enemy)
+       public void DynamicInit(Unit[] teammates, Unit[] enemy)
        {
            _leftBoarder.DynamicInit(teammates);
            _rightBoarder.DynamicInit(enemy);

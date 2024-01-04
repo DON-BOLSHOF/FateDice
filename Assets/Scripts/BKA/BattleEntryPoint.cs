@@ -11,8 +11,8 @@ namespace BKA
         [SerializeField] private CharacterBoarderHandler _characterBoarderHandler;
         [SerializeField] private FightHandler _fightHandler;
 
-        [InjectOptional(Id = "Teammates")] private UnitDefinition[] _teammates;
-        [InjectOptional(Id = "Enemies")] private UnitDefinition[] _enemy;
+        [InjectOptional(Id = "Teammates")] private Unit[] _teammates;
+        [InjectOptional(Id = "Enemies")] private Unit[] _enemy;
         
         private void Start()
         {

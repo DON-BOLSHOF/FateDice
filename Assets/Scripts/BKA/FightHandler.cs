@@ -6,14 +6,14 @@ namespace BKA
 {
     public class FightHandler : MonoBehaviour
     {
-        private UnitDefinition[] _firstPack;
-        private UnitDefinition[] _secondPack;
+        private Unit[] _firstPack;
+        private Unit[] _secondPack;
 
         private void Start()
         {
         }
 
-        public void DynamicInit(UnitDefinition[] teammates, UnitDefinition[] enemy)
+        public void DynamicInit(Unit[] teammates, Unit[] enemy)
         {
             _firstPack = teammates;
             _secondPack = enemy;

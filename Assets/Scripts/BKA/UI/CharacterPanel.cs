@@ -10,9 +10,9 @@ namespace BKA.UI
         [SerializeField] private Image _attribute;
         [SerializeField] private HealthWidget _healthWidget;
 
-        public void Fulfill(UnitDefinition unitDefinition)
+        public void Fulfill(Unit unit)
         {
-            
+            _portrait.sprite = unit.Definition.UnitIcon;
         }
     }
 }

@@ -6,13 +6,12 @@ namespace BKA.Zenject.Installers
 {
     public class TestCharactersInstaller : MonoInstaller
     {
-        [SerializeField] private UnitDefinition[] _teammates;
-        [SerializeField] private UnitDefinition[] _enemies;
+        [Inject] private DefinitionPool _definitionPool;
         
         public override void InstallBindings()
         {
-            Container.Bind<UnitDefinition[]>().WithId("Teammates").FromInstance(_teammates).AsCached();
-            Container.Bind<UnitDefinition[]>().WithId("Enemies").FromInstance(_enemies).AsCached();
+            Container.Bind<Unit[]>().WithId("Teammates").FromInstance(new Unit[]{new DemonPaladin(_definitionPool)}).AsCached();
+            Container.Bind<Unit[]>().WithId("Enemies").FromInstance(new Unit[]{new DemonPaladin(_definitionPool)}).AsCached();
         }
     }
 }

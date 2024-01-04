@@ -2,6 +2,7 @@
 using BKA.Units;
 using UniRx;
 using UnityEngine;
+using Unit = BKA.Units.Unit;
 
 namespace BKA.UI
 {
@@ -21,7 +22,7 @@ namespace BKA.UI
         }
 
 
-        public void DynamicInit(UnitDefinition[] characters)
+        public void DynamicInit(Unit[] characters)
         {
             if (characters.Length > _characterPanels.Length)
                 throw new ArgumentException("too huge count of characters");

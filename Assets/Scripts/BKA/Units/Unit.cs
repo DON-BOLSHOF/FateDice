@@ -1,23 +1,14 @@
 ﻿using BKA.System;
+using Zenject;
 
 namespace BKA.Units
 {
     public abstract class Unit
     {
-        protected abstract UnitDefinition _definition { get; set; }
+        public abstract UnitDefinition Definition { get; protected set; }
 
-        protected UnitDefinitionProvider _definitionProvider { get; }
+        [Inject] protected DefinitionPool _definitionPool;
 
         public abstract void Execute();
-
-        protected Unit()
-        {
-            _definitionProvider = new UnitDefinitionProvider();
-        }
-
-        ~Unit()
-        {
-            _definitionProvider.Unload();
-        }
     }
 }

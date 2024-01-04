@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 86679e43861090b4e8b12a005e0cca2f
   m_SerializeEntries:
   - m_GUID: 47f18d4f1eeecb44abf3bb778303c258
-    m_Address: MilitiaDefinition
+    m_Address: DemonPaladinDefinition
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
