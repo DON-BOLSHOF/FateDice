@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ID>k__BackingField: ShieldProtect
   <_diceAttributeFocus>k__BackingField: 2
+  <ActionView>k__BackingField: {fileID: 21300000, guid: 0ab8727cfbe99d942b57505813595924, type: 3}

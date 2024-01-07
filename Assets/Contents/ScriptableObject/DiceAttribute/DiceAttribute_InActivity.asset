@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ID>k__BackingField: InActivity
   <_diceAttributeFocus>k__BackingField: 0
+  <ActionView>k__BackingField: {fileID: 21300000, guid: 6166d3b23007e1046a1b67e804754b1d, type: 3}

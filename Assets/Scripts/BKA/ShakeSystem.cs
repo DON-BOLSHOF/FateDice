@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BKA.Dices;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -6,17 +7,7 @@ namespace BKA
 {
     public class ShakeSystem : MonoBehaviour
     {
-        [SerializeField] private DiceObject[] _diceObjects;
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                ShakeObjects(_diceObjects);
-            }
-        }
-
-        private void ShakeObjects(DiceObject[] diceObjects)
+        public void ShakeObjects(IEnumerable<DiceObject> diceObjects)
         {
             foreach (var diceObject in diceObjects)
             {

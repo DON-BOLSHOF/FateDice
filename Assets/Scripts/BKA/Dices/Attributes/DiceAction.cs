@@ -6,6 +6,7 @@ namespace BKA.Dices.Attributes
     {
         public abstract string ID { get; protected set; }
         protected abstract DiceAttributeFocus _diceAttributeFocus { get; set;}
+        public abstract Sprite ActionView { get; protected set; }
     }
 
     public enum DiceAttributeFocus

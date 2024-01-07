@@ -6,7 +6,7 @@ namespace BKA.BootsTraps
     {
         private ReactiveProperty<BootsTrapState> _bootTrapState { get; } = new();
 
-        public IReactiveProperty<BootsTrapState> BootsTrapState => _bootTrapState;
+        public IReadOnlyReactiveProperty<BootsTrapState> BootsTrapState => _bootTrapState;
 
         public void Visit(BootsTrap visitor)
         {

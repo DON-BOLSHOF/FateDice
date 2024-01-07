@@ -21,4 +21,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
   - {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
   <FixedActionsValue>k__BackingField: 6
+  <Health>k__BackingField: 5
   <UnitIcon>k__BackingField: {fileID: 21300000, guid: 930d62d7bed22094a9da122f97270e0c, type: 3}
