@@ -1,4 +1,5 @@
-﻿using BKA.Units;
+﻿using System.Collections.Generic;
+using BKA.Units;
 using UnityEngine;
 
 namespace BKA.UI
@@ -8,7 +9,7 @@ namespace BKA.UI
        [SerializeField] private CharacterBoarder _leftBoarder;
        [SerializeField] private CharacterBoarder _rightBoarder;
 
-       public void DynamicInit(Unit[] teammates, Unit[] enemy)
+       public void DynamicInit(List<UnitBattleBehaviour> teammates, List<UnitBattleBehaviour> enemy)
        {
            _leftBoarder.DynamicInit(teammates);
            _rightBoarder.DynamicInit(enemy);

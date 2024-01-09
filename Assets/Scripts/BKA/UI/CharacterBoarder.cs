@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BKA.Units;
 using UniRx;
 using UnityEngine;
@@ -22,17 +23,17 @@ namespace BKA.UI
         }
 
 
-        public void DynamicInit(Unit[] characters)
+        public void DynamicInit(List<UnitBattleBehaviour> characters)
         {
-            if (characters.Length > _characterPanels.Length)
+            if (characters.Count > _characterPanels.Length)
                 throw new ArgumentException("too huge count of characters");
 
             var iterator = 0;
             
-            for (; iterator < characters.Length; iterator++)
+            for (; iterator < characters.Count; iterator++)
             {
                 _characterPanels[iterator].gameObject.SetActive(true);
-                _characterPanels[iterator].Fulfill(characters[iterator]);
+                _characterPanels[iterator].Fulfill(characters[iterator].Unit);
             }
 
             for (; iterator < _characterPanels.Length; iterator++)

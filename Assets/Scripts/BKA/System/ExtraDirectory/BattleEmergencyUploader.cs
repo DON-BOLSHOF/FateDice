@@ -9,7 +9,7 @@ namespace BKA.System.ExtraDirectory
     {
         [Inject] private DefinitionPool _definitionPool;
 
-        public async UniTask<(Unit[] teammates, Unit[] enemy)> UploadNeededData()
+        public async UniTask<(Unit[] party, Unit[] enemy)> UploadNeededData()
         {
             await _definitionPool.UploadBaseDefinitions();
 

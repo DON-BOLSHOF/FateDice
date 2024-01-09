@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using BKA.Dices;
+using UniRx;
 using UnityEngine;
 using Zenject;
-using Random = UnityEngine.Random;
 
 namespace BKA
 {
@@ -11,33 +11,64 @@ namespace BKA
     {
         [SerializeField] private ShakeSystem _shakeSystem;
 
-        private List<DiceObject> _activeDices = new();
+        private List<DiceObject> _partyDices = new();
 
-        private List<DiceObject> _inactiveDices = new();
+        private List<DiceObject> _enemyDices = new();
 
-        private List<DiceObject> _dicePool = new();
+        [Inject] private TurnSystem _turnSystem;
 
-        [Inject] private DiceFactory _diceFactory;
-
-        public List<DiceObject> UploadNewDices(int unitsLenght)
+        public void DynamicInit(List<DiceObject> partyDices, List<DiceObject> enemyDices)
         {
-            var result = new List<DiceObject>();
+            _partyDices = partyDices;
+            _enemyDices = enemyDices;
 
-            for (int i = 0; i < unitsLenght; i++)
-            {
-                result.Add(_diceFactory.CreateCubeDice(transform, new Vector3(Random.Range(-3,3),8,Random.Range(-3,3))));
-            }
-
-            _dicePool.AddRange(result);
-            
-            return result;
+            _turnSystem.TurnState.Subscribe(ChangeDices).AddTo(this);
         }
 
-        private void Update()
+        private void ChangeDices(TurnState turnState)
+        {
+            switch (turnState)
+            {
+                case TurnState.PartyTurn:
+                    foreach (var diceObject in _enemyDices)
+                    {
+                        diceObject.gameObject.SetActive(false);
+                    }
+
+                    foreach (var diceObject in _partyDices)
+                    {
+                        diceObject.gameObject.SetActive(true);
+                    }
+                    break;
+                case TurnState.EnemyTurn:
+                    foreach (var diceObject in _enemyDices)
+                    {
+                        diceObject.gameObject.SetActive(true);
+                    }
+
+                    foreach (var diceObject in _partyDices)
+                    {
+                        diceObject.gameObject.SetActive(false);
+                    }
+                    break;
+            }
+        }
+
+        public void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _shakeSystem.ShakeObjects(_dicePool);
+                switch (_turnSystem.TurnState.Value)
+                {
+                    case TurnState.PartyTurn:
+                        _shakeSystem.ShakeObjects(_partyDices);
+                        break;
+                    case TurnState.EnemyTurn:
+                        _shakeSystem.ShakeObjects(_enemyDices);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
     }

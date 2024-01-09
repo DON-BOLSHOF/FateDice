@@ -7,7 +7,7 @@ namespace BKA.Units
 {
     public class UnitBattleBehaviour
     {
-        private Unit _unit;
+        public Unit Unit { get; }
 
         private DiceObject _dice;
 
@@ -17,10 +17,10 @@ namespace BKA.Units
         
         public UnitBattleBehaviour(Unit unit, DiceObject dice)
         {
-            _unit = unit;
+            Unit = unit;
             _dice = dice;
 
-            _unit.Health.Where(value => value <= 0).Subscribe(_ => OnDead?.Execute()).AddTo(_disposable);
+            Unit.Health.Where(value => value <= 0).Subscribe(_ => OnDead?.Execute()).AddTo(_disposable);
             _dice.OnDiceSelected.Subscribe(PrepareToAct).AddTo(_disposable);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BKA.BootsTraps;
+using BKA.Dices;
 using BKA.System.ExtraDirectory;
 using BKA.UI;
 using BKA.Units;
@@ -14,10 +15,12 @@ namespace BKA
         [SerializeField] private FightHandler _fightHandler;
         [SerializeField] private DiceHandler _diceHandler;
 
-        [InjectOptional(Id = "Teammates")] private Unit[] _teammates;
+        [InjectOptional(Id = "Party")] private Unit[] _party;
         [InjectOptional(Id = "Enemies")] private Unit[] _enemy;
 
         [Inject] private BootsTrapStateObserver _bootsTrapStateObserver;
+
+        [Inject] private DiceFactory _diceFactory;
 
         private async void Start()
         {
@@ -28,7 +31,7 @@ namespace BKA
 
                 var data = await uploader.UploadNeededData();
 
-                _teammates = data.teammates;
+                _party = data.party;
                 _enemy = data.enemy;
             }
 #else
@@ -37,32 +40,45 @@ namespace BKA
                 throw new BootsTrapException();
             }
 #endif
-            var dices = _diceHandler.UploadNewDices(_teammates.Length + _enemy.Length);
+            PrepareData(out var partyBattleBehaviours, out var enemyBattleBehaviours);
 
-            var teammateBattleBehaviours = new List<UnitBattleBehaviour>();
+            _characterBoarderHandler.DynamicInit(partyBattleBehaviours, enemyBattleBehaviours);
+            _fightHandler.DynamicInit(partyBattleBehaviours, enemyBattleBehaviours);
 
-            for (int i = 0; i < _teammates.Length; i++)
+            _fightHandler.StartBattle();
+        }
+
+        private void PrepareData(out List<UnitBattleBehaviour> partyBattleBehaviours,
+            out List<UnitBattleBehaviour> enemyBattleBehaviours)
+        {
+            var partyDices = _diceFactory.UploadNewDices(_party.Length, _diceHandler.transform,
+                new Vector3(Random.Range(-3, 3), 8, Random.Range(-3, 3)));
+            var enemyDices = _diceFactory.UploadNewDices(_enemy.Length, _diceHandler.transform,
+                new Vector3(Random.Range(-3, 3), 8, Random.Range(-3, 3)));
+
+            partyBattleBehaviours = new List<UnitBattleBehaviour>();
+
+            for (int i = 0; i < _party.Length; i++)
             {
-                var battleBehaviour = new UnitBattleBehaviour(_teammates[i], dices[i]);
+                var battleBehaviour = new UnitBattleBehaviour(_party[i], partyDices[i]);
 
-                dices[i].DynamicInit(_teammates[i].Definition.DiceActions);
+                partyDices[i].UpdateActions(_party[i].Definition.DiceActions);
 
-                teammateBattleBehaviours.Add(battleBehaviour);
+                partyBattleBehaviours.Add(battleBehaviour);
             }
-            
-            var enemyBattleBehaviours = new List<UnitBattleBehaviour>();
+
+            enemyBattleBehaviours = new List<UnitBattleBehaviour>();
 
             for (int i = 0; i < _enemy.Length; i++)
             {
-                var battleBehaviour = new UnitBattleBehaviour(_enemy[i], dices[i + _teammates.Length]);
+                var battleBehaviour = new UnitBattleBehaviour(_enemy[i], enemyDices[i]);
 
-                dices[i + _teammates.Length].DynamicInit(_enemy[i].Definition.DiceActions);
+                enemyDices[i].UpdateActions(_enemy[i].Definition.DiceActions);
 
                 enemyBattleBehaviours.Add(battleBehaviour);
             }
 
-            _characterBoarderHandler.DynamicInit(_teammates, _enemy);
-            _fightHandler.DynamicInit(_teammates, _enemy);
-        }  
+            _diceHandler.DynamicInit(partyDices, enemyDices);
+        }
     }
 }

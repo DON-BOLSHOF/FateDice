@@ -26,7 +26,7 @@ namespace BKA.Dices
             }
         }
 
-        public void DynamicInit(DiceAction[] diceAttributes)
+        public void UpdateActions(DiceAction[] diceAttributes)
         {
             if (diceAttributes.Length != FixedActionsAmount)
             {

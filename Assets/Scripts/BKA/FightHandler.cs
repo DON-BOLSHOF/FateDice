@@ -1,22 +1,34 @@
 using System;
+using System.Collections.Generic;
 using BKA.Units;
 using UnityEngine;
+using Zenject;
 
 namespace BKA
 {
     public class FightHandler : MonoBehaviour
     {
-        private Unit[] _firstPack;
-        private Unit[] _secondPack;
+        private List<UnitBattleBehaviour> _firstPack;
+        private List<UnitBattleBehaviour> _secondPack;
 
-        private void Start()
-        {
-        }
+        [Inject] private TurnSystem _turnSystem;
 
-        public void DynamicInit(Unit[] teammates, Unit[] enemy)
+        public void DynamicInit(List<UnitBattleBehaviour> teammates, List<UnitBattleBehaviour> enemy)
         {
             _firstPack = teammates;
             _secondPack = enemy;
+        }
+
+        public void StartBattle()
+        {
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                _turnSystem.NextTurn();
+            }
         }
     }
 }
