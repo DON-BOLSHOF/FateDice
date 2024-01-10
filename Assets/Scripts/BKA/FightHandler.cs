@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using BKA.BattleDirectory;
 using BKA.Units;
 using UnityEngine;
 using Zenject;
 
 namespace BKA
 {
-    public class FightHandler : MonoBehaviour
+    public class FightHandler : MonoBehaviour, ITurnSystemVisitor
     {
         private List<UnitBattleBehaviour> _firstPack;
         private List<UnitBattleBehaviour> _secondPack;
@@ -23,12 +24,9 @@ namespace BKA
         {
         }
 
-        private void Update()
+        public void Accept(TurnSystem turnSystem)
         {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                _turnSystem.NextTurn();
-            }
+            turnSystem.Visit(this);
         }
     }
 }

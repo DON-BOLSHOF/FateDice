@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BKA.BattleDirectory;
 using BKA.Dices;
 using UniRx;
 using UnityEngine;
@@ -54,21 +55,18 @@ namespace BKA
             }
         }
 
-        public void Update()
+        public void Shake()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            switch (_turnSystem.TurnState.Value)
             {
-                switch (_turnSystem.TurnState.Value)
-                {
-                    case TurnState.PartyTurn:
-                        _shakeSystem.ShakeObjects(_partyDices);
-                        break;
-                    case TurnState.EnemyTurn:
-                        _shakeSystem.ShakeObjects(_enemyDices);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case TurnState.PartyTurn:
+                    _shakeSystem.ShakeObjects(_partyDices);
+                    break;
+                case TurnState.EnemyTurn:
+                    _shakeSystem.ShakeObjects(_enemyDices);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

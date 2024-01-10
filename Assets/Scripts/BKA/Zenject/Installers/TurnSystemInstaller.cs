@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using BKA.BattleDirectory;
+using Zenject;
 
 namespace BKA.Zenject.Installers
 {
