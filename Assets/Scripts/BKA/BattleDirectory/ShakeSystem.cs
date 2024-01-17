@@ -3,7 +3,7 @@ using BKA.Dices;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace BKA
+namespace BKA.BattleDirectory
 {
     public class ShakeSystem : MonoBehaviour
     {

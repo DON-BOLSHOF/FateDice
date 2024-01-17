@@ -1,29 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using BKA.BattleDirectory;
+using System.Linq;
 using BKA.Dices;
+using BKA.Units;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace BKA
+namespace BKA.BattleDirectory
 {
     public class DiceHandler : MonoBehaviour
     {
-        [SerializeField] private ShakeSystem _shakeSystem;
+        private List<UnitDice> _partyDices;
+        private List<UnitDice> _enemyDices;
 
-        private List<DiceObject> _partyDices = new();
+        [SerializeField] private RerollHandler _rerollHandler;
+        [SerializeField] private DiceMovementHandler _diceMovementHandler;
 
-        private List<DiceObject> _enemyDices = new();
+        public ReadOnlyReactiveProperty<bool> IsDiceHandlerCompleteWork;
 
-        [Inject] private TurnSystem _turnSystem;
-
-        public void DynamicInit(List<DiceObject> partyDices, List<DiceObject> enemyDices)
+        private void Start()
         {
-            _partyDices = partyDices;
-            _enemyDices = enemyDices;
-
-            _turnSystem.TurnState.Subscribe(ChangeDices).AddTo(this);
+            IsDiceHandlerCompleteWork = _rerollHandler.IsDicesReady
+                .CombineLatest(_diceMovementHandler.IsMovementComplete, (isDicesReady, isMovementComplete) => isDicesReady && isMovementComplete)
+                .ToReadOnlyReactiveProperty();
+        }
+        
+        public void DynamicInit(IEnumerable<IUnitOfBattle> party, IEnumerable<IUnitOfBattle> enemy)
+        {
+            _partyDices = party.Select(unit => new UnitDice { DiceObject = unit.DiceObject, BaseUnitPosition = unit.Position}).ToList();
+            _enemyDices = enemy.Select(unit => new UnitDice { DiceObject = unit.DiceObject, BaseUnitPosition = unit.Position}).ToList();
         }
 
         private void ChangeDices(TurnState turnState)
@@ -31,43 +38,55 @@ namespace BKA
             switch (turnState)
             {
                 case TurnState.PartyTurn:
-                    foreach (var diceObject in _enemyDices)
+                    foreach (var unitDice in _enemyDices)
                     {
-                        diceObject.gameObject.SetActive(false);
+                        unitDice.DiceObject.gameObject.SetActive(false);
                     }
 
                     foreach (var diceObject in _partyDices)
                     {
-                        diceObject.gameObject.SetActive(true);
+                        diceObject.DiceObject.gameObject.SetActive(true);
                     }
+
+                    _rerollHandler.UpdateDices(_partyDices.Select(unitDice => unitDice.DiceObject).ToList());
                     break;
                 case TurnState.EnemyTurn:
                     foreach (var diceObject in _enemyDices)
                     {
-                        diceObject.gameObject.SetActive(true);
+                        diceObject.DiceObject.gameObject.SetActive(true);
                     }
 
                     foreach (var diceObject in _partyDices)
                     {
-                        diceObject.gameObject.SetActive(false);
+                        diceObject.DiceObject.gameObject.SetActive(false);
                     }
+
+                    _rerollHandler.UpdateDices(_enemyDices.Select(unitDice => unitDice.DiceObject).ToList());
                     break;
             }
         }
 
-        public void Shake()
+        public async UniTask HandleNextTurn(TurnState currentTurn)
         {
-            switch (_turnSystem.TurnState.Value)
+            List<UnitDice> activeDices = currentTurn switch
             {
-                case TurnState.PartyTurn:
-                    _shakeSystem.ShakeObjects(_partyDices);
-                    break;
-                case TurnState.EnemyTurn:
-                    _shakeSystem.ShakeObjects(_enemyDices);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                TurnState.PartyTurn => _partyDices,
+                TurnState.EnemyTurn => _enemyDices,
+                _ => throw new ArgumentOutOfRangeException(nameof(currentTurn), currentTurn, null)
+            };
+            
+            ChangeDices(currentTurn);
+            await UniTask.Yield();
+            await _diceMovementHandler.MoveDicesToBase(activeDices);
+            /*await reroll*/
+
         }
+    }
+
+    public class UnitDice
+    {
+        public Vector3 PositionInBoard;
+        public Vector3 BaseUnitPosition;
+        public DiceObject DiceObject;
     }
 }

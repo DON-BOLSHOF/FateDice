@@ -1,32 +1,47 @@
 ﻿using BKA.Dices;
 using BKA.Dices.Attributes;
+using BKA.UI;
+using BKA.Utils;
 using UniRx;
 using UnityEngine;
 
 namespace BKA.Units
 {
-    public class UnitBattleBehaviour
+    public class UnitBattleBehaviour : IUnitOfBattle
     {
         public Unit Unit { get; }
+        public ReactiveCommand OnDead { get; }
 
-        private DiceObject _dice;
+        public Vector3 Position => _UIPanel.GetPositionInWorldSpace();
+        public DiceObject DiceObject { get; }
 
-        public ReactiveCommand OnDead;
+        private CharacterPanel _UIPanel;
 
         private CompositeDisposable _disposable = new();
         
         public UnitBattleBehaviour(Unit unit, DiceObject dice)
         {
             Unit = unit;
-            _dice = dice;
+            DiceObject = dice;
 
             Unit.Health.Where(value => value <= 0).Subscribe(_ => OnDead?.Execute()).AddTo(_disposable);
-            _dice.OnDiceSelected.Subscribe(PrepareToAct).AddTo(_disposable);
+            DiceObject.OnDiceSelected.Subscribe(PrepareToAct).AddTo(_disposable);
         }
 
         private void PrepareToAct(DiceAction action)
         {
             Debug.Log(action.ID);
+        }
+
+        public void BindPanel(CharacterPanel panel)
+        {
+            _UIPanel = panel;
+            panel.OnCharacterPanelClicked.Subscribe(_ => UndoAct()).AddTo(_disposable);
+        }
+
+        private void UndoAct()
+        {
+            Debug.Log("Undo");
         }
 
         ~UnitBattleBehaviour()

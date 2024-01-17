@@ -13,15 +13,11 @@ namespace BKA.UI
 
         private const int MaximumPanels = 5;
 
-        public ReactiveCommand<CharacterPanel> OnCharacterClicked = new();
-        public ReactiveCommand<CharacterPanel> OnCharacterDead = new();
-
         private void Awake()
         {
             if (_characterPanels.Length > MaximumPanels) 
                 throw new ArgumentException("too huge count of charactersPanels");
         }
-
 
         public void DynamicInit(List<UnitBattleBehaviour> characters)
         {
@@ -40,6 +36,16 @@ namespace BKA.UI
             {
                 _characterPanels[iterator].gameObject.SetActive(false);
             }
+        }
+
+        public CharacterPanel GetPanel(int index)
+        {
+            if (index > _characterPanels.Length)
+                throw new ArgumentException("Incorrect panelIndex");
+            if (!_characterPanels[index].enabled)
+                throw new ArgumentException("Incorrect index");
+
+            return _characterPanels[index];
         }
     }
 }

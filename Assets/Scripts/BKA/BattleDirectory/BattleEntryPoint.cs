@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BKA.BootsTraps;
 using BKA.Dices;
 using BKA.System.ExtraDirectory;
 using BKA.UI;
 using BKA.Units;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace BKA
+namespace BKA.BattleDirectory
 {
     public class BattleEntryPoint : MonoBehaviour
     {
@@ -40,12 +42,34 @@ namespace BKA
                 throw new BootsTrapException();
             }
 #endif
+            await UniTask.DelayFrame(1);
+            
             PrepareData(out var partyBattleBehaviours, out var enemyBattleBehaviours);
 
             _characterBoarderHandler.DynamicInit(partyBattleBehaviours, enemyBattleBehaviours);
-            _fightHandler.DynamicInit(partyBattleBehaviours, enemyBattleBehaviours);
+            BindBattleBehavioursWithUIPanels(partyBattleBehaviours, enemyBattleBehaviours, _characterBoarderHandler);
+            
+            _diceHandler.DynamicInit(partyBattleBehaviours.ToList<IUnitOfBattle>(), enemyBattleBehaviours.ToList<IUnitOfBattle>());
 
-            _fightHandler.StartBattle();
+            _fightHandler.DynamicInit(partyBattleBehaviours, enemyBattleBehaviours);
+        }
+
+        private void BindBattleBehavioursWithUIPanels(List<UnitBattleBehaviour> partyBattleBehaviours, List<UnitBattleBehaviour> enemyBattleBehaviours, 
+            CharacterBoarderHandler characterBoarderHandler)
+        {
+            for (var i = 0; i < partyBattleBehaviours.Count; i++)
+            {
+                var panel = characterBoarderHandler.GetCharacterUIPanel(BoarderType.Left,i);
+
+                partyBattleBehaviours[i].BindPanel(panel);
+            }
+
+            for (var i = 0; i < enemyBattleBehaviours.Count; i++)
+            {
+                var panel = characterBoarderHandler.GetCharacterUIPanel(BoarderType.Right,i);
+                
+                enemyBattleBehaviours[i].BindPanel(panel);
+            }
         }
 
         private void PrepareData(out List<UnitBattleBehaviour> partyBattleBehaviours,
@@ -77,8 +101,6 @@ namespace BKA
 
                 enemyBattleBehaviours.Add(battleBehaviour);
             }
-
-            _diceHandler.DynamicInit(partyDices, enemyDices);
         }
     }
 }

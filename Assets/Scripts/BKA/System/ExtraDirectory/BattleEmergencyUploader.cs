@@ -13,7 +13,12 @@ namespace BKA.System.ExtraDirectory
         {
             await _definitionPool.UploadBaseDefinitions();
 
-            return (new Unit[] { new DemonPaladin(_definitionPool) }, new Unit[] { new DemonPaladin(_definitionPool) });
+            return (new Unit[] { new DemonPaladin(_definitionPool), new DemonPaladin(_definitionPool) },
+                new Unit[]
+                {
+                    new DemonPaladin(_definitionPool), new DemonPaladin(_definitionPool),
+                    new DemonPaladin(_definitionPool)
+                });
         }
     }
 }
