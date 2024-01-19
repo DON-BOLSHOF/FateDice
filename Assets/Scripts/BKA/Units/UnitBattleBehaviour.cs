@@ -10,13 +10,10 @@ namespace BKA.Units
     public class UnitBattleBehaviour : IUnitOfBattle
     {
         public Unit Unit { get; }
-        public ReactiveCommand OnDead { get; }
+        public ReactiveCommand OnDead { get; } = new();
 
-        public Vector3 Position => _UIPanel.GetPositionInWorldSpace();
         public DiceObject DiceObject { get; }
-
-        private CharacterPanel _UIPanel;
-
+        
         private CompositeDisposable _disposable = new();
         
         public UnitBattleBehaviour(Unit unit, DiceObject dice)
@@ -32,13 +29,7 @@ namespace BKA.Units
         {
             Debug.Log(action.ID);
         }
-
-        public void BindPanel(CharacterPanel panel)
-        {
-            _UIPanel = panel;
-            panel.OnCharacterPanelClicked.Subscribe(_ => UndoAct()).AddTo(_disposable);
-        }
-
+        
         private void UndoAct()
         {
             Debug.Log("Undo");

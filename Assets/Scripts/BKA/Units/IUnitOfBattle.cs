@@ -6,8 +6,8 @@ namespace BKA.Units
 {
     public interface IUnitOfBattle
     {
+        public Unit Unit { get; }
         public ReactiveCommand OnDead { get; }
-        public Vector3 Position { get; }
         public DiceObject DiceObject { get; }
     }
 }

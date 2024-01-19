@@ -19,8 +19,7 @@ namespace BKA.UI
             _portrait.sprite = unit.Definition.UnitIcon;
         }
 
-        [ContextMenu("Test")]
-        public Vector3 GetPositionInWorldSpace()
+        public Vector3 GetAttributePositionInWorldSpace()
         {
             Debug.Log(UIToWorldConverter.Convert(_attribute.GetComponent<RectTransform>()) + new Vector3(0, 0.5f, 0));
             return UIToWorldConverter.Convert(_attribute.GetComponent<RectTransform>()) + new Vector3(0, 0.5f, 0);

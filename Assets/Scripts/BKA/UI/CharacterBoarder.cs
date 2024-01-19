@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using BKA.Units;
-using UniRx;
 using UnityEngine;
-using Unit = BKA.Units.Unit;
 
 namespace BKA.UI
 {
@@ -15,37 +13,33 @@ namespace BKA.UI
 
         private void Awake()
         {
-            if (_characterPanels.Length > MaximumPanels) 
+            if (_characterPanels.Length > MaximumPanels)
                 throw new ArgumentException("too huge count of charactersPanels");
-        }
 
-        public void DynamicInit(List<UnitBattleBehaviour> characters)
-        {
-            if (characters.Count > _characterPanels.Length)
-                throw new ArgumentException("too huge count of characters");
-
-            var iterator = 0;
-            
-            for (; iterator < characters.Count; iterator++)
+            foreach (var characterPanel in _characterPanels)
             {
-                _characterPanels[iterator].gameObject.SetActive(true);
-                _characterPanels[iterator].Fulfill(characters[iterator].Unit);
-            }
-
-            for (; iterator < _characterPanels.Length; iterator++)
-            {
-                _characterPanels[iterator].gameObject.SetActive(false);
+                characterPanel.gameObject.SetActive(false);
             }
         }
 
-        public CharacterPanel GetPanel(int index)
+        public void AddNewBehaviour(UnitBattleBehaviour unitBehaviour)
         {
-            if (index > _characterPanels.Length)
-                throw new ArgumentException("Incorrect panelIndex");
-            if (!_characterPanels[index].enabled)
-                throw new ArgumentException("Incorrect index");
+            var needPanel = _characterPanels.FirstOrDefault(panel => !panel.gameObject.activeInHierarchy);
+            if (needPanel == null)
+            {
+                throw new ArgumentException("There no position to add behaviour");
+            }
 
-            return _characterPanels[index];
+            needPanel.gameObject.SetActive(true);
+            needPanel.Fulfill(unitBehaviour.Unit);
+        }
+
+        public Vector3[] GetAttributePositionsInWorld()
+        {
+            var result = _characterPanels.Where(panel => panel.gameObject.activeInHierarchy)
+                .Select(value => value.GetAttributePositionInWorldSpace()).ToArray();
+
+            return result;
         }
     }
 }
