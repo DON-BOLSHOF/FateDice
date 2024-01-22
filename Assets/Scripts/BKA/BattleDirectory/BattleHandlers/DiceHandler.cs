@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BKA.BattleDirectory.BattleSystems;
 using BKA.Dices;
 using BKA.System.Exceptions;
 using BKA.Units;
@@ -9,7 +10,7 @@ using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace BKA.BattleDirectory
+namespace BKA.BattleDirectory.BattleHandlers
 {
     public class DiceHandler : MonoBehaviour
     {
@@ -20,6 +21,7 @@ namespace BKA.BattleDirectory
         [SerializeField] private DiceMovementHandler _diceMovementHandler;
 
         [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
+        [Inject] private Boarder _boarder;
 
         public ReadOnlyReactiveProperty<bool> IsDiceHandlerCompleteWork;
 
@@ -58,7 +60,8 @@ namespace BKA.BattleDirectory
             
             ChangeDices(currentTurn);
             await UniTask.Yield();
-            await _diceMovementHandler.MoveDicesToBase(activeDices);
+            GenerateRandomPositionsOnBoard(activeDices, currentTurn);
+            await _diceMovementHandler.MoveDicesFromBase(activeDices);
             /*await reroll*/
 
         }
@@ -93,6 +96,15 @@ namespace BKA.BattleDirectory
 
                     _rerollHandler.UpdateDices(_enemyDices.Select(unitDice => unitDice.DiceObject).ToList());
                     break;
+            }
+        }
+
+        private void GenerateRandomPositionsOnBoard(List<UnitDice> activeDices, TurnState turnState)
+        {
+            var positionsToMove = _boarder.GenerateProportionalPositionsToMove(activeDices.Count, turnState);
+            for (var i = 0; i < positionsToMove.Count; i++)
+            {
+                activeDices[i].PositionInBoard = positionsToMove[i];
             }
         }
 

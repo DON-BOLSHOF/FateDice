@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BKA.BattleDirectory.BattleSystems;
 using BKA.System;
 using BKA.Units;
 using Cysharp.Threading.Tasks;
@@ -7,7 +8,7 @@ using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace BKA.BattleDirectory
+namespace BKA.BattleDirectory.BattleHandlers
 {
     public class FightHandler : MonoBehaviour, ITurnSystemVisitor
     {

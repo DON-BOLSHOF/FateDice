@@ -1,6 +1,6 @@
 ﻿using UniRx;
 
-namespace BKA.BattleDirectory
+namespace BKA.BattleDirectory.BattleSystems
 {
     public class TurnSystem
     {
@@ -9,7 +9,7 @@ namespace BKA.BattleDirectory
 
         private void NextTurn()
         {
-            _turnState.Value = _turnState.Value == BattleDirectory.TurnState.PartyTurn? BattleDirectory.TurnState.EnemyTurn: BattleDirectory.TurnState.PartyTurn;
+            _turnState.Value = _turnState.Value == BattleSystems.TurnState.PartyTurn? BattleSystems.TurnState.EnemyTurn: BattleSystems.TurnState.PartyTurn;
         }
 
         public void Visit(ITurnSystemVisitor visitor)

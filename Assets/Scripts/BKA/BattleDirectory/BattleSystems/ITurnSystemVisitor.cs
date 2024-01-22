@@ -1,4 +1,4 @@
-﻿namespace BKA.BattleDirectory
+﻿namespace BKA.BattleDirectory.BattleSystems
 {
     public interface ITurnSystemVisitor
     {

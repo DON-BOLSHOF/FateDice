@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BKA.BattleDirectory.BattleSystems;
 using BKA.Dices;
 using BKA.System.Exceptions;
 using BKA.UI;
@@ -7,7 +8,7 @@ using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 
-namespace BKA.BattleDirectory
+namespace BKA.BattleDirectory.BattleHandlers
 {
     public class RerollHandler : MonoBehaviour
     {
