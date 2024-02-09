@@ -62,8 +62,8 @@ namespace BKA.BattleDirectory.BattleHandlers
             await UniTask.Yield();
             GenerateRandomPositionsOnBoard(activeDices, currentTurn);
             await _diceMovementHandler.MoveDicesFromBase(activeDices);
-            /*await reroll*/
-
+            await _rerollHandler.ForceAsyncReroll();
+            await _diceMovementHandler.MoveDicesToBase(activeDices);
         }
 
         private void ChangeDices(TurnState turnState)

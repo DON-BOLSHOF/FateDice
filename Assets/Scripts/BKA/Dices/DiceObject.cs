@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace BKA.Dices
 {
-    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Rigidbody), typeof(Collider))]
     public abstract class DiceObject : MonoBehaviour, IPointerClickHandler
     {
         public abstract Rigidbody Rigidbody { get; protected set; }
@@ -14,11 +14,14 @@ namespace BKA.Dices
         protected abstract int FixedActionsAmount { get; }
         protected abstract DiceEdge[] _diceEdges { get; set;}
 
+        private Collider _collider;
+
         public ReactiveCommand<DiceAction> OnDiceSelected = new();
 
         private void Start()
         {
             Rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
 
             if (FixedActionsAmount != _diceEdges.Length)
             {
@@ -52,6 +55,18 @@ namespace BKA.Dices
                     OnDiceSelected?.Execute(DiceActions[i]);
                 }
             }
+        }
+
+        public void ActivatePhysicality()
+        {
+            Rigidbody.isKinematic = false;
+            _collider.enabled = true;
+        }
+
+        public void DeactivatePhysicality()
+        {
+            Rigidbody.isKinematic = true;
+            _collider.enabled = false;
         }
     }
 }

@@ -17,6 +17,7 @@ namespace BKA.System.ExtraDirectory
                 new Unit[]
                 {
                     new DemonPaladin(_definitionPool), new DemonPaladin(_definitionPool),
+                    new DemonPaladin(_definitionPool), new DemonPaladin(_definitionPool),
                     new DemonPaladin(_definitionPool)
                 });
         }

@@ -46,13 +46,13 @@ namespace BKA.BattleDirectory.BattleHandlers
             }
         }
 
-        private async UniTaskVoid WaitReadiness(List<DiceObject> diceObjects)
+        private async UniTask WaitReadiness(List<DiceObject> diceObjects)
         {
             await UniTask.Delay(TimeSpan.FromMilliseconds(25));
 
             foreach (var diceObject in diceObjects)
             {
-                await UniTask.WaitUntil(() => diceObject.Rigidbody.velocity.magnitude <= 0.025f);
+                await UniTask.WaitUntil(() => diceObject.Rigidbody.velocity.magnitude <= 0.0001f);
             }
 
             _isDicesReadyToReroll.Value = true;
@@ -65,12 +65,13 @@ namespace BKA.BattleDirectory.BattleHandlers
             _remainRerolls.Value = _totalRerolls;
         }
 
-        public void ForceReroll()
+        public async UniTask ForceAsyncReroll()
         {
             if (!_isDicesReadyToReroll.Value)
                 throw new RerollException();
                 
             _shakeSystem.ShakeObjects(_activeDices);
+            await WaitReadiness(_activeDices);
         }
     }
 }
