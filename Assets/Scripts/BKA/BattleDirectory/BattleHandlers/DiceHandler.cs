@@ -25,12 +25,15 @@ namespace BKA.BattleDirectory.BattleHandlers
 
         public ReadOnlyReactiveProperty<bool> IsDiceHandlerCompleteWork;
 
-        private void Start()
+        private void Awake()
         {
             IsDiceHandlerCompleteWork = _rerollHandler.IsDicesReady
                 .CombineLatest(_diceMovementHandler.IsMovementComplete, (isDicesReady, isMovementComplete) => isDicesReady && isMovementComplete)
                 .ToReadOnlyReactiveProperty();
+        }
 
+        private void Start()
+        {
             _behaviourUploader.OnUploadedBehaviour.Subscribe(value => BindNewDice(value.Item1, value.Item2)).AddTo(this);
         }
 

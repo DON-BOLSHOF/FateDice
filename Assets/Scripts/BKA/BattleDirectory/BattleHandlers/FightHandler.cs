@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BKA.BattleDirectory.BattleSystems;
+using BKA.BattleDirectory.ReadinessObserver;
 using BKA.System;
 using BKA.Units;
 using Cysharp.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace BKA.BattleDirectory.BattleHandlers
         {
             var currentTurn = _turnSystem.TurnState.Value;
             
-            await UniTask.WaitUntil(() => _readinessObserver.IsReadyToBattle.Value);
+            await UniTask.WaitUntil(() => _readinessObserver.IsReady.Value);
 
             await _diceHandler.HandleNextTurn(currentTurn);
         }

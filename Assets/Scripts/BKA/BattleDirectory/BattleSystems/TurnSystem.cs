@@ -1,4 +1,6 @@
-﻿using UniRx;
+﻿using BKA.BattleDirectory.ReadinessObserver;
+using UniRx;
+using Zenject;
 
 namespace BKA.BattleDirectory.BattleSystems
 {
@@ -7,8 +9,13 @@ namespace BKA.BattleDirectory.BattleSystems
         private ReactiveProperty<TurnState> _turnState = new();
         public IReadOnlyReactiveProperty<TurnState> TurnState => _turnState;
 
+        [Inject] private ReadinessToNextTurnObserver _readinessToNext;
+
         private void NextTurn()
         {
+            if(!_readinessToNext.IsReady.Value)
+                return;
+            
             _turnState.Value = _turnState.Value == BattleSystems.TurnState.PartyTurn? BattleSystems.TurnState.EnemyTurn: BattleSystems.TurnState.PartyTurn;
         }
 

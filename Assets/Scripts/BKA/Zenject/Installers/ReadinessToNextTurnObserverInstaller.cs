@@ -1,14 +1,13 @@
 ﻿using BKA.BattleDirectory.ReadinessObserver;
-using BKA.System;
 using Zenject;
 
 namespace BKA.Zenject.Installers
 {
-    public class ReadinessToBattleObserverInstaller : MonoInstaller
+    public class ReadinessToNextTurnObserverInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<ReadinessToBattleObserver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ReadinessToNextTurnObserver>().AsSingle();
         }
     }
 }

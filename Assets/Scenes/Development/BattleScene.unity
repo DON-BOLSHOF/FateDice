@@ -1736,15 +1736,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 42303812}
   - {fileID: 830529259}
+  - {fileID: 199858791}
+  - {fileID: 42303812}
   - {fileID: 1404421268}
   - {fileID: 1681918800}
-  - {fileID: 20645395}
-  - {fileID: 199858791}
-  - {fileID: 665099806}
   - {fileID: 194036857}
+  - {fileID: 20645395}
   - {fileID: 1552309645}
+  - {fileID: 665099806}
+  - {fileID: 714086168}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -1784,6 +1785,7 @@ Transform:
   - {fileID: 199858790}
   - {fileID: 20645394}
   - {fileID: 1552309644}
+  - {fileID: 714086167}
   m_Father: {fileID: 267110840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &645806690
@@ -2127,6 +2129,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _edgeView: {fileID: 0}
+--- !u!1 &714086166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 714086167}
+  - component: {fileID: 714086168}
+  m_Layer: 0
+  m_Name: ReadinessToNextTurnInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &714086167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714086166}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 608970390}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &714086168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714086166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7519567801584d9390879773ae4e0d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &719943706
 PrefabInstance:
   m_ObjectHideFlags: 0
