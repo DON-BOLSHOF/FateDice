@@ -8,7 +8,7 @@ namespace BKA.Zenject.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<ReadinessToBattleObserver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ReadinessToBattleObservable>().AsSingle();
         }
     }
 }

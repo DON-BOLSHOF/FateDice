@@ -1,20 +1,24 @@
-﻿using BKA.Dices;
-using BKA.Dices.Attributes;
-using BKA.UI;
-using BKA.Utils;
+﻿using System;
+using System.Linq;
+using BKA.Dices;
+using BKA.Dices.DiceActions;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace BKA.Units
 {
-    public class UnitBattleBehaviour : IUnitOfBattle
+    public class UnitBattleBehaviour : IUnitOfBattle, IDisposable
     {
         public Unit Unit { get; }
-        public ReactiveCommand OnDead { get; } = new();
-
         public DiceObject DiceObject { get; }
+        public ReactiveCommand OnDead { get; } = new();
+        public DiceAction DiceAction => _diceAction;
         
         private CompositeDisposable _disposable = new();
+
+        private DiceAction _diceAction;
         
         public UnitBattleBehaviour(Unit unit, DiceObject dice)
         {
@@ -22,31 +26,35 @@ namespace BKA.Units
             DiceObject = dice;
 
             Unit.Health.Where(value => value <= 0).Subscribe(_ => OnDead?.Execute()).AddTo(_disposable);
+            
+            dice.UpdateActions(unit.Definition.DiceActions.Select(data => new DiceAction(data)).ToArray());
+            
             DiceObject.OnDiceSelected.Subscribe(PrepareToAct).AddTo(_disposable);
         }
 
-        private void PrepareToAct(DiceAction action)
+        private void PrepareToAct(DiceAction actionData)
         {
-            Debug.Log(action.ID);
+            _diceAction= actionData;
+        }
+
+        public async UniTask Act()
+        {
+            Debug.Log("Act");
+            
+            DiceAction.Act();
+
+            await UniTask.Delay(TimeSpan.FromSeconds(5));
         }
         
-        private void UndoAct()
+        public void UndoAct()
         {
             Debug.Log("Undo");
         }
 
-        ~UnitBattleBehaviour()
+        public void Dispose()
         {
-            _disposable.Dispose();
-            _disposable.Clear();
-
-            _disposable = null;
+            _disposable?.Dispose();
+            OnDead?.Dispose();
         }
-    }
-
-    public enum UnitBattleState
-    {
-        NotReady,
-        Ready
     }
 }

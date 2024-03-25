@@ -7,7 +7,7 @@ namespace BKA.Zenject.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<ReadinessToNextTurnObserver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ReadinessToNextTurnObservable>().AsSingle();
         }
     }
 }

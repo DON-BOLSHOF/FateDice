@@ -1,4 +1,4 @@
-using BKA.Dices.Attributes;
+using BKA.Dices.DiceActions;
 using UnityEngine;
 using NotImplementedException = System.NotImplementedException;
 
@@ -38,7 +38,7 @@ namespace BKA.Dices
             return leftRay || rightRay || middleRay || upRay || downRay;
         }
 
-        public void UpdateAction(DiceAction diceAttribute)
+        public void UpdateAction(DiceActionData diceAttribute)
         {
             _edgeView.sprite = diceAttribute.ActionView;
         }

@@ -1385,6 +1385,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeroPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 8904347891270152195, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
+      propertyPath: _healthWidget
+      value: 
+      objectReference: {fileID: 1240751157118904422}
     - target: {fileID: 8940405829468895878, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1443,6 +1447,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1844307190389467461, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
   m_PrefabInstance: {fileID: 2095729903352338830}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1240751157118904422 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 877515440513937896, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
+  m_PrefabInstance: {fileID: 2095729903352338830}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a30a50cf9144e0804145f3b53ed4cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2603900759291652694
 PrefabInstance:
   m_ObjectHideFlags: 0

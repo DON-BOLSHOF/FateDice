@@ -11,8 +11,6 @@ namespace BKA.Units
         protected abstract ReactiveProperty<int> _health { get; }
         public IReadOnlyReactiveProperty<int> Health => _health;
 
-        public abstract void Execute();
-
         public void ModifyHealth(int value)
         {
             _health.Value += value;

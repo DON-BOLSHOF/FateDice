@@ -31,7 +31,7 @@ namespace BKA.UI
             }
 
             needPanel.gameObject.SetActive(true);
-            needPanel.Fulfill(unitBehaviour.Unit);
+            needPanel.Fulfill(unitBehaviour.Unit, unitBehaviour.DiceObject);
         }
 
         public Vector3[] GetAttributePositionsInWorld()

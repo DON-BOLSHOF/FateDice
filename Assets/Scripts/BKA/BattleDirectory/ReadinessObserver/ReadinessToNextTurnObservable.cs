@@ -6,16 +6,17 @@ using Zenject;
 
 namespace BKA.BattleDirectory.ReadinessObserver
 {
-    public class ReadinessToNextTurnObserver : IReadinessObserver, IInitializable, IDisposable
+    public class ReadinessToNextTurnObservable : IReadinessObservable, IInitializable, IDisposable
     {
         public ReadOnlyReactiveProperty<bool> IsReady { get; private set; }
 
         [Inject] private DiceHandler _diceHandler;
-        
+        [Inject] private FightHandler _fightHandler;
+
         public void Initialize()
         {
-            Debug.Log("Init`");
-            IsReady = _diceHandler.IsDiceHandlerCompleteWork.ToReadOnlyReactiveProperty();
+            IsReady = _diceHandler.IsDiceHandlerCompleteWork.CombineLatest(_fightHandler.IsReady, 
+                (x,y) => x && y).ToReadOnlyReactiveProperty();
         }
 
         public void Dispose()

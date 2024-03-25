@@ -2,7 +2,7 @@
 
 namespace BKA.BattleDirectory.ReadinessObserver
 {
-    public interface IReadinessObserver
+    public interface IReadinessObservable
     {
         ReadOnlyReactiveProperty<bool> IsReady { get; }
     }

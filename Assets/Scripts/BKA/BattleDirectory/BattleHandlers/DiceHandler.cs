@@ -67,6 +67,11 @@ namespace BKA.BattleDirectory.BattleHandlers
             await _diceMovementHandler.MoveDicesFromBase(activeDices);
             await _rerollHandler.ForceAsyncReroll();
             await _diceMovementHandler.MoveDicesToBase(activeDices);
+            
+            foreach (var activeDice in activeDices)
+            {
+                activeDice.DiceObject.SelectDice();
+            }
         }
 
         private void ChangeDices(TurnState turnState)

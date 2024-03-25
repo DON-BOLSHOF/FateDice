@@ -9,7 +9,7 @@ namespace BKA.BattleDirectory.BattleSystems
         private ReactiveProperty<TurnState> _turnState = new();
         public IReadOnlyReactiveProperty<TurnState> TurnState => _turnState;
 
-        [Inject] private ReadinessToNextTurnObserver _readinessToNext;
+        [Inject] private ReadinessToNextTurnObservable _readinessToNext;
 
         private void NextTurn()
         {

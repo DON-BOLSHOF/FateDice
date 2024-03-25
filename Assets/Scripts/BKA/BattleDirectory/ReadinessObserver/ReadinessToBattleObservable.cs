@@ -5,7 +5,7 @@ using Zenject;
 
 namespace BKA.BattleDirectory.ReadinessObserver
 {
-    public class ReadinessToBattleObserver: IReadinessObserver, IInitializable, IDisposable
+    public class ReadinessToBattleObservable: IReadinessObservable, IInitializable, IDisposable
     {
         public ReadOnlyReactiveProperty<bool> IsReady { get; private set; }
 

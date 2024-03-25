@@ -1,5 +1,5 @@
 ﻿using System;
-using BKA.Dices.Attributes;
+using BKA.Dices.DiceActions;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,12 +11,16 @@ namespace BKA.Dices
     {
         public abstract Rigidbody Rigidbody { get; protected set; }
         public abstract DiceAction[] DiceActions { get; protected set; }
+
+        public ReactiveCommand<DiceAction> OnDiceSelected = new();
+        public ReactiveCommand OnDiceUnSelected = new();
+
         protected abstract int FixedActionsAmount { get; }
-        protected abstract DiceEdge[] _diceEdges { get; set;}
+        protected abstract DiceEdge[] _diceEdges { get; set; }
 
         private Collider _collider;
 
-        public ReactiveCommand<DiceAction> OnDiceSelected = new();
+        private bool _isSelected = false;
 
         private void Start()
         {
@@ -29,6 +33,40 @@ namespace BKA.Dices
             }
         }
 
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            SelectDice();
+        }
+
+        public void SelectDice()
+        {
+            if(_isSelected)
+                return;
+            
+            for (int i = 0; i < _diceEdges.Length; i++)
+            {
+                if (_diceEdges[i].CheckNotCrossEnvironment())
+                {
+                    Debug.Log(_diceEdges[i].name);
+
+                    OnDiceSelected?.Execute(DiceActions[i]);
+                }
+            }
+
+            _isSelected = true;
+        }
+
+        public void TryUnSelect()
+        {
+            if (!_isSelected)
+            {
+                return;
+            }
+
+            OnDiceUnSelected?.Execute();
+            _isSelected = false;
+        }
+
         public void UpdateActions(DiceAction[] diceAttributes)
         {
             if (diceAttributes.Length != FixedActionsAmount)
@@ -37,23 +75,10 @@ namespace BKA.Dices
             }
 
             DiceActions = diceAttributes;
-            
+
             for (var i = 0; i < _diceEdges.Length; i++)
             {
-                _diceEdges[i].UpdateAction(diceAttributes[i]);
-            }
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            for (int i = 0; i < _diceEdges.Length; i++)
-            {
-                if (_diceEdges[i].CheckNotCrossEnvironment())
-                {
-                    Debug.Log(_diceEdges[i].name);    
-                    
-                    OnDiceSelected?.Execute(DiceActions[i]);
-                }
+                _diceEdges[i].UpdateAction(diceAttributes[i].DiceActionData);
             }
         }
 

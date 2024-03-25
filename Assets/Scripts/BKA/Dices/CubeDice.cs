@@ -1,5 +1,5 @@
 ﻿using System;
-using BKA.Dices.Attributes;
+using BKA.Dices.DiceActions;
 using UnityEngine;
 
 namespace BKA.Dices
