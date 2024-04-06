@@ -9,7 +9,7 @@ namespace BKA.Units
 
         public DemonPaladin(DefinitionPool definitionPool)
         {
-           Definition = definitionPool.GetFromPool("DemonPaladinDefinition");
+           Definition = definitionPool.GetFromPool("DemonPaladin");
            _health.Value = Definition.Health;
         }
     }

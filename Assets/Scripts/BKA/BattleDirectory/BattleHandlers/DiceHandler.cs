@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using BKA.BattleDirectory.BattleSystems;
 using BKA.Dices;
 using BKA.System.Exceptions;
@@ -18,6 +20,7 @@ namespace BKA.BattleDirectory.BattleHandlers
         private readonly List<UnitDice> _enemyDices = new();
 
         [SerializeField] private RerollHandler _rerollHandler;
+        [SerializeField] private ReadyHandler _readyHandler;
         [SerializeField] private DiceMovementHandler _diceMovementHandler;
 
         [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
@@ -28,13 +31,26 @@ namespace BKA.BattleDirectory.BattleHandlers
         private void Awake()
         {
             IsDiceHandlerCompleteWork = _rerollHandler.IsDicesReady
-                .CombineLatest(_diceMovementHandler.IsMovementComplete, (isDicesReady, isMovementComplete) => isDicesReady && isMovementComplete)
+                .CombineLatest(_diceMovementHandler.IsMovementComplete,
+                    (isDicesReady, isMovementComplete) => isDicesReady && isMovementComplete)
                 .ToReadOnlyReactiveProperty();
+
+            _readyHandler.OnReady.Subscribe(_ => OnReadyClicked().Forget()).AddTo(this);
+        }
+
+        private async UniTask OnReadyClicked()
+        {
+            await _diceMovementHandler.MoveDicesToBase(_partyDices);
+            foreach (var activeDice in _partyDices)
+            {
+                activeDice.DiceObject.SelectDice();
+            }
         }
 
         private void Start()
         {
-            _behaviourUploader.OnUploadedBehaviour.Subscribe(value => BindNewDice(value.Item1, value.Item2)).AddTo(this);
+            _behaviourUploader.OnUploadedBehaviour.Subscribe(value => BindNewDice(value.Item1, value.Item2))
+                .AddTo(this);
         }
 
         private void BindNewDice(IUnitOfBattle unitOfBattle, UnitSide side)
@@ -42,17 +58,17 @@ namespace BKA.BattleDirectory.BattleHandlers
             switch (side)
             {
                 case UnitSide.Party:
-                    _partyDices.Add(new UnitDice{DiceObject = unitOfBattle.DiceObject});
+                    _partyDices.Add(new UnitDice { DiceObject = unitOfBattle.DiceObject });
                     break;
                 case UnitSide.Enemy:
-                    _enemyDices.Add(new UnitDice{DiceObject = unitOfBattle.DiceObject});
+                    _enemyDices.Add(new UnitDice { DiceObject = unitOfBattle.DiceObject });
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(side), side, null);
             }
         }
 
-        public async UniTask HandleNextTurn(TurnState currentTurn)
+        public async UniTask HandleNextTurn(TurnState currentTurn, CancellationToken token)
         {
             List<UnitDice> activeDices = currentTurn switch
             {
@@ -60,17 +76,30 @@ namespace BKA.BattleDirectory.BattleHandlers
                 TurnState.EnemyTurn => _enemyDices,
                 _ => throw new ArgumentOutOfRangeException(nameof(currentTurn), currentTurn, null)
             };
-            
+
             ChangeDices(currentTurn);
-            await UniTask.Yield();
+            await UniTask.Yield(cancellationToken: token);
             GenerateRandomPositionsOnBoard(activeDices, currentTurn);
-            await _diceMovementHandler.MoveDicesFromBase(activeDices);
-            await _rerollHandler.ForceAsyncReroll();
-            await _diceMovementHandler.MoveDicesToBase(activeDices);
-            
-            foreach (var activeDice in activeDices)
+            await _diceMovementHandler.MoveDicesFromBase(activeDices, token);
+            await _rerollHandler.ForceAsyncReroll(token);
+
+            switch (currentTurn)
             {
-                activeDice.DiceObject.SelectDice();
+                case TurnState.PartyTurn:
+                    await UniTask.WhenAll(activeDices.Select(dice =>
+                        dice.DiceObject.IsSelected.Where(value => value)
+                            .ToUniTask(useFirstValue: true, cancellationToken: token)));
+                    break;
+                case TurnState.EnemyTurn:
+                    await _diceMovementHandler.MoveDicesToBase(activeDices, token);
+                    foreach (var activeDice in activeDices)
+                    {
+                        activeDice.DiceObject.SelectDice();
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(currentTurn), currentTurn, null);
             }
         }
 
@@ -81,11 +110,13 @@ namespace BKA.BattleDirectory.BattleHandlers
                 case TurnState.PartyTurn:
                     foreach (var unitDice in _enemyDices)
                     {
+                        unitDice.DiceObject.TryUnSelect();
                         unitDice.DiceObject.gameObject.SetActive(false);
                     }
 
                     foreach (var diceObject in _partyDices)
                     {
+                        diceObject.DiceObject.TryUnSelect();
                         diceObject.DiceObject.gameObject.SetActive(true);
                     }
 
@@ -94,11 +125,13 @@ namespace BKA.BattleDirectory.BattleHandlers
                 case TurnState.EnemyTurn:
                     foreach (var diceObject in _enemyDices)
                     {
+                        diceObject.DiceObject.TryUnSelect();
                         diceObject.DiceObject.gameObject.SetActive(true);
                     }
 
                     foreach (var diceObject in _partyDices)
                     {
+                        diceObject.DiceObject.TryUnSelect();
                         diceObject.DiceObject.gameObject.SetActive(false);
                     }
 
@@ -116,7 +149,7 @@ namespace BKA.BattleDirectory.BattleHandlers
             }
         }
 
-        public void SynchronizeDices(Vector3[] partyDicesBasePositions,Vector3[] enemyDicesBasePositions)
+        public void SynchronizeDices(Vector3[] partyDicesBasePositions, Vector3[] enemyDicesBasePositions)
         {
             if (partyDicesBasePositions.Count() != _partyDices.Count ||
                 enemyDicesBasePositions.Count() != _enemyDices.Count)
@@ -126,7 +159,7 @@ namespace BKA.BattleDirectory.BattleHandlers
             {
                 _partyDices[i].BaseUnitPosition = partyDicesBasePositions[i];
             }
-            
+
             for (var i = 0; i < enemyDicesBasePositions.Length; i++)
             {
                 _enemyDices[i].BaseUnitPosition = enemyDicesBasePositions[i];

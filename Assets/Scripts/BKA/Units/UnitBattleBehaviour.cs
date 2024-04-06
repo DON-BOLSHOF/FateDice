@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using BKA.Dices;
 using BKA.Dices.DiceActions;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace BKA.Units
 {
@@ -16,10 +16,12 @@ namespace BKA.Units
         public ReactiveCommand OnDead { get; } = new();
         public DiceAction DiceAction => _diceAction;
         
-        private CompositeDisposable _disposable = new();
-
         private DiceAction _diceAction;
         
+        private CompositeDisposable _disposable = new();
+
+        public readonly ReactiveProperty<bool> IsReadyToAct = new(false);
+
         public UnitBattleBehaviour(Unit unit, DiceObject dice)
         {
             Unit = unit;
@@ -35,20 +37,26 @@ namespace BKA.Units
         private void PrepareToAct(DiceAction actionData)
         {
             _diceAction= actionData;
+            IsReadyToAct.Value = true;
         }
 
-        public async UniTask Act()
+        public void UnPrepareToAct()
         {
-            Debug.Log("Act");
-            
+            IsReadyToAct.Value = false;
+        }
+
+        public async UniTask Act(CancellationToken token)
+        {
             DiceAction.Act();
 
-            await UniTask.Delay(TimeSpan.FromSeconds(5));
+            //await UniTask.Delay(TimeSpan.FromSeconds(5));
+
+            IsReadyToAct.Value = false;
         }
-        
+
         public void UndoAct()
         {
-            Debug.Log("Undo");
+            IsReadyToAct.Value = true;
         }
 
         public void Dispose()

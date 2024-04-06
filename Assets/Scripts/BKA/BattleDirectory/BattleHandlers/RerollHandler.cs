@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using BKA.BattleDirectory.BattleSystems;
 using BKA.Dices;
 using BKA.System.Exceptions;
@@ -24,10 +25,12 @@ namespace BKA.BattleDirectory.BattleHandlers
         private ReactiveProperty<bool> _isDicesReadyToReroll = new(true);
         public IReadOnlyReactiveProperty<bool> IsDicesReady => _isDicesReadyToReroll;
 
+        private CancellationTokenSource _handlerSource = new();
+
         private void Start()
         {
             _isDicesReadyToReroll.Where(value => !value).Subscribe(_ =>
-                    WaitReadiness(_activeDices).Forget()).AddTo(this);
+                    WaitReadiness(_activeDices, _handlerSource.Token).Forget()).AddTo(this);
 
             _rerollWidget.DynamicInit(_remainRerolls, _totalRerolls);
 
@@ -46,13 +49,13 @@ namespace BKA.BattleDirectory.BattleHandlers
             }
         }
 
-        private async UniTask WaitReadiness(List<DiceObject> diceObjects)
+        private async UniTask WaitReadiness(List<DiceObject> diceObjects, CancellationToken token)
         {
             await UniTask.Delay(TimeSpan.FromMilliseconds(25));
 
             foreach (var diceObject in diceObjects)
             {
-                await UniTask.WaitUntil(() => diceObject.Rigidbody.velocity.magnitude <= 0.0001f);
+                await UniTask.WaitUntil(() => diceObject.Rigidbody.velocity.magnitude <= 0.0001f, cancellationToken:token);
             }
 
             _isDicesReadyToReroll.Value = true;
@@ -65,13 +68,21 @@ namespace BKA.BattleDirectory.BattleHandlers
             _remainRerolls.Value = _totalRerolls;
         }
 
-        public async UniTask ForceAsyncReroll()
+        public async UniTask ForceAsyncReroll(CancellationToken token)
         {
             if (!_isDicesReadyToReroll.Value)
                 throw new RerollException();
                 
             _shakeSystem.ShakeObjects(_activeDices);
-            await WaitReadiness(_activeDices);
+            await WaitReadiness(_activeDices, token);
+        }
+
+        public void OnDestroy()
+        {
+            _remainRerolls?.Dispose();
+            _isDicesReadyToReroll?.Dispose();
+            _handlerSource?.Cancel();
+            _handlerSource?.Dispose();
         }
     }
 }

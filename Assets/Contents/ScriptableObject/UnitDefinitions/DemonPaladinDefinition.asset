@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e7b05fb2f8d4759a4e5a283ecfe10a7, type: 3}
   m_Name: DemonPaladinDefinition
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: DemonPaladinDefinition
+  <ID>k__BackingField: DemonPaladin
   <DiceActions>k__BackingField:
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}

@@ -16,6 +16,8 @@ namespace BKA.System
     {
         [Inject] private CharacterBoarderHandler _boarderHandler;
         [Inject] private DiceHandler _diceHandler;
+
+        [Inject] private BattleEntryPoint _battleEntryPoint;
         
         public ReadOnlyReactiveProperty<bool> IsSynchrolized;
 
@@ -24,7 +26,8 @@ namespace BKA.System
 
         public void Initialize()
         {
-            IsSynchrolized = _boarderHandler.IsSynchrolized.ToReadOnlyReactiveProperty();//Потом добавим еще
+            IsSynchrolized = _boarderHandler.IsSynchrolized.CombineLatest(_battleEntryPoint.IsReadyAbsolutely, 
+                (x,y) => x && y).ToReadOnlyReactiveProperty();//Потом добавим еще
 
             _boarderHandler.IsSynchrolized.Where(value => !value).Subscribe(_ =>
             {

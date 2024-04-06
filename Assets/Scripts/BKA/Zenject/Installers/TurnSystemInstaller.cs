@@ -8,7 +8,7 @@ namespace BKA.Zenject.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<TurnSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<TurnSystem>().AsSingle();
         }
     }
 }

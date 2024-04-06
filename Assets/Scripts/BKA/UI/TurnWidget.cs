@@ -1,21 +1,22 @@
-﻿using BKA.BattleDirectory;
-using BKA.BattleDirectory.BattleSystems;
+﻿using BKA.BattleDirectory.BattleSystems;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using NotImplementedException = System.NotImplementedException;
 
 namespace BKA.UI
 {
+    [RequireComponent(typeof(Button))]
     public class TurnWidget : MonoBehaviour, ITurnSystemVisitor
     {
         [Inject] private TurnSystem _turnSystem;
 
-        [SerializeField] private Button _turnButton;
+        private Button _turnButton;
 
         private void Start()
         {
+            _turnButton = GetComponent<Button>();
+            
             _turnButton.OnClickAsObservable().Subscribe(_ => Accept(_turnSystem)).AddTo(this);
         }
 

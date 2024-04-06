@@ -1,10 +1,11 @@
-﻿using BKA.Dices;
+﻿using System;
+using BKA.Units;
 using BKA.Utils;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Unit = BKA.Units.Unit;
 
 namespace BKA.UI
 {
@@ -12,30 +13,79 @@ namespace BKA.UI
     {
         [SerializeField] private Image _portrait;
         [SerializeField] private Image _attribute;
+        [SerializeField] private TextMeshProUGUI _name;
         [SerializeField] private HealthWidget _healthWidget;
+        [SerializeField] private Transform _view;
 
-        private DiceObject _diceObject;
-        
-        public void Fulfill(Unit unit, DiceObject dice)
+        public ReactiveCommand<UnitBattleBehaviour> OnPanelClicked = new();
+        public UnitBattleBehaviour UnitBattleBehaviour => _unitBattleBehaviour;
+
+        private UnitBattleBehaviour _unitBattleBehaviour;
+        private Vector3 _viewBasePosition;
+
+        private void Start()
         {
-            _portrait.sprite = unit.Definition.UnitIcon;
+            _viewBasePosition = _view.localPosition;
+        }
 
-            dice.OnDiceSelected.Subscribe(diceAction =>
+        public void Fulfill(UnitBattleBehaviour unitBehaviour)
+        {
+            _portrait.sprite = unitBehaviour.Unit.Definition.UnitIcon;
+
+            _name.text = unitBehaviour.Unit.Definition.ID;
+
+            unitBehaviour.DiceObject.OnDiceSelected.Subscribe(diceAction =>
             {
                 _attribute.sprite = diceAction.DiceActionData.ActionView;
             }).AddTo(this);
 
-            unit.Health.Subscribe(value => _healthWidget.SetHealth(value)).AddTo(this);
+            unitBehaviour.Unit.Health.Subscribe(value => _healthWidget.SetHealth(value)).AddTo(this);
+
+            unitBehaviour.IsReadyToAct.Subscribe(isReady =>
+            {
+                if (isReady)
+                {
+                    OnReadyToAct();
+                }
+                else
+                {
+                    OnUnReadyToAct();
+                }
+            }).AddTo(this);
+
+            _unitBattleBehaviour = unitBehaviour;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _diceObject.TryUnSelect();
+            Debug.Log("Clicked");
+            OnPanelClicked?.Execute(_unitBattleBehaviour);
+            //_diceObject.TryUnSelect();
         }
 
         public Vector3 GetAttributePositionInWorldSpace()
         {
             return UIToWorldConverter.Convert(_attribute.GetComponent<RectTransform>()) + new Vector3(0, 0.5f, 0);
+        }
+
+        private void OnReadyToAct()
+        {
+            transform.localScale = new Vector3(1.25f, 1.25f, 1f);
+        }
+
+        private void OnUnReadyToAct()
+        {
+            transform.localScale = new Vector3(1, 1, 1f);
+        }
+
+        public void SetActing()
+        {
+            _view.localPosition += new Vector3(50f, 0, 0);
+        }
+
+        public void SetUnActing()
+        {
+            _view.localPosition = _viewBasePosition;
         }
     }
 }

@@ -24,6 +24,9 @@ namespace BKA.UI
 
             for (int i = value; i < _healthPoints.Length; i++)
             {
+                if(i <= 0)
+                    return;
+                
                 _healthPoints[i].gameObject.SetActive(false);
             }
         }

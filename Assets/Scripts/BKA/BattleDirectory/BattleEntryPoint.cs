@@ -1,18 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BKA.BattleDirectory.BattleHandlers;
+using BKA.BattleDirectory.ReadinessObserver;
 using BKA.BootsTraps;
 using BKA.Dices;
+using BKA.System.Exceptions;
 using BKA.System.ExtraDirectory;
 using BKA.UI;
 using BKA.Units;
 using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using Zenject;
+using Unit = BKA.Units.Unit;
 
 namespace BKA.BattleDirectory
 {
-    public class BattleEntryPoint : MonoBehaviour
+    public class BattleEntryPoint : MonoBehaviour, IReadinessObservable
     {
         [SerializeField] private CharacterBoarderHandler _characterBoarderHandler;
         [SerializeField] private FightHandler _fightHandler;
@@ -26,6 +31,10 @@ namespace BKA.BattleDirectory
         [Inject] private DiceFactory _diceFactory;
 
         [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
+
+        private ReactiveProperty<bool> _isReady = new(false);
+
+        public ReadOnlyReactiveProperty<bool> IsReadyAbsolutely => _isReady.ToReadOnlyReactiveProperty();
 
         private async void Start()
         {
@@ -45,7 +54,9 @@ namespace BKA.BattleDirectory
                 throw new BootsTrapException();
             }
 #endif
+            await UniTask.DelayFrame(10);
             PrepareData(out var partyBattleBehaviours, out var enemyBattleBehaviours);
+            _isReady.Value = true;
         }
 
         private void PrepareData(out List<UnitBattleBehaviour> partyBattleBehaviours,

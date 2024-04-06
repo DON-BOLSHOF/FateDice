@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using BKA.Dices;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -13,7 +14,7 @@ namespace BKA.BattleDirectory.BattleHandlers
         private ReactiveProperty<bool> _isMovementComplete = new(true);
         public IReadOnlyReactiveProperty<bool> IsMovementComplete => _isMovementComplete;
 
-        private async UniTask MoveDice(DiceObject dice, Vector3 position)
+        private async UniTask MoveDice(DiceObject dice, Vector3 position, CancellationToken token)
         {
             /*
             var euler = dice.transform.localEulerAngles;
@@ -37,16 +38,16 @@ namespace BKA.BattleDirectory.BattleHandlers
             var sequence = DOTween.Sequence().Append(dice.transform.DOMove(position, 0.65f))
                 /*.Join(dice.transform.DOLocalRotate(test,0.65f))*/;
 
-            await sequence;
+            await sequence.ToUniTask(cancellationToken: token);
         }
 
-        public async UniTask MoveDicesToBase(List<UnitDice> activeDices)
+        public async UniTask MoveDicesToBase(List<UnitDice> activeDices, CancellationToken token = default)
         {
             _isMovementComplete.Value = false;
             
             activeDices.ForEach(dice => dice.DiceObject.DeactivatePhysicality());
             
-            var uniTasks = activeDices.Select(unitDice => MoveDice(unitDice.DiceObject, unitDice.BaseUnitPosition));
+            var uniTasks = activeDices.Select(unitDice => MoveDice(unitDice.DiceObject, unitDice.BaseUnitPosition, token));
             await UniTask.WhenAll(uniTasks);
             
             activeDices.ForEach(dice => dice.DiceObject.ActivatePhysicality());
@@ -54,7 +55,7 @@ namespace BKA.BattleDirectory.BattleHandlers
             _isMovementComplete.Value = true;
         } 
         
-        public async UniTask MoveDicesFromBase(List<UnitDice> activeDices)
+        public async UniTask MoveDicesFromBase(List<UnitDice> activeDices, CancellationToken token = default)
         {
             _isMovementComplete.Value = false;
             
@@ -64,7 +65,7 @@ namespace BKA.BattleDirectory.BattleHandlers
                 dice.DiceObject.transform.position = dice.BaseUnitPosition;
             });
             
-            var uniTasks = activeDices.Select(unitDice => MoveDice(unitDice.DiceObject, unitDice.PositionInBoard));
+            var uniTasks = activeDices.Select(unitDice => MoveDice(unitDice.DiceObject, unitDice.PositionInBoard, token));
             await UniTask.WhenAll(uniTasks);
             
             activeDices.ForEach(dice => dice.DiceObject.ActivatePhysicality());

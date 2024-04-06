@@ -7,18 +7,18 @@ namespace BKA.BattleDirectory.ReadinessObserver
 {
     public class ReadinessToBattleObservable: IReadinessObservable, IInitializable, IDisposable
     {
-        public ReadOnlyReactiveProperty<bool> IsReady { get; private set; }
+        public ReadOnlyReactiveProperty<bool> IsReadyAbsolutely { get; private set; }
 
         [Inject] private Synchronizer _synchronizer;
         
         public void Initialize()
         {
-            IsReady = _synchronizer.IsSynchrolized.ToReadOnlyReactiveProperty();//Потом расширится думаю
+            IsReadyAbsolutely = _synchronizer.IsSynchrolized.ToReadOnlyReactiveProperty();//Потом расширится думаю
         }
 
         public void Dispose()
         {
-            IsReady?.Dispose();
+            IsReadyAbsolutely?.Dispose();
         }
     }
 }
