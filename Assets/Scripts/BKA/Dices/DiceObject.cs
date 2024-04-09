@@ -12,8 +12,8 @@ namespace BKA.Dices
         public abstract Rigidbody Rigidbody { get; protected set; }
         public abstract DiceAction[] DiceActions { get; protected set; }
 
-        public ReactiveCommand<DiceAction> OnDiceSelected = new();
-        public ReactiveCommand OnDiceUnSelected = new();
+        public ReactiveCommand<DiceAction> OnDiceReadyToAct = new();
+        public ReactiveCommand OnDiceUnReadyToAct = new();
 
         public ReadOnlyReactiveProperty<bool> IsSelected => _isSelected.ToReadOnlyReactiveProperty();
 
@@ -22,7 +22,7 @@ namespace BKA.Dices
 
         private Collider _collider;
 
-        private ReactiveProperty<bool> _isSelected = new (false);
+        private ReactiveProperty<bool> _isSelected = new(true);
 
         private void Awake()
         {
@@ -42,29 +42,28 @@ namespace BKA.Dices
 
         public void SelectDice()
         {
-            /*if(_isSelected)
-                return;*/
-            
-            for (int i = 0; i < _diceEdges.Length; i++)
-            {
-                if (_diceEdges[i].CheckNotCrossEnvironment())
-                {
-                    OnDiceSelected?.Execute(DiceActions[i]);
-                }
-            }
-
             _isSelected.Value = true;
         }
 
-        public void TryUnSelect()
+        public void UnSelectDice()
         {
-            /*if (!_isSelected)
-            {
-                return;
-            }*/
-
-            OnDiceUnSelected?.Execute();
             _isSelected.Value = false;
+        }
+
+        public void SetReadyToAct()
+        {
+            for (var i = 0; i < _diceEdges.Length; i++)
+            {
+                if (_diceEdges[i].CheckNotCrossEnvironment())
+                {
+                    OnDiceReadyToAct?.Execute(DiceActions[i]);
+                }
+            }
+        }
+
+        public void SetUnReadyToAct()
+        {
+            OnDiceUnReadyToAct?.Execute();
         }
 
         public void UpdateActions(DiceAction[] diceAttributes)

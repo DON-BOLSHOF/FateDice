@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using BKA.BattleDirectory.BattleSystems;
 using BKA.Dices;
 using BKA.System.Exceptions;
@@ -21,30 +20,52 @@ namespace BKA.BattleDirectory.BattleHandlers
 
         [SerializeField] private RerollHandler _rerollHandler;
         [SerializeField] private ReadyHandler _readyHandler;
+        [SerializeField] private UndoHandler _undoHandler;
         [SerializeField] private DiceMovementHandler _diceMovementHandler;
 
         [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
         [Inject] private Boarder _boarder;
 
+        private ReactiveProperty<bool> _isDiceTurnEnd = new();
+
+        private CancellationTokenSource _handlerSource = new();
+        
         public ReadOnlyReactiveProperty<bool> IsDiceHandlerCompleteWork;
 
         private void Awake()
         {
             IsDiceHandlerCompleteWork = _rerollHandler.IsDicesReady
-                .CombineLatest(_diceMovementHandler.IsMovementComplete,
-                    (isDicesReady, isMovementComplete) => isDicesReady && isMovementComplete)
+                .CombineLatest(_diceMovementHandler.IsMovementComplete, _isDiceTurnEnd,
+                    (isDicesReady, isMovementComplete, isTurnEnd) => isDicesReady && isMovementComplete && isTurnEnd)
                 .ToReadOnlyReactiveProperty();
 
-            _readyHandler.OnReady.Subscribe(_ => OnReadyClicked().Forget()).AddTo(this);
+            _readyHandler.OnReady.Subscribe(_ => OnReadyClicked()).AddTo(this);
+            _undoHandler.OnUndo.Subscribe(_ => OnUndoClicked().Forget()).AddTo(this);
         }
 
-        private async UniTask OnReadyClicked()
+        private void OnReadyClicked()
         {
-            await _diceMovementHandler.MoveDicesToBase(_partyDices);
             foreach (var activeDice in _partyDices)
             {
                 activeDice.DiceObject.SelectDice();
             }
+        }
+
+        private async UniTask OnUndoClicked()
+        {
+            _handlerSource?.Cancel();
+            _handlerSource = new();
+            
+            foreach (var activeDice in _partyDices)
+            {
+                activeDice.DiceObject.UnSelectDice();
+            }
+
+            _isDiceTurnEnd.Value = false;
+
+            await CharactersTurn(TurnState.PartyTurn, _handlerSource.Token, _partyDices);
+            
+            _isDiceTurnEnd.Value = true;
         }
 
         private void Start()
@@ -55,21 +76,55 @@ namespace BKA.BattleDirectory.BattleHandlers
 
         private void BindNewDice(IUnitOfBattle unitOfBattle, UnitSide side)
         {
+            var unitDice = new UnitDice { DiceObject = unitOfBattle.DiceObject, IsMoving = new() };
             switch (side)
             {
                 case UnitSide.Party:
-                    _partyDices.Add(new UnitDice { DiceObject = unitOfBattle.DiceObject });
+                    _partyDices.Add(unitDice);
+                    unitOfBattle.DiceObject.IsSelected.Skip(1)
+                        .Subscribe(value => OnSelectedChanged(unitDice, value).Forget()).AddTo(this);
                     break;
                 case UnitSide.Enemy:
-                    _enemyDices.Add(new UnitDice { DiceObject = unitOfBattle.DiceObject });
+                    _enemyDices.Add(unitDice);
+                    unitOfBattle.DiceObject.IsSelected.Skip(1)
+                        .Subscribe(value => OnSelectedChanged(unitDice, value).Forget()).AddTo(this);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(side), side, null);
             }
         }
 
+        private async UniTask OnSelectedChanged(UnitDice unitDice, bool value)
+        {
+            unitDice.DiceCancellationTokenSource?.Cancel();
+
+            unitDice.DiceCancellationTokenSource = new();
+
+            if (value)
+            {
+                unitDice.IsMoving.Value = true;
+
+                await _diceMovementHandler.MoveDiceToBase(unitDice, token: unitDice.DiceCancellationTokenSource.Token);
+                unitDice.DiceObject.SetReadyToAct();
+
+                unitDice.IsMoving.Value = false;
+            }
+            else
+            {
+                unitDice.IsMoving.Value = true;
+
+                unitDice.DiceObject.SetUnReadyToAct();
+                await _diceMovementHandler.MoveDiceToPositionInBoard(unitDice,
+                    token: unitDice.DiceCancellationTokenSource.Token);
+
+                unitDice.IsMoving.Value = false;
+            }
+        }
+
         public async UniTask HandleNextTurn(TurnState currentTurn, CancellationToken token)
         {
+            _isDiceTurnEnd.Value = false;
+
             List<UnitDice> activeDices = currentTurn switch
             {
                 TurnState.PartyTurn => _partyDices,
@@ -80,18 +135,43 @@ namespace BKA.BattleDirectory.BattleHandlers
             ChangeDices(currentTurn);
             await UniTask.Yield(cancellationToken: token);
             GenerateRandomPositionsOnBoard(activeDices, currentTurn);
-            await _diceMovementHandler.MoveDicesFromBase(activeDices, token);
+
+            foreach (var activeDice in activeDices)
+            {
+                activeDice.DiceObject.UnSelectDice();
+            }
+
+            await UniTask.Yield(token);
+
+            await UniTask.WhenAll(activeDices.Select(dice => dice.IsMoving.Where(value => !value)
+                .ToUniTask(useFirstValue: true, cancellationToken: token)));
+
             await _rerollHandler.ForceAsyncReroll(token);
 
+            await CharactersTurn(currentTurn, token, activeDices);
+
+            _isDiceTurnEnd.Value = true;
+        }
+
+        private async UniTask CharactersTurn(TurnState currentTurn, CancellationToken token, List<UnitDice> activeDices)
+        {
             switch (currentTurn)
             {
                 case TurnState.PartyTurn:
-                    await UniTask.WhenAll(activeDices.Select(dice =>
-                        dice.DiceObject.IsSelected.Where(value => value)
-                            .ToUniTask(useFirstValue: true, cancellationToken: token)));
+                    await UniTask.WaitUntil( () => activeDices.Count(activeDice => 
+                        activeDice.DiceObject.IsSelected.Value) == activeDices.Count, cancellationToken: token);
+
+                    await UniTask.WhenAll(activeDices.Select(dice => dice.IsMoving.Where(value => !value)
+                        .ToUniTask(useFirstValue: true, cancellationToken: token)));
                     break;
                 case TurnState.EnemyTurn:
-                    await _diceMovementHandler.MoveDicesToBase(activeDices, token);
+                    foreach (var activeDice in activeDices)
+                    {
+                        activeDice.DiceObject.SelectDice();
+                    }
+
+                    await UniTask.WhenAll(activeDices.Select(dice => dice.IsMoving.Where(value => !value)
+                        .ToUniTask(useFirstValue: true, cancellationToken: token)));
                     foreach (var activeDice in activeDices)
                     {
                         activeDice.DiceObject.SelectDice();
@@ -110,13 +190,11 @@ namespace BKA.BattleDirectory.BattleHandlers
                 case TurnState.PartyTurn:
                     foreach (var unitDice in _enemyDices)
                     {
-                        unitDice.DiceObject.TryUnSelect();
                         unitDice.DiceObject.gameObject.SetActive(false);
                     }
 
                     foreach (var diceObject in _partyDices)
                     {
-                        diceObject.DiceObject.TryUnSelect();
                         diceObject.DiceObject.gameObject.SetActive(true);
                     }
 
@@ -125,13 +203,11 @@ namespace BKA.BattleDirectory.BattleHandlers
                 case TurnState.EnemyTurn:
                     foreach (var diceObject in _enemyDices)
                     {
-                        diceObject.DiceObject.TryUnSelect();
                         diceObject.DiceObject.gameObject.SetActive(true);
                     }
 
                     foreach (var diceObject in _partyDices)
                     {
-                        diceObject.DiceObject.TryUnSelect();
                         diceObject.DiceObject.gameObject.SetActive(false);
                     }
 
@@ -172,5 +248,7 @@ namespace BKA.BattleDirectory.BattleHandlers
         public Vector3 PositionInBoard;
         public Vector3 BaseUnitPosition;
         public DiceObject DiceObject;
+        public CancellationTokenSource DiceCancellationTokenSource;
+        public ReactiveProperty<bool> IsMoving;
     }
 }

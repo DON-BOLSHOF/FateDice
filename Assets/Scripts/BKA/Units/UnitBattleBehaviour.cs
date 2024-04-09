@@ -5,7 +5,6 @@ using BKA.Dices;
 using BKA.Dices.DiceActions;
 using Cysharp.Threading.Tasks;
 using UniRx;
-using UnityEngine;
 
 namespace BKA.Units
 {
@@ -21,6 +20,7 @@ namespace BKA.Units
         private CompositeDisposable _disposable = new();
 
         public readonly ReactiveProperty<bool> IsReadyToAct = new(false);
+        public readonly ReactiveProperty<bool> IsActed = new(false);
 
         public UnitBattleBehaviour(Unit unit, DiceObject dice)
         {
@@ -31,31 +31,36 @@ namespace BKA.Units
             
             dice.UpdateActions(unit.Definition.DiceActions.Select(data => new DiceAction(data)).ToArray());
             
-            DiceObject.OnDiceSelected.Subscribe(PrepareToAct).AddTo(_disposable);
+            DiceObject.OnDiceReadyToAct.Subscribe(PrepareToAct).AddTo(_disposable);
+            DiceObject.OnDiceUnReadyToAct.Subscribe(_ => UnPrepareToAct()).AddTo(_disposable);
         }
 
         private void PrepareToAct(DiceAction actionData)
         {
             _diceAction= actionData;
             IsReadyToAct.Value = true;
+            IsActed.Value = false;
         }
 
         public void UnPrepareToAct()
         {
+            _diceAction = null;
             IsReadyToAct.Value = false;
         }
 
         public async UniTask Act(CancellationToken token)
         {
-            DiceAction.Act();
+            _diceAction.Act();
 
             //await UniTask.Delay(TimeSpan.FromSeconds(5));
 
+            IsActed.Value = true;
             IsReadyToAct.Value = false;
         }
 
         public void UndoAct()
         {
+            IsActed.Value = false;
             IsReadyToAct.Value = true;
         }
 

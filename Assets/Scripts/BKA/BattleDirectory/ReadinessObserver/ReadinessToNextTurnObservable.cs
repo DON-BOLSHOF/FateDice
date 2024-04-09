@@ -15,10 +15,10 @@ namespace BKA.BattleDirectory.ReadinessObserver
 
         public void Initialize()
         {
-            IsReadyAbsolutely = _diceHandler.IsDiceHandlerCompleteWork.CombineLatest(_fightHandler.IsReadyAbsolutely, 
-                (x,y) => x && y).ToReadOnlyReactiveProperty();
-
             IsReadyEmergency = _diceHandler.IsDiceHandlerCompleteWork.ToReadOnlyReactiveProperty();
+
+            IsReadyAbsolutely = _diceHandler.IsDiceHandlerCompleteWork.CombineLatest(_fightHandler.IsReadyAbsolutely,
+                (x, y) => x && y).ToReadOnlyReactiveProperty();
         }
 
         public void Dispose()

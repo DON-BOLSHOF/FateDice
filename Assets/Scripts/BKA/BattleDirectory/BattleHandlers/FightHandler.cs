@@ -36,14 +36,28 @@ namespace BKA.BattleDirectory.BattleHandlers
 
         private readonly ReactiveProperty<bool> _isReady = new(true);
 
-        private CancellationTokenSource _source;
+        private CancellationTokenSource _handlerSource;
+
+        private bool _isPlayerMove = false;
 
         private void Start()
         {
             _behaviourUploader.OnUploadedBehaviour.Subscribe(value => UpdateUnits(value.Item1, value.Item2))
                 .AddTo(this);
-            
+
             _turnSystem.TurnState.Subscribe(_ => StartBattle().Forget()).AddTo(this);
+
+            _diceHandler.IsDiceHandlerCompleteWork.Where(value => !value && _isPlayerMove)
+                .Subscribe(_ => ReloadPlayerTurn().Forget()).AddTo(this);
+        }
+
+        private async UniTask ReloadPlayerTurn()
+        {
+            _handlerSource?.Cancel();
+            _handlerSource = new();
+
+            await _diceHandler.IsDiceHandlerCompleteWork.Where(value => value).ToUniTask(useFirstValue: true, _handlerSource.Token);
+            await HandleCharacterTurn(TurnState.PartyTurn);
         }
 
         private void UpdateUnits(UnitBattleBehaviour unit, UnitSide side)
@@ -63,24 +77,32 @@ namespace BKA.BattleDirectory.BattleHandlers
 
         private async UniTask StartBattle()
         {
-            _source?.Cancel();
-            _source = new();
-            
-            _isReady.Value = false;
-            
-            await UniTask.WaitUntil(() => _readinessObservable.IsReadyAbsolutely.Value, cancellationToken: _source.Token);
-         
-            var currentTurn = _turnSystem.TurnState.Value;
-            
-            await _diceHandler.HandleNextTurn(currentTurn, _source.Token);
+            _handlerSource?.Cancel();
+            _handlerSource = new();
 
+            _isReady.Value = false;
+
+            await UniTask.WaitUntil(() => _readinessObservable.IsReadyAbsolutely.Value,
+                cancellationToken: _handlerSource.Token);
+
+            var currentTurn = _turnSystem.TurnState.Value;
+
+            await _diceHandler.HandleNextTurn(currentTurn, _handlerSource.Token);
+
+            await HandleCharacterTurn(currentTurn);
+        }
+
+        private async UniTask HandleCharacterTurn(TurnState currentTurn)
+        {
             switch (currentTurn)
             {
                 case TurnState.PartyTurn:
-                    await PlayerMove(_source.Token);
+                    _isPlayerMove = true;
+                    await PlayerMove(_handlerSource.Token);
+                    _isPlayerMove = false;
                     break;
                 case TurnState.EnemyTurn:
-                    await EnemyMove(_source.Token);
+                    await EnemyMove(_handlerSource.Token);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -101,6 +123,8 @@ namespace BKA.BattleDirectory.BattleHandlers
             {
                 unitBattleBehaviour.UnPrepareToAct();
             }
+
+            _isPlayerMove = false;
         }
 
         private async UniTask EnemyMove(CancellationToken token)
@@ -126,11 +150,12 @@ namespace BKA.BattleDirectory.BattleHandlers
             }
 
             await UniTask.Yield(cancellationToken: token);
-            
+
             foreach (var unitBattleBehaviour in _secondPack)
             {
                 await unitBattleBehaviour.Act(token);
             }
+
             Debug.Log("EnemyEndTurn");
         }
 
@@ -139,7 +164,7 @@ namespace BKA.BattleDirectory.BattleHandlers
             _turnSystem?.Dispose();
             _readinessObservable?.Dispose();
             _isReady?.Dispose();
-            _source?.Dispose();
+            _handlerSource?.Dispose();
         }
     }
 }
