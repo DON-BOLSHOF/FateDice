@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using BKA.Dices;
 using BKA.Dices.DiceActions;
-using Cysharp.Threading.Tasks;
 using UniRx;
 
 namespace BKA.Units
@@ -48,11 +46,9 @@ namespace BKA.Units
             IsReadyToAct.Value = false;
         }
 
-        public async UniTask Act(CancellationToken token)
+        public void Act()
         {
             _diceAction.Act();
-
-            //await UniTask.Delay(TimeSpan.FromSeconds(5));
 
             IsActed.Value = true;
             IsReadyToAct.Value = false;
@@ -60,6 +56,8 @@ namespace BKA.Units
 
         public void UndoAct()
         {
+            _diceAction.Undo();
+            
             IsActed.Value = false;
             IsReadyToAct.Value = true;
         }

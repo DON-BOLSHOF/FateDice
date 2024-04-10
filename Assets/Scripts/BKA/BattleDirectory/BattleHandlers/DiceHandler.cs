@@ -13,14 +13,23 @@ using Zenject;
 
 namespace BKA.BattleDirectory.BattleHandlers
 {
+    public class UnitDice
+    {
+        public Vector3 PositionInBoard;
+        public Vector3 BaseUnitPosition;
+
+        public DiceObject DiceObject;
+
+        public CancellationTokenSource DiceCancellationTokenSource;
+        public ReactiveProperty<bool> IsMoving;
+    }
+
     public class DiceHandler : MonoBehaviour
     {
         private readonly List<UnitDice> _partyDices = new();
         private readonly List<UnitDice> _enemyDices = new();
 
         [SerializeField] private RerollHandler _rerollHandler;
-        [SerializeField] private ReadyHandler _readyHandler;
-        [SerializeField] private UndoHandler _undoHandler;
         [SerializeField] private DiceMovementHandler _diceMovementHandler;
 
         [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
@@ -29,8 +38,9 @@ namespace BKA.BattleDirectory.BattleHandlers
         private ReactiveProperty<bool> _isDiceTurnEnd = new();
 
         private CancellationTokenSource _handlerSource = new();
-        
+
         public ReadOnlyReactiveProperty<bool> IsDiceHandlerCompleteWork;
+        public ReadOnlyReactiveProperty<bool> IsDicesInputUnlocked;
 
         private void Awake()
         {
@@ -39,11 +49,67 @@ namespace BKA.BattleDirectory.BattleHandlers
                     (isDicesReady, isMovementComplete, isTurnEnd) => isDicesReady && isMovementComplete && isTurnEnd)
                 .ToReadOnlyReactiveProperty();
 
-            _readyHandler.OnReady.Subscribe(_ => OnReadyClicked()).AddTo(this);
-            _undoHandler.OnUndo.Subscribe(_ => OnUndoClicked().Forget()).AddTo(this);
+            IsDicesInputUnlocked = _rerollHandler.IsDicesReady.CombineLatest(_diceMovementHandler.IsMovementComplete, (
+                isRerollEnd, isMovementEnd) => isRerollEnd && isMovementEnd).ToReadOnlyReactiveProperty();
         }
 
-        private void OnReadyClicked()
+        private void Start()
+        {
+            _behaviourUploader.OnUploadedBehaviour.Subscribe(value => BindNewDice(value.Item1, value.Item2))
+                .AddTo(this);
+            IsDicesInputUnlocked.Subscribe(LockDicesInput).AddTo(this);
+        }
+
+        public async UniTask HandleNextTurn(TurnState currentTurn, CancellationToken token)
+        {
+            _isDiceTurnEnd.Value = false;
+
+            List<UnitDice> activeDices = currentTurn switch
+            {
+                TurnState.PartyTurn => _partyDices,
+                TurnState.EnemyTurn => _enemyDices,
+                _ => throw new ArgumentOutOfRangeException(nameof(currentTurn), currentTurn, null)
+            };
+
+            ChangeDices(currentTurn);
+            await UniTask.Yield(cancellationToken: token);
+            GenerateRandomPositionsOnBoard(activeDices, currentTurn);
+
+            foreach (var activeDice in activeDices)
+            {
+                activeDice.DiceObject.UnSelectDice();
+            }
+
+            await UniTask.Yield(token);
+
+            await UniTask.WhenAll(activeDices.Select(dice => dice.IsMoving.Where(value => !value)
+                .ToUniTask(useFirstValue: true, cancellationToken: token)));
+
+            await _rerollHandler.ForceAsyncReroll(token);
+
+            await CharactersTurn(currentTurn, token, activeDices);
+
+            _isDiceTurnEnd.Value = true;
+        }
+
+        public void SynchronizeDices(Vector3[] partyDicesBasePositions, Vector3[] enemyDicesBasePositions)
+        {
+            if (partyDicesBasePositions.Count() != _partyDices.Count ||
+                enemyDicesBasePositions.Count() != _enemyDices.Count)
+                throw new SynchronizationException("Mismatched dice count and its new positions");
+
+            for (var i = 0; i < partyDicesBasePositions.Length; i++)
+            {
+                _partyDices[i].BaseUnitPosition = partyDicesBasePositions[i];
+            }
+
+            for (var i = 0; i < enemyDicesBasePositions.Length; i++)
+            {
+                _enemyDices[i].BaseUnitPosition = enemyDicesBasePositions[i];
+            }
+        }
+
+        public void SetReadyDices()
         {
             foreach (var activeDice in _partyDices)
             {
@@ -51,27 +117,23 @@ namespace BKA.BattleDirectory.BattleHandlers
             }
         }
 
-        private async UniTask OnUndoClicked()
+        public async UniTask ReturnDicesToBoard(CancellationToken handlerSourceToken)
         {
             _handlerSource?.Cancel();
             _handlerSource = new();
-            
+
+            var source = CancellationTokenSource.CreateLinkedTokenSource(handlerSourceToken, _handlerSource.Token);
+
+            _isDiceTurnEnd.Value = false;
+
             foreach (var activeDice in _partyDices)
             {
                 activeDice.DiceObject.UnSelectDice();
             }
 
-            _isDiceTurnEnd.Value = false;
+            await CharactersTurn(TurnState.PartyTurn, source.Token, _partyDices);
 
-            await CharactersTurn(TurnState.PartyTurn, _handlerSource.Token, _partyDices);
-            
             _isDiceTurnEnd.Value = true;
-        }
-
-        private void Start()
-        {
-            _behaviourUploader.OnUploadedBehaviour.Subscribe(value => BindNewDice(value.Item1, value.Item2))
-                .AddTo(this);
         }
 
         private void BindNewDice(IUnitOfBattle unitOfBattle, UnitSide side)
@@ -107,12 +169,14 @@ namespace BKA.BattleDirectory.BattleHandlers
                 await _diceMovementHandler.MoveDiceToBase(unitDice, token: unitDice.DiceCancellationTokenSource.Token);
                 unitDice.DiceObject.SetReadyToAct();
 
+                unitDice.DiceObject.gameObject.SetActive(false);
                 unitDice.IsMoving.Value = false;
             }
             else
             {
                 unitDice.IsMoving.Value = true;
 
+                unitDice.DiceObject.gameObject.SetActive(true);
                 unitDice.DiceObject.SetUnReadyToAct();
                 await _diceMovementHandler.MoveDiceToPositionInBoard(unitDice,
                     token: unitDice.DiceCancellationTokenSource.Token);
@@ -121,44 +185,12 @@ namespace BKA.BattleDirectory.BattleHandlers
             }
         }
 
-        public async UniTask HandleNextTurn(TurnState currentTurn, CancellationToken token)
-        {
-            _isDiceTurnEnd.Value = false;
-
-            List<UnitDice> activeDices = currentTurn switch
-            {
-                TurnState.PartyTurn => _partyDices,
-                TurnState.EnemyTurn => _enemyDices,
-                _ => throw new ArgumentOutOfRangeException(nameof(currentTurn), currentTurn, null)
-            };
-
-            ChangeDices(currentTurn);
-            await UniTask.Yield(cancellationToken: token);
-            GenerateRandomPositionsOnBoard(activeDices, currentTurn);
-
-            foreach (var activeDice in activeDices)
-            {
-                activeDice.DiceObject.UnSelectDice();
-            }
-
-            await UniTask.Yield(token);
-
-            await UniTask.WhenAll(activeDices.Select(dice => dice.IsMoving.Where(value => !value)
-                .ToUniTask(useFirstValue: true, cancellationToken: token)));
-
-            await _rerollHandler.ForceAsyncReroll(token);
-
-            await CharactersTurn(currentTurn, token, activeDices);
-
-            _isDiceTurnEnd.Value = true;
-        }
-
         private async UniTask CharactersTurn(TurnState currentTurn, CancellationToken token, List<UnitDice> activeDices)
         {
             switch (currentTurn)
             {
                 case TurnState.PartyTurn:
-                    await UniTask.WaitUntil( () => activeDices.Count(activeDice => 
+                    await UniTask.WaitUntil(() => activeDices.Count(activeDice =>
                         activeDice.DiceObject.IsSelected.Value) == activeDices.Count, cancellationToken: token);
 
                     await UniTask.WhenAll(activeDices.Select(dice => dice.IsMoving.Where(value => !value)
@@ -216,6 +248,19 @@ namespace BKA.BattleDirectory.BattleHandlers
             }
         }
 
+        private void LockDicesInput(bool value)
+        {
+            foreach (var partyDice in _partyDices)
+            {
+                partyDice.DiceObject.LockInput(!value);
+            }
+
+            foreach (var enemyDice in _enemyDices)
+            {
+                enemyDice.DiceObject.LockInput(!value);
+            }
+        }
+
         private void GenerateRandomPositionsOnBoard(List<UnitDice> activeDices, TurnState turnState)
         {
             var positionsToMove = _boarder.GenerateProportionalPositionsToMove(activeDices.Count, turnState);
@@ -224,31 +269,5 @@ namespace BKA.BattleDirectory.BattleHandlers
                 activeDices[i].PositionInBoard = positionsToMove[i];
             }
         }
-
-        public void SynchronizeDices(Vector3[] partyDicesBasePositions, Vector3[] enemyDicesBasePositions)
-        {
-            if (partyDicesBasePositions.Count() != _partyDices.Count ||
-                enemyDicesBasePositions.Count() != _enemyDices.Count)
-                throw new SynchronizationException("Mismatched dice count and its new positions");
-
-            for (var i = 0; i < partyDicesBasePositions.Length; i++)
-            {
-                _partyDices[i].BaseUnitPosition = partyDicesBasePositions[i];
-            }
-
-            for (var i = 0; i < enemyDicesBasePositions.Length; i++)
-            {
-                _enemyDices[i].BaseUnitPosition = enemyDicesBasePositions[i];
-            }
-        }
-    }
-
-    public class UnitDice
-    {
-        public Vector3 PositionInBoard;
-        public Vector3 BaseUnitPosition;
-        public DiceObject DiceObject;
-        public CancellationTokenSource DiceCancellationTokenSource;
-        public ReactiveProperty<bool> IsMoving;
     }
 }

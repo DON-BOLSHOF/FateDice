@@ -1,6 +1,5 @@
 ﻿using System;
 using BKA.Units;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BKA.Dices.DiceActions
@@ -11,7 +10,8 @@ namespace BKA.Dices.DiceActions
         public abstract DiceAttributeFocus DiceAttributeFocus { get; protected set;}
         public abstract Sprite ActionView { get; protected set; }
 
-        public abstract Action<UnitBattleBehaviour> Action { get; }
+        public abstract Action<UnitBattleBehaviour> Act { get; }
+        public abstract Action<UnitBattleBehaviour> Undo { get; }
     }
 
     public enum DiceAttributeFocus

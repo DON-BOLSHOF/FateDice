@@ -27,6 +27,10 @@ namespace BKA.BattleDirectory.PlayerInput
 
         private CancellationTokenSource _cancellationTokenSource = new();
 
+        private readonly Stack<UnitBattleBehaviour> _actedUnits = new();
+
+        public bool _hasToUndo => _actedUnits.Count > 0;
+
         private void Start()
         {
             foreach (var characterPanel in _partyCharacterPanels)
@@ -53,19 +57,37 @@ namespace BKA.BattleDirectory.PlayerInput
         {
             _party = party;
 
+            _actedUnits.Clear();
             _isMakeTurn = true;
 
             foreach (var unitBattleBehaviour in party.Where(unitBattleBehaviour =>
                          unitBattleBehaviour.DiceAction.DiceActionData.DiceAttributeFocus == DiceAttributeFocus.None))
             {
-                unitBattleBehaviour.Act(_cancellationTokenSource.Token).Forget();
+                unitBattleBehaviour.Act();
             }
 
-            var uniTasks = party.Select(unit => unit.IsActed.Where(value => value)
-                .ToUniTask(useFirstValue: true, cancellationToken: token));
-            await UniTask.WhenAll(uniTasks).WithPostCancellation(() => _isMakeTurn = false);
+            await UniTask.WaitUntil(() => party.Count(unit =>
+                unit.IsActed.Value) == party.Count, cancellationToken: token).WithPostCancellation(() =>
+            {
+                while (_actedUnits.Count > 0)
+                {
+                    var actedUnit = _actedUnits.Pop();
+                    actedUnit.UndoAct();
+                }
+
+                _isMakeTurn = false;
+            });
 
             _isMakeTurn = false;
+        }
+
+        public void UndoLastAct()
+        {
+            if (_actedUnits.Count <= 0)
+                throw new ApplicationException("Пытаешься отменить то чего нет");
+
+            var actedUnit = _actedUnits.Pop();
+            actedUnit.UndoAct();
         }
 
         private void OnUnitBehaviourClicked(UnitBattleBehaviour unit)
@@ -90,14 +112,16 @@ namespace BKA.BattleDirectory.PlayerInput
                         !_party.Contains(unit) && _turningUnit.Value.IsReadyToAct.Value:
                         _turningUnit.Value.DiceAction.ChooseTarget(unit);
 
-                        _turningUnit.Value.Act(_cancellationTokenSource.Token).Forget();
+                        _turningUnit.Value.Act();
+                        _actedUnits.Push(_turningUnit.Value);
                         _turningUnit.Value = null;
                         return;
                     case DiceAttributeFocus.Ally when
                         _party.Contains(unit) && _turningUnit.Value.IsReadyToAct.Value:
                         _turningUnit.Value.DiceAction.ChooseTarget(unit);
 
-                        _turningUnit.Value.Act(_cancellationTokenSource.Token).Forget();
+                        _turningUnit.Value.Act();
+                        _actedUnits.Push(_turningUnit.Value);
                         _turningUnit.Value = null;
                         return;
                 }

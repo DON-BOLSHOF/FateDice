@@ -11,11 +11,17 @@ namespace BKA.Dices.DiceActions
         [field:SerializeField] public override DiceAttributeFocus DiceAttributeFocus { get; protected set; }
         [field:SerializeField] public override Sprite ActionView { get; protected set; }
 
-        public override Action<UnitBattleBehaviour> Action => Attack;
+        public override Action<UnitBattleBehaviour> Act => Attack;
+        public override Action<UnitBattleBehaviour> Undo => UndoAttack;
 
-        private void Attack(UnitBattleBehaviour unit)
+        private void Attack(UnitBattleBehaviour unitBehaviour)
         {
-            unit.Unit.ModifyHealth(-4);
+            unitBehaviour.Unit.ModifyHealth(-4);
+        }
+
+        private void UndoAttack(UnitBattleBehaviour unitBehaviour)
+        {
+            unitBehaviour.Unit.ModifyHealth(4);
         }
     }
 }

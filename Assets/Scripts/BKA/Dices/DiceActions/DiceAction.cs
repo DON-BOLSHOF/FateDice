@@ -17,7 +17,12 @@ namespace BKA.Dices.DiceActions
 
         public void Act()
         {
-            _data.Action(_target);
+            _data.Act(_target);
+        }
+
+        public void Undo()
+        {
+            _data.Undo(_target);
         }
 
         public void ChooseTarget(UnitBattleBehaviour target)

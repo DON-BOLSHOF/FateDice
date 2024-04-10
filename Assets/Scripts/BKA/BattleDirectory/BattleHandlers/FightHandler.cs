@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using BKA.BattleDirectory.BattleSystems;
 using BKA.BattleDirectory.PlayerInput;
 using BKA.BattleDirectory.ReadinessObserver;
 using BKA.Dices.DiceActions;
-using BKA.System;
 using BKA.System.Exceptions;
 using BKA.Units;
 using Cysharp.Threading.Tasks;
@@ -22,14 +20,14 @@ namespace BKA.BattleDirectory.BattleHandlers
         private readonly List<UnitBattleBehaviour> _firstPack = new();
         private readonly List<UnitBattleBehaviour> _secondPack = new();
 
-        [Inject] private TurnSystem _turnSystem;
-
         [SerializeField] private DiceHandler _diceHandler;
-
         [SerializeField] private BattleInputHandler _battleInputHandler;
 
-        [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
+        [SerializeField] private ReadyHandler _readyHandler;
+        [SerializeField] private UndoHandler _undoHandler;
 
+        [Inject] private TurnSystem _turnSystem;
+        [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
         [Inject] private ReadinessToBattleObservable _readinessObservable;
 
         public ReadOnlyReactiveProperty<bool> IsReadyAbsolutely => _isReady.ToReadOnlyReactiveProperty();
@@ -47,17 +45,18 @@ namespace BKA.BattleDirectory.BattleHandlers
 
             _turnSystem.TurnState.Subscribe(_ => StartBattle().Forget()).AddTo(this);
 
-            _diceHandler.IsDiceHandlerCompleteWork.Where(value => !value && _isPlayerMove)
-                .Subscribe(_ => ReloadPlayerTurn().Forget()).AddTo(this);
-        }
+            _readyHandler.OnReady.Subscribe(_ =>
+            {
+                if(!_diceHandler.IsDicesInputUnlocked.Value) return;
+                
+                _diceHandler.SetReadyDices();
+            }).AddTo(this);
+            _undoHandler.OnUndo.Subscribe(_ =>
+            {
+                if (!_isPlayerMove) return;
 
-        private async UniTask ReloadPlayerTurn()
-        {
-            _handlerSource?.Cancel();
-            _handlerSource = new();
-
-            await _diceHandler.IsDiceHandlerCompleteWork.Where(value => value).ToUniTask(useFirstValue: true, _handlerSource.Token);
-            await HandleCharacterTurn(TurnState.PartyTurn);
+                UndoPlayerMove();
+            }).AddTo(this);
         }
 
         private void UpdateUnits(UnitBattleBehaviour unit, UnitSide side)
@@ -117,16 +116,6 @@ namespace BKA.BattleDirectory.BattleHandlers
             Debug.Log("PlayerEndTurn");
         }
 
-        private void ForceEndPlayerMove()
-        {
-            foreach (var unitBattleBehaviour in _firstPack)
-            {
-                unitBattleBehaviour.UnPrepareToAct();
-            }
-
-            _isPlayerMove = false;
-        }
-
         private async UniTask EnemyMove(CancellationToken token)
         {
             foreach (var unitBattleBehaviour in _secondPack)
@@ -153,10 +142,42 @@ namespace BKA.BattleDirectory.BattleHandlers
 
             foreach (var unitBattleBehaviour in _secondPack)
             {
-                await unitBattleBehaviour.Act(token);
+                /*await*/
+                unitBattleBehaviour.Act();
             }
 
             Debug.Log("EnemyEndTurn");
+        }
+
+        private void UndoPlayerMove()
+        {
+            if (_battleInputHandler._hasToUndo)
+            {
+                _battleInputHandler.UndoLastAct();
+            }
+            else
+            {
+                ReloadPlayerTurn().Forget();
+            }
+        }
+
+        private async UniTask ReloadPlayerTurn()
+        {
+            _handlerSource?.Cancel();
+            _handlerSource = new();
+
+            await _diceHandler.ReturnDicesToBoard(_handlerSource.Token);
+            await HandleCharacterTurn(TurnState.PartyTurn);
+        }
+
+        private void ForceEndPlayerMove()
+        {
+            foreach (var unitBattleBehaviour in _firstPack)
+            {
+                unitBattleBehaviour.UnPrepareToAct();
+            }
+
+            _isPlayerMove = false;
         }
 
         public void OnDestroy()

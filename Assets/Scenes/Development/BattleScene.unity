@@ -616,8 +616,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rerollHandler: {fileID: 1719468181}
-  _readyHandler: {fileID: 1124983471}
-  _undoHandler: {fileID: 1881765774}
   _diceMovementHandler: {fileID: 952042908}
 --- !u!1 &377414913
 GameObject:
@@ -1450,6 +1448,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _diceHandler: {fileID: 368640899}
   _battleInputHandler: {fileID: 540868415}
+  _readyHandler: {fileID: 1124983471}
+  _undoHandler: {fileID: 1881765774}
 --- !u!1 &652088387
 GameObject:
   m_ObjectHideFlags: 0

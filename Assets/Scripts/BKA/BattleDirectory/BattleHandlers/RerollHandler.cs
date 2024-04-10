@@ -51,7 +51,7 @@ namespace BKA.BattleDirectory.BattleHandlers
 
         private async UniTask WaitReadiness(List<DiceObject> diceObjects, CancellationToken token)
         {
-            await UniTask.Delay(TimeSpan.FromMilliseconds(25));
+            await UniTask.Delay(TimeSpan.FromMilliseconds(25), cancellationToken: token);
 
             foreach (var diceObject in diceObjects)
             {
@@ -74,6 +74,9 @@ namespace BKA.BattleDirectory.BattleHandlers
                 throw new RerollException();
                 
             _shakeSystem.ShakeObjects(_activeDices);
+            
+            _isDicesReadyToReroll.Value = false;
+
             await WaitReadiness(_activeDices, token);
         }
 

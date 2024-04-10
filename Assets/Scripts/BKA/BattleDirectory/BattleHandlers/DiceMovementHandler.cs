@@ -10,7 +10,7 @@ namespace BKA.BattleDirectory.BattleHandlers
     public class DiceMovementHandler : MonoBehaviour
     {
         public IReadOnlyReactiveProperty<bool> IsMovementComplete => _isMovementComplete;
-        
+
         private ReactiveProperty<bool> _isMovementComplete = new(true);
 
         private int _countMovingDices = 0;
@@ -19,21 +19,23 @@ namespace BKA.BattleDirectory.BattleHandlers
         {
             _countMovingDices++;
             activeDice.DiceObject.DeactivatePhysicality();
-            
+
             await MoveDice(activeDice.DiceObject, activeDice.BaseUnitPosition, token);
-            
+
             activeDice.DiceObject.ActivatePhysicality();
-            _countMovingDices--; 
+            _countMovingDices--;
         }
-       
+
         public async UniTask MoveDiceToPositionInBoard(UnitDice activeDice, CancellationToken token = default)
         {
+            _countMovingDices++;
             activeDice.DiceObject.DeactivatePhysicality();
             activeDice.DiceObject.transform.position = activeDice.BaseUnitPosition;
 
             await MoveDice(activeDice.DiceObject, activeDice.PositionInBoard, token);
-            
+
             activeDice.DiceObject.ActivatePhysicality();
+            _countMovingDices--;
         }
 
         private void Update()

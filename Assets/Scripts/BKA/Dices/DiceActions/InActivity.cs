@@ -10,7 +10,8 @@ namespace BKA.Dices.DiceActions
         [field:SerializeField] public override string ID { get; protected set; }
         [field:SerializeField] public override DiceAttributeFocus DiceAttributeFocus { get; protected set; }
         [field:SerializeField] public override Sprite ActionView { get; protected set; }
-        public override Action<UnitBattleBehaviour> Action => DoNothing;
+        public override Action<UnitBattleBehaviour> Act => DoNothing;
+        public override Action<UnitBattleBehaviour> Undo => DoNothing;
 
         private void DoNothing(UnitBattleBehaviour battleBehaviour)
         {

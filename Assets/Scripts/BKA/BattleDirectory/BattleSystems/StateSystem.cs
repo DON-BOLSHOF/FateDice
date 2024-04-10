@@ -63,7 +63,9 @@ namespace BKA.BattleDirectory.BattleSystems
                 case TurnState.EnemyTurn:
                     _isPartyTurn.Value = false;
                     _readyWidget.gameObject.SetActive(false);
+                    _rerollWidget.gameObject.SetActive(false);
                     _turnWidget.gameObject.SetActive(false);
+                    _undoWidget.gameObject.SetActive(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(turnState), turnState, null);

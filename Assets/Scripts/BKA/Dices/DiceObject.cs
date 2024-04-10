@@ -24,6 +24,8 @@ namespace BKA.Dices
 
         private ReactiveProperty<bool> _isSelected = new(true);
 
+        private bool _lockedToInput = false;
+
         private void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
@@ -35,9 +37,17 @@ namespace BKA.Dices
             }
         }
 
+        public void LockInput(bool value)
+        {
+            _lockedToInput = value;
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
-            SelectDice();
+            if (!_lockedToInput)
+            {
+                SelectDice();
+            }
         }
 
         public void SelectDice()
