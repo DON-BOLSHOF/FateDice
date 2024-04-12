@@ -15,7 +15,13 @@ using Random = UnityEngine.Random;
 
 namespace BKA.BattleDirectory.BattleHandlers
 {
-    public class FightHandler : MonoBehaviour, IReadinessObservable
+    public enum FightEndStatus
+    {
+        PartyWin,
+        EnemyWin
+    }
+
+    public class FightHandler : MonoBehaviour, IReadinessObservable, IFinilizerLockedSystem,IDisposable
     {
         private readonly List<UnitBattleBehaviour> _firstPack = new();
         private readonly List<UnitBattleBehaviour> _secondPack = new();
@@ -31,32 +37,40 @@ namespace BKA.BattleDirectory.BattleHandlers
         [Inject] private ReadinessToBattleObservable _readinessObservable;
 
         public ReadOnlyReactiveProperty<bool> IsReadyAbsolutely => _isReady.ToReadOnlyReactiveProperty();
+        public IObservable<(FightEndStatus, List<UnitBattleBehaviour>)> OnFightEnd => _onFightEnd;
 
         private readonly ReactiveProperty<bool> _isReady = new(true);
+        private readonly ReactiveCommand<(FightEndStatus, List<UnitBattleBehaviour>)> _onFightEnd = new();
 
         private CancellationTokenSource _handlerSource;
-
+        private CompositeDisposable _handlerDisposable = new();
+        
         private bool _isPlayerMove = false;
+
+        public void Lock()
+        {
+            Dispose();   
+        }
 
         private void Start()
         {
             _behaviourUploader.OnUploadedBehaviour.Subscribe(value => UpdateUnits(value.Item1, value.Item2))
-                .AddTo(this);
+                .AddTo(_handlerDisposable);
 
-            _turnSystem.TurnState.Subscribe(_ => StartBattle().Forget()).AddTo(this);
+            _turnSystem.TurnState.Subscribe(_ => { StartBattle().Forget(); }).AddTo(_handlerDisposable);
 
             _readyHandler.OnReady.Subscribe(_ =>
             {
-                if(!_diceHandler.IsDicesInputUnlocked.Value) return;
-                
+                if (!_diceHandler.IsDicesInputUnlocked.Value) return;
+
                 _diceHandler.SetReadyDices();
-            }).AddTo(this);
+            }).AddTo(_handlerDisposable);
             _undoHandler.OnUndo.Subscribe(_ =>
             {
                 if (!_isPlayerMove) return;
 
                 UndoPlayerMove();
-            }).AddTo(this);
+            }).AddTo(_handlerDisposable);
         }
 
         private void UpdateUnits(UnitBattleBehaviour unit, UnitSide side)
@@ -65,9 +79,19 @@ namespace BKA.BattleDirectory.BattleHandlers
             {
                 case UnitSide.Party:
                     _firstPack.Add(unit);
+                    unit.OnDead.Subscribe(_ =>
+                    {
+                        _firstPack.Remove(unit);
+                        OnDeadUnitCheck();
+                    }).AddTo(_handlerDisposable);
                     break;
                 case UnitSide.Enemy:
                     _secondPack.Add(unit);
+                    unit.OnDead.Subscribe(_ =>
+                    {
+                        _secondPack.Remove(unit);
+                        OnDeadUnitCheck();
+                    }).AddTo(_handlerDisposable);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(side), side, null);
@@ -142,7 +166,6 @@ namespace BKA.BattleDirectory.BattleHandlers
 
             foreach (var unitBattleBehaviour in _secondPack)
             {
-                /*await*/
                 unitBattleBehaviour.Act();
             }
 
@@ -180,12 +203,24 @@ namespace BKA.BattleDirectory.BattleHandlers
             _isPlayerMove = false;
         }
 
-        public void OnDestroy()
+        private void OnDeadUnitCheck()
+        {
+            if (_firstPack.Count > 0 && _secondPack.Count > 0) return;
+
+            _handlerSource.Cancel();
+
+            var fightEndStatus = _firstPack.Count <= 0 ? FightEndStatus.EnemyWin : FightEndStatus.PartyWin;
+
+            _onFightEnd?.Execute((fightEndStatus, _firstPack));
+        }
+
+        public void Dispose()
         {
             _turnSystem?.Dispose();
             _readinessObservable?.Dispose();
             _isReady?.Dispose();
             _handlerSource?.Dispose();
+            _handlerDisposable?.Dispose();
         }
     }
 }

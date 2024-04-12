@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BKA.System;
 using BKA.Units;
 using UniRx;
@@ -30,9 +29,19 @@ namespace BKA.UI
             {
                 case UnitSide.Party:
                     _leftBoarder.AddNewBehaviour(unit);
+                    unit.OnDead.Subscribe(_ =>
+                    {
+                        _leftBoarder.RemoveBehaviour(unit);
+                        _isSynchrolized.Value = false;
+                    }).AddTo(this);
                     break;
                 case UnitSide.Enemy:
                     _rightBoarder.AddNewBehaviour(unit);
+                    unit.OnDead.Subscribe(_ =>
+                    {
+                        _rightBoarder.RemoveBehaviour(unit);
+                        _isSynchrolized.Value = false;
+                    }).AddTo(this);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(side), side, null);
@@ -50,11 +59,5 @@ namespace BKA.UI
         {
             _isSynchrolized.Value = true;
         }
-    }
-
-    public enum BoarderType
-    {
-        Left,
-        Right
     }
 }

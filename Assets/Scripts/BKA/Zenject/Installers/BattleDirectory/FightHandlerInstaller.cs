@@ -10,7 +10,7 @@ namespace BKA.Zenject.Installers
         
         public override void InstallBindings()
         {
-            Container.Bind<FightHandler>().FromInstance(_fightHandler).AsSingle();
+            Container.BindInterfacesAndSelfTo<FightHandler>().FromInstance(_fightHandler).AsSingle();
         }
     }
 }

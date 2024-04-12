@@ -34,6 +34,13 @@ namespace BKA.UI
             needPanel.Fulfill(unitBehaviour);
         }
 
+        public void RemoveBehaviour(UnitBattleBehaviour unit)
+        {
+            var characterPanel = _characterPanels.FirstOrDefault(value => value.UnitBattleBehaviour.Equals(unit));
+            
+            characterPanel.gameObject.SetActive(false);
+        }
+
         public Vector3[] GetAttributePositionsInWorld()
         {
             var result = _characterPanels.Where(panel => panel.gameObject.activeInHierarchy)

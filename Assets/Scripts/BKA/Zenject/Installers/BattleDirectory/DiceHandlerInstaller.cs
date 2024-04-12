@@ -11,7 +11,7 @@ namespace BKA.Zenject.Installers
 
         public override void InstallBindings()
         {
-            Container.Bind<DiceHandler>().FromInstance(_diceHandler).AsSingle();
+            Container.BindInterfacesAndSelfTo<DiceHandler>().FromInstance(_diceHandler).AsSingle();
         }
     }
 }

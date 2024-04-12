@@ -24,7 +24,7 @@ namespace BKA.BattleDirectory.BattleHandlers
         public ReactiveProperty<bool> IsMoving;
     }
 
-    public class DiceHandler : MonoBehaviour
+    public class DiceHandler : MonoBehaviour, IFinilizerLockedSystem, IDisposable
     {
         private readonly List<UnitDice> _partyDices = new();
         private readonly List<UnitDice> _enemyDices = new();
@@ -35,12 +35,13 @@ namespace BKA.BattleDirectory.BattleHandlers
         [Inject] private UnitBattleBehaviourUploader _behaviourUploader;
         [Inject] private Boarder _boarder;
 
-        private ReactiveProperty<bool> _isDiceTurnEnd = new();
-
-        private CancellationTokenSource _handlerSource = new();
-
         public ReadOnlyReactiveProperty<bool> IsDiceHandlerCompleteWork;
         public ReadOnlyReactiveProperty<bool> IsDicesInputUnlocked;
+        
+        private ReactiveProperty<bool> _isDiceTurnEnd = new();
+        
+        private CancellationTokenSource _handlerSource = new();
+        private CompositeDisposable _handlerDisposable = new();
 
         private void Awake()
         {
@@ -56,8 +57,8 @@ namespace BKA.BattleDirectory.BattleHandlers
         private void Start()
         {
             _behaviourUploader.OnUploadedBehaviour.Subscribe(value => BindNewDice(value.Item1, value.Item2))
-                .AddTo(this);
-            IsDicesInputUnlocked.Subscribe(LockDicesInput).AddTo(this);
+                .AddTo(_handlerDisposable);
+            IsDicesInputUnlocked.Subscribe(LockDicesInput).AddTo(_handlerDisposable);
         }
 
         public async UniTask HandleNextTurn(TurnState currentTurn, CancellationToken token)
@@ -136,20 +137,32 @@ namespace BKA.BattleDirectory.BattleHandlers
             _isDiceTurnEnd.Value = true;
         }
 
+        public void Lock()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            _handlerSource?.Cancel();
+            _handlerDisposable?.Dispose();   
+        }
+
         private void BindNewDice(IUnitOfBattle unitOfBattle, UnitSide side)
         {
             var unitDice = new UnitDice { DiceObject = unitOfBattle.DiceObject, IsMoving = new() };
+            
+            unitOfBattle.DiceObject.IsSelected.Skip(1)
+                .Subscribe(value => OnSelectedChanged(unitDice, value).Forget()).AddTo(_handlerDisposable);
             switch (side)
             {
                 case UnitSide.Party:
                     _partyDices.Add(unitDice);
-                    unitOfBattle.DiceObject.IsSelected.Skip(1)
-                        .Subscribe(value => OnSelectedChanged(unitDice, value).Forget()).AddTo(this);
+                    unitOfBattle.OnDead.Subscribe(_ => _partyDices.Remove(unitDice)).AddTo(_handlerDisposable);
                     break;
                 case UnitSide.Enemy:
                     _enemyDices.Add(unitDice);
-                    unitOfBattle.DiceObject.IsSelected.Skip(1)
-                        .Subscribe(value => OnSelectedChanged(unitDice, value).Forget()).AddTo(this);
+                    unitOfBattle.OnDead.Subscribe(_ => _enemyDices.Remove(unitDice)).AddTo(_handlerDisposable);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(side), side, null);

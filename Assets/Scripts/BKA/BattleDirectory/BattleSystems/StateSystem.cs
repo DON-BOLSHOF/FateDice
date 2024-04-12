@@ -7,7 +7,7 @@ using Zenject;
 
 namespace BKA.BattleDirectory.BattleSystems
 {
-    public class StateSystem : MonoBehaviour
+    public class StateSystem : MonoBehaviour, IFinilizerLockedSystem
     {
         [Inject] private TurnSystem _turnSystem;
         [Inject] private ReadinessToNextTurnObservable _readinessToNextTurn;
@@ -69,6 +69,19 @@ namespace BKA.BattleDirectory.BattleSystems
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(turnState), turnState, null);
+            }
+        }
+
+        public void Lock()
+        {
+            _readyWidget.enabled  = false;
+            _rerollWidget.enabled  = false;
+            _turnWidget.enabled  = false;
+            _undoWidget.enabled  = false;
+            
+            foreach (var characterStateWidget in _characterStateWidgets)
+            {
+                characterStateWidget.enabled = false;
             }
         }
     }
