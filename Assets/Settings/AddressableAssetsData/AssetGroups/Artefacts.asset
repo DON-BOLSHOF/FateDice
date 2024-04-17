@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Artefacts
+  m_EditorClassIdentifier: 
+  m_GroupName: Artefacts
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 950ec59f526c3f84e8973ed969680672
+  m_SerializeEntries:
+  - m_GUID: bce616d3b37f25b44ae09a336d09ea4f
+    m_Address: SwordFire
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c2ba05d6cded204d9afa6d76bc36760
+    m_Address: SwordPoison
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 824df42db4d196c49a24ad642c8166a4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c857cc1789f36e5458cd3498cd183a15, type: 2}
+    - {fileID: 11400000, guid: 19c4389c90e417f49a754087601d43aa, type: 2}

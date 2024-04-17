@@ -27,7 +27,7 @@ namespace BKA.Units
 
             Unit.Health.Where(value => value <= 0).Subscribe(_ => OnDead?.Execute()).AddTo(_disposable);
             
-            dice.UpdateActions(unit.Definition.DiceActions.Select(data => new DiceAction(data)).ToArray());
+            dice.UpdateActions(unit.DiceActions.Select(data => new DiceAction(data)).ToArray());
             
             DiceObject.OnDiceReadyToAct.Subscribe(PrepareToAct).AddTo(_disposable);
             DiceObject.OnDiceUnReadyToAct.Subscribe(_ => UnPrepareToAct()).AddTo(_disposable);

@@ -18,7 +18,9 @@ namespace BKA
             _unitDefinitionProviders.Add(temp);
             
             var definition = await temp.Load("DemonPaladinDefinition");
-            _unitDefinitions.Add(definition);
+            _unitDefinitions.Add(definition); 
+            definition = await temp.Load("HellMageDefinition");
+            _unitDefinitions.Add(definition); 
         }
 
         public void Dispose()

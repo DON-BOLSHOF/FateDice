@@ -1,6 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 namespace BKA.WorldMapDirectory
 {
@@ -24,7 +24,7 @@ namespace BKA.WorldMapDirectory
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0)  && !EventSystem.current.IsPointerOverGameObject())
             {
                 _agent.SetDestination(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
@@ -41,7 +41,7 @@ namespace BKA.WorldMapDirectory
             if (_agent.hasPath && _hasToDraw)
             {
                 _hasToDraw = false;
-                Test();
+                DrawVectors();
             }
 
             if (_agent.hasPath && _agent.path.corners.Length>0 && _currentCorner != _agent.path.corners.Length)
@@ -58,7 +58,7 @@ namespace BKA.WorldMapDirectory
             _animator.SetBool(IsMoving, _agent.hasPath);
         }
 
-        private void Test()
+        private void DrawVectors()
         {
             var t = _agent.transform.position;
             t.z = 0;
@@ -68,7 +68,6 @@ namespace BKA.WorldMapDirectory
                 te.z = 0;
                 
                 Debug.DrawLine(t, te, Color.magenta, 10);
-                Debug.Log(pathCorner);
 
                 t = te;
             }

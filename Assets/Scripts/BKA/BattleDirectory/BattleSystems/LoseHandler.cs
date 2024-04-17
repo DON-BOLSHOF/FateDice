@@ -1,13 +1,16 @@
-﻿using BKA.UI;
+﻿using BKA.System;
+using BKA.UI;
 using UniRx;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace BKA.BattleDirectory.BattleSystems
 {
     public class LoseHandler : MonoBehaviour
     {
         [SerializeField] private LosePanel _losePanel;
+
+        [Inject] private LevelManager _levelManager;
 
         private void Start()
         {
@@ -22,7 +25,7 @@ namespace BKA.BattleDirectory.BattleSystems
 
         private void RestartGame()
         {
-            SceneManager.LoadSceneAsync(0);
+            _levelManager.LoadLevel("MainMenu");
         }
     }
 }

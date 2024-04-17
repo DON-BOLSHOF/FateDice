@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf5d7a4375240f5b76bd1d73953ee8f, type: 3}
+  m_Name: SwordFire
+  m_EditorClassIdentifier: 
+  _id: SwordFire
+  _artefactStatus: 1
+  _view: {fileID: 21300000, guid: 426c1c8f908c2084da01c4e5c3793ee4, type: 3}
+  _diceActions:
+  - Index: 1
+    DiceAction: {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}

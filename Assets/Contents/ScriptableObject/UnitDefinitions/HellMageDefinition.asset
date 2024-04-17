@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7b05fb2f8d4759a4e5a283ecfe10a7, type: 3}
+  m_Name: HellMageDefinition
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: HellMage
+  <DiceActions>k__BackingField:
+  - {fileID: 11400000, guid: 36291331459381d4cb9e9a0ed5d47158, type: 2}
+  - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
+  - {fileID: 11400000, guid: 47efb1ac9b791e44dbc81e249b35c758, type: 2}
+  - {fileID: 11400000, guid: 47efb1ac9b791e44dbc81e249b35c758, type: 2}
+  - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
+  - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
+  <FixedActionsValue>k__BackingField: 6
+  <Health>k__BackingField: 3
+  <UnitIcon>k__BackingField: {fileID: 21300000, guid: dea5ad81380959d47accaff8cf1f6f61, type: 3}
