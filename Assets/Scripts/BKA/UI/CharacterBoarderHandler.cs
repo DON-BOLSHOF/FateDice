@@ -55,7 +55,7 @@ namespace BKA.UI
             return (_leftBoarder.GetAttributePositionsInWorld(), _rightBoarder.GetAttributePositionsInWorld());
         }
         
-        public void Synchronize(Synchronizer synchronizer)
+        public void Synchronize(BattleSynchronizer synchronizer)
         {
             _isSynchrolized.Value = true;
         }

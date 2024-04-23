@@ -9,7 +9,7 @@ namespace BKA.BattleDirectory.ReadinessObserver
     {
         public ReadOnlyReactiveProperty<bool> IsReadyAbsolutely { get; private set; }
 
-        [Inject] private Synchronizer _synchronizer;
+        [Inject] private BattleSynchronizer _synchronizer;
         
         public void Initialize()
         {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BKA.BattleDirectory.BattleHandlers;
 using BKA.Units;
 using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace BKA.BattleDirectory.BattleSystems
@@ -13,6 +12,7 @@ namespace BKA.BattleDirectory.BattleSystems
         [Inject] private FightHandler _fightHandler;
         [Inject] private IEnumerable<IFinilizerLockedSystem> _lockedSystems;
         [Inject] private LoseHandler _loseHandler;
+        [Inject] private WinHandler _winHandler;
 
         private CompositeDisposable _finilizerDisposable = new();
         
@@ -34,10 +34,9 @@ namespace BKA.BattleDirectory.BattleSystems
             switch (fightStatus)
             {
                 case FightEndStatus.PartyWin:
-                    Debug.Log("PartyWin");
+                    _winHandler.ManageWin(partyPack);
                     break;
                 case FightEndStatus.EnemyWin:
-                    Debug.Log("EnemyWin");
                     _loseHandler.ActivateLosePanel();
                     break;
                 default:

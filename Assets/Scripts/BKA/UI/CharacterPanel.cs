@@ -46,7 +46,6 @@ namespace BKA.UI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("Clicked");
             OnPanelClicked?.Execute(_unitBattleBehaviour);
         }
 

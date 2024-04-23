@@ -137,7 +137,6 @@ namespace BKA.BattleDirectory.BattleHandlers
         private async UniTask PlayerMove(CancellationToken token)
         {
             await _battleInputHandler.MakeTurn(_firstPack, token).WithPostCancellation(ForceEndPlayerMove);
-            Debug.Log("PlayerEndTurn");
         }
 
         private async UniTask EnemyMove(CancellationToken token)
@@ -168,8 +167,6 @@ namespace BKA.BattleDirectory.BattleHandlers
             {
                 unitBattleBehaviour.Act();
             }
-
-            Debug.Log("EnemyEndTurn");
         }
 
         private void UndoPlayerMove()

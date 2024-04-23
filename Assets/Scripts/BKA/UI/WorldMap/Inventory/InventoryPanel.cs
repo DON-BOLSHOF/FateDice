@@ -25,7 +25,10 @@ namespace BKA.UI.Inventory
 
         [SerializeField] private HeroArtefactWidget _heroArtefactWidget;
 
+        public IObservable<List<Artefact>> OnUpdatedInventory => _onUpdatedInventory;
+
         private ReactiveProperty<HeroInventoryWidget> _selectedWidget = new();
+        private ReactiveCommand<List<Artefact>> _onUpdatedInventory = new();
 
         private void Start()
         {
@@ -41,7 +44,12 @@ namespace BKA.UI.Inventory
             _heroArtefactWidget.OnUpdatedActions.Subscribe(
                 _ => _sweep.UpdateData(_selectedWidget.Value.Hero.DiceActions)
             ).AddTo(this);
-            
+
+            _itemHolder.OnUpdatedData.Subscribe(_ => _onUpdatedInventory.Execute(_itemHolder.GetArtefacts()))
+                .AddTo(this);
+            _heroArtefactWidget.OnUpdatedData.Subscribe(_ => _onUpdatedInventory.Execute(_itemHolder.GetArtefacts()))
+                .AddTo(this);
+
             _selectedWidget.Value = _heroInventoryWidgets[0];
         }
 
@@ -69,6 +77,29 @@ namespace BKA.UI.Inventory
             }
 
             _itemHolder.SetArtefacts(partyArtefacts);
+        }
+
+        public void UpdateArtefacts(List<Artefact> gameSessionArtefacts)
+        {
+            var localArtefacts = _itemHolder.GetArtefacts();
+            
+            foreach (var artefact in gameSessionArtefacts)
+            {
+                if (localArtefacts.Find(artef => artef.Equals(artefact)))
+                {
+                    localArtefacts.Remove(artefact);
+                }
+                else
+                {
+                    _itemHolder.UploadArtefact(artefact);
+                }
+            }
+
+            foreach (var localArtefact in localArtefacts)
+            {
+                _itemHolder.ClearArtefact(localArtefact);
+            }
+
         }
 
         private void ChangeSelectedHero(HeroInventoryWidget heroInventoryWidget)

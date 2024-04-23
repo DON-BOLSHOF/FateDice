@@ -10,14 +10,18 @@ namespace BKA.UI.WorldMap.Inventory
 {
     public class ItemHolder : MonoBehaviour
     {
-        [SerializeField]
-        protected InventorySlot[] _inventorySlots;
+        [SerializeField] protected InventorySlot[] _inventorySlots;
+
+        public IObservable<Unit> OnUpdatedData => _onUpdatedData;
+
+        private ReactiveCommand _onUpdatedData = new();
 
         protected virtual void Awake()
         {
             foreach (var inventorySlot in _inventorySlots)
             {
-                inventorySlot.OnDroppedItem.Subscribe(inventoryItem => ReloadSlots(inventorySlot, inventoryItem)).AddTo(this);
+                inventorySlot.OnDroppedItem.Subscribe(inventoryItem => ReloadSlots(inventorySlot, inventoryItem))
+                    .AddTo(this);
             }
         }
 
@@ -31,26 +35,61 @@ namespace BKA.UI.WorldMap.Inventory
             {
                 _inventorySlots[index].SetItem(partyArtefacts[index]);
             }
-            
-            for (;index < _inventorySlots.Length; index++)
+
+            for (; index < _inventorySlots.Length; index++)
             {
                 _inventorySlots[index].ClearSlot();
             }
         }
 
-        protected virtual void ReloadSlots(InventorySlot inventorySlotTo, InventoryItem inventoryItemFrom)
+        public void UploadArtefact(Artefact artefact)
         {
-            inventorySlotTo.SetItem(inventoryItemFrom.Artefact);
-            
-            inventoryItemFrom.ClearData();
+            foreach (var inventorySlot in _inventorySlots)
+            {
+                if (inventorySlot.IsFullFilled) continue;
+                
+                inventorySlot.SetItem(artefact);
+                return;
+            }
         }
         
-        #if UNITY_EDITOR
+        public void ClearArtefact(Artefact artefact)
+        {
+            foreach (var inventorySlot in _inventorySlots)
+            {
+                if (!inventorySlot.IsFullFilled || !inventorySlot.InventoryItem.Artefact.Equals(artefact)) continue;
+                
+                inventorySlot.ClearSlot();
+                return;
+            }
+        }
+
+        public List<Artefact> GetArtefacts()
+        {
+            var result = (from inventorySlot in _inventorySlots
+                where inventorySlot.IsFullFilled
+                select inventorySlot.InventoryItem.Artefact).ToList();
+
+            return result;
+        }
+
+        private void ReloadSlots(InventorySlot inventorySlotTo, InventoryItem inventoryItemFrom)
+        {
+            var artefact = inventoryItemFrom.Artefact;
+            
+            inventoryItemFrom.ClearData();
+
+            inventorySlotTo.SetItem(artefact);
+
+            _onUpdatedData?.Execute();
+        }
+
+#if UNITY_EDITOR
         [Button]
         private void GetSlots()
         {
             _inventorySlots = GetComponentsInChildren<InventorySlot>();
         }
-        #endif
+#endif
     }
 }

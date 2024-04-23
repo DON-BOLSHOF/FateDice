@@ -15,12 +15,12 @@ namespace BKA.Dices.DiceActions
 
         private void Pulse(UnitBattleBehaviour battleBehaviour)
         {
-            battleBehaviour.Unit.ModifyHealth(5);
+            battleBehaviour.Unit.ModifyHealth(-5);
         }
         
         private void UndoPulse(UnitBattleBehaviour battleBehaviour)
         {
-            battleBehaviour.Unit.ModifyHealth(-5);
+            battleBehaviour.Unit.ModifyHealth(5);
         }
     }
 }

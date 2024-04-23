@@ -6,6 +6,6 @@ namespace BKA.System
     {
         public IReadOnlyReactiveProperty<bool> IsSynchrolized { get; }
 
-        public void Synchronize(Synchronizer synchronizer);
+        public void Synchronize(BattleSynchronizer synchronizer);
     }
 }

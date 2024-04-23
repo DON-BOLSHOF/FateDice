@@ -12,6 +12,11 @@ namespace BKA.BootsTraps
         {
             _bootTrapState.Value = BootsTraps.BootsTrapState.Loaded;
         }
+
+        public void TestVisit()
+        {
+            _bootTrapState.Value = BootsTraps.BootsTrapState.Loaded;
+        }
     }
 
     public enum BootsTrapState

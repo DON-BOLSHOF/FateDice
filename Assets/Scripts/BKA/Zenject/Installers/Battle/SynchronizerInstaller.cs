@@ -7,7 +7,7 @@ namespace BKA.Zenject.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<Synchronizer>().AsSingle();
+            Container.BindInterfacesAndSelfTo<BattleSynchronizer>().AsSingle();
         }
     }
 }
