@@ -13,7 +13,7 @@ namespace BKA.WorldMapDirectory.Inventory
 
         [Inject] private GameSession _gameSession;
 
-        private void Start()
+        private void Awake()
         {
             _inventoryPanel.Fullfill(_gameSession.Party, _gameSession.Artefacts);
             
