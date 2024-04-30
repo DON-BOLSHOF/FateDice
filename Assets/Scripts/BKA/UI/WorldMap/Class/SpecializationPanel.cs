@@ -16,6 +16,7 @@ namespace BKA.UI
         public IObservable<Specialization> OnSpecializationChoose => _onSpecializationChoose;
         public IReadOnlyReactiveProperty<Specialization> OnSpecializationSelected => _chosenSpecialization;
 
+        private readonly ReactiveProperty<Class> _currentClass = new();
         private SpecializationTree _specializationTree;
 
         private readonly ReactiveProperty<Specialization> _chosenSpecialization = new();
@@ -29,6 +30,8 @@ namespace BKA.UI
 
         private void Start()
         {
+            _currentClass.Subscribe(CheckPossibilityToLevelUp).AddTo(this);
+
             for (var i = 0; i < _perkHolders.Length; i++)
             {
                 var indexPinchedHolder = i;
@@ -52,11 +55,23 @@ namespace BKA.UI
 
         public void UpdateData(Class currentHeroClass)
         {
+            _currentClass.Value = currentHeroClass;
+
             _chosenSpecialization.Value = null;
-            
+
             _specializationTree.FormTree(currentHeroClass);
 
             UpdateUI();
+        }
+
+        public void UpdateLocalData()
+        {
+            CheckPossibilityToLevelUp(_currentClass.Value);
+        }
+
+        private void CheckPossibilityToLevelUp(Class heroClass)
+        {
+            _chooseButton.enabled = heroClass.OnReadyToLevelUp.Value;
         }
 
         private void TryCreateHintSpecializations(Specialization specialization, int indexPinchedHolder)
@@ -72,14 +87,14 @@ namespace BKA.UI
             }
             else
             {
-                _perkHolders[indexPinchedHolder+1].ClearData();
+                _perkHolders[indexPinchedHolder + 1].ClearData();
             }
         }
 
         private void UpdateNextSpecializationStep(Specialization chosenSpecialization)
         {
             _specializationTree.MakeNextStep(chosenSpecialization);
-            
+
             UpdateUI();
         }
 
@@ -89,7 +104,7 @@ namespace BKA.UI
             {
                 perkHolder.DeactivateHint();
             }
-            
+
             var steps = _specializationTree.GetSpecializationPath();
             var index = 0;
 

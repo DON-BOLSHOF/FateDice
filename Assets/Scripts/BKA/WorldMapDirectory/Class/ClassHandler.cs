@@ -31,7 +31,7 @@ namespace BKA.WorldMapDirectory.Class
             var unit = valueTuple.Item1;
             var specialization = valueTuple.Item2;
 
-            unit.Class.DecorateSpecialization(specialization);
+            unit.Class.LevelUp(specialization);
         }
     }
 }

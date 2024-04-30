@@ -13,12 +13,14 @@ namespace BKA.Units
         public abstract DiceActionData[] DiceActions { get; protected set; }
         
         public IReadOnlyReactiveProperty<int> Health => _health;
+      
         public List<Artefact> Artefacts { get; protected set; } = new();
         public abstract Class Class { get; }
 
         public IObservable<UniRx.Unit> OnUpdatedData => _onUpdatedData;
         
         protected ReactiveProperty<int> _health { get; } = new();
+        
         protected ReactiveCommand _onUpdatedData { get; } = new();
         protected readonly CompositeDisposable _unitDisposable = new();
 
@@ -42,6 +44,7 @@ namespace BKA.Units
         {
             _unitDisposable?.Dispose();
             _health?.Dispose();
+            Class?.Dispose();
         }
 
         protected void UpdateData()
@@ -49,7 +52,7 @@ namespace BKA.Units
             DiceActions = new DiceActionData[Definition.DiceActions.Length];
             Array.Copy(Definition.DiceActions, DiceActions, Definition.DiceActions.Length);
 
-            var specializationBuffs = Class.SpecializationDecoratedBuff;
+            var specializationBuffs = Class.ClassBuff;
             if ((specializationBuffs.BuffStatus & BuffStatus.Actions) != 0)
             {
                 foreach (var specializationBuffsDiceActionPair in specializationBuffs.DiceActionPairs)

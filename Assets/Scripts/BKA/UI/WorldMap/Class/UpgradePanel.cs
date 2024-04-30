@@ -17,6 +17,8 @@ namespace BKA.UI.WorldMap.Class
         [SerializeField] private TextMeshProUGUI _name;
         [SerializeField] private TextMeshProUGUI _definition;
 
+        [SerializeField] private Slider _xpSlider;
+
         public IObservable<(Units.Unit, Specialization)> OnChooseSpecialization => _onChooseSpecialization;
 
         private ReactiveCommand<(Units.Unit, Specialization)> _onChooseSpecialization = new();
@@ -38,19 +40,22 @@ namespace BKA.UI.WorldMap.Class
         public void UpdateData(Units.Unit currentHero)
         {
             _currentHero = currentHero;
-
-            _sweep.UpdateData(currentHero.DiceActions);
             
             _icon.sprite = currentHero.Definition.UnitIcon;
             _name.text = currentHero.Definition.ID;
             _definition.text = currentHero.Definition.UnitDescription;
 
+            _xpSlider.value = currentHero.Class.XPPercentage;
+
+            _sweep.UpdateData(currentHero.DiceActions);
             _specializationPanel.UpdateData(currentHero.Class);
         }
 
         public void UpdateLocalData()
         {
             _sweep.UpdateData(_currentHero.DiceActions);
+            _xpSlider.value = _currentHero.Class.XPPercentage;
+            _specializationPanel.UpdateLocalData();
         }
     }
 }

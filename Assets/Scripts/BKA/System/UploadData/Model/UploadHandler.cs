@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UniRx;
 using Zenject;
 
-namespace BKA.TestUploadData
+namespace BKA.System.UploadData
 {
     public class UploadHandler : IReadinessObservable
     {

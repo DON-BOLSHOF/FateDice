@@ -28,12 +28,14 @@ namespace BKA.WorldMapDirectory.Systems
             }
         }
 
-        private void StartBattle(IEnumerable<Unit> enemies)
+        private void StartBattle((IEnumerable<Unit> enemies, int xpValue) turple)
         {
             _levelManager.LoadLevel("BattleScene", (container) =>
             {
                 container.Bind<Unit[]>().WithId("Party").FromInstance(_gameSession.Party.ToArray()).AsCached();
-                container.Bind<Unit[]>().WithId("Enemies").FromInstance(enemies.ToArray()).AsCached();
+                container.Bind<Unit[]>().WithId("Enemies").FromInstance(turple.enemies.ToArray()).AsCached();
+
+                container.Bind<int>().WithId("XP").FromInstance(turple.xpValue).AsSingle();
 
                 container.Bind<Artefact[]>().FromInstance(_gameSession.Artefacts.ToArray()).AsSingle();
             });

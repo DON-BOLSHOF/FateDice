@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BKA.Buffs;
 using BKA.System;
-using BKA.TestUploadData;
+using BKA.System.UploadData;
 using BKA.Units;
 using Zenject;
 
@@ -12,9 +12,15 @@ namespace BKA.BattleDirectory.BattleSystems
         [Inject] private LevelManager _levelManager;
 
         [Inject] private IArtefactAwarding _artefactAwarding;
+        [Inject] private IXPAwarding _xpAwarding;
 
         public void ManageWin(List<UnitBattleBehaviour> partyPack)
         {
+            foreach (var unitBattleBehaviour in partyPack)
+            {
+                unitBattleBehaviour.Unit.Class.ModifyXP(_xpAwarding.XPAward/partyPack.Count);
+            }
+
             _levelManager.LoadLevel("WorldMap", container =>
             {
                 foreach (var unitBattleBehaviour in partyPack)

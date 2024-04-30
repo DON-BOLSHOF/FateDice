@@ -20,7 +20,7 @@ namespace BKA.Units
             
             _health.Value = Definition.Health;
             Class = new Class(new Specialization(Definition.BaseSpecializationDefinition));
-            Class.OnDecorated?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
+            Class.OnLevelUpped?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
           
             UpdateData();
         }

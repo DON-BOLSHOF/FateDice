@@ -1,8 +1,6 @@
-﻿using System;
-using BKA.System;
-using UniRx;
+﻿using UniRx;
 
-namespace BKA.TestUploadData
+namespace BKA.System.UploadData
 {
     public class WorldMapSynchronizer : ISynchronizer
     {

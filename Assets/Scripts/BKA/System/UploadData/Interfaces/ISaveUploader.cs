@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 
-namespace BKA.TestUploadData
+namespace BKA.System.UploadData
 {
     public interface ISaveUploader
     {

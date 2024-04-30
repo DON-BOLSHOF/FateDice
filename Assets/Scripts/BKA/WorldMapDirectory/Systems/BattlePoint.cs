@@ -19,13 +19,14 @@ namespace BKA.WorldMapDirectory.Systems
     public class BattlePoint : MonoBehaviour, IDisposable
     {
         [SerializeField] private UnitDefinition[] _unitDefinitions;
+        [SerializeField] private int _battleXPValue;
 
         [Inject] private UnitFactory _unitFactory;
 
-        public IObservable<IEnumerable<Unit>> OnBattleStart => _onBattleStart;
+        public IObservable<(IEnumerable<Unit>, int)> OnBattleStart => _onBattleStart;
         public BattlePointData BattlePointData => _battlePointData;
 
-        private readonly ReactiveCommand<IEnumerable<Unit>> _onBattleStart = new();
+        private readonly ReactiveCommand<(IEnumerable<Unit>, int)> _onBattleStart = new();
 
         private InteractableObject _interactableObject;
 
@@ -60,7 +61,7 @@ namespace BKA.WorldMapDirectory.Systems
         private void StartBattle()
         {
             _battlePointData.IsBattleBegan = true;
-            _onBattleStart?.Execute(_unitDefinitions.Select(definition => _unitFactory.UploadUnit(definition)));
+            _onBattleStart?.Execute((_unitDefinitions.Select(definition => _unitFactory.UploadUnit(definition)), _battleXPValue));
         }
     }
 }

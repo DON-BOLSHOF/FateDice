@@ -23,7 +23,7 @@ namespace BKA.Units
             Class = new Class(new Specialization(Definition.BaseSpecializationDefinition));
             UpdateData();
 
-            Class.OnDecorated?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
+            Class.OnLevelUpped?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
         }
     }
 }
