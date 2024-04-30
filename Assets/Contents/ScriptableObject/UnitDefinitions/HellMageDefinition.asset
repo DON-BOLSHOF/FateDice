@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: HellMageDefinition
   m_EditorClassIdentifier: 
   <ID>k__BackingField: HellMage
+  <UnitDescription>k__BackingField: "\u041E\u0433\u043D\u0435\u043D\u043D\u0430\u044F
+    \u0434\u0435\u0432\u0430"
+  <UnitIcon>k__BackingField: {fileID: 21300000, guid: dea5ad81380959d47accaff8cf1f6f61, type: 3}
   <DiceActions>k__BackingField:
   - {fileID: 11400000, guid: 36291331459381d4cb9e9a0ed5d47158, type: 2}
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
@@ -22,4 +25,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   <FixedActionsValue>k__BackingField: 6
   <Health>k__BackingField: 3
-  <UnitIcon>k__BackingField: {fileID: 21300000, guid: dea5ad81380959d47accaff8cf1f6f61, type: 3}
+  <BaseSpecializationDefinition>k__BackingField: {fileID: 11400000, guid: f9a40a5a34ccb47468fdb96c0a76502b, type: 2}

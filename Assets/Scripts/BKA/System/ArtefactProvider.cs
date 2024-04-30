@@ -1,4 +1,4 @@
-﻿using BKA.WorldMapDirectory.Artefacts;
+﻿using BKA.Buffs;
 using Cysharp.Threading.Tasks;
 
 namespace BKA.System

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BKA.Buffs;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,9 @@ namespace BKA.UI.WorldMap.Class
         
         [SerializeField] private HeroInventoryWidget[] _heroInventoryWidgets;
 
-        [SerializeField] private Sweep _sweep;
+        [SerializeField] private UpgradePanel _upgradePanel;
+
+        public IObservable<(Unit, Specialization)> OnChooseSpecialization => _upgradePanel.OnChooseSpecialization;
         
         private ReactiveProperty<HeroInventoryWidget> _selectedWidget = new();
         
@@ -38,7 +41,7 @@ namespace BKA.UI.WorldMap.Class
         {
             _view.gameObject.SetActive(true);
         }
-        
+
         public void Fullfill(List<Unit> gameSessionParty)
         {
             if (_heroInventoryWidgets.Length < gameSessionParty.Count)
@@ -57,12 +60,20 @@ namespace BKA.UI.WorldMap.Class
                 _heroInventoryWidgets[i].gameObject.SetActive(false);
             }
         }
-        
+
+        public void UpdateLocalData(Unit unit)
+        {
+            if(!_selectedWidget.Value.Hero.Equals(unit))
+                return;
+            
+            _upgradePanel.UpdateLocalData();
+        }
+
         private void ChangeSelectedHero(HeroInventoryWidget heroInventoryWidget)
         {
-            _sweep.UpdateData(heroInventoryWidget.Hero.DiceActions);
+            _upgradePanel.UpdateData(heroInventoryWidget.Hero);
+            
             heroInventoryWidget.PutForward();
-
             foreach (var inventoryWidget in _heroInventoryWidgets.Where(value => !heroInventoryWidget.Equals(value)))
             {
                 inventoryWidget.PutBase();

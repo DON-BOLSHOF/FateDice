@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BKA.WorldMapDirectory.Artefacts;
+using BKA.Buffs;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -9,7 +9,7 @@ using Unit = BKA.Units.Unit;
 
 namespace BKA.System
 {
-    public class GameSession
+    public class GameSession : IDisposable
     {
         private List<Unit> _partyCompanions;
         private List<Artefact> _artefacts;
@@ -17,15 +17,24 @@ namespace BKA.System
         public List<Unit> Party => _partyCompanions;
         public List<Artefact> Artefacts => _artefacts;
 
-        public IObservable<UniRx.Unit> OnArtefactsUpdated => _onArtefactsUpdated;
+        public IObservable<UniRx.Unit> OnArtefactsUpdated => _onArtefactsUpdated;//Вынеси
+        public IObservable<Unit> OnUnitUpdated => _onUnitUpdated;
+        
+        private readonly ReactiveCommand _onArtefactsUpdated = new();
+        private readonly ReactiveCommand<Unit> _onUnitUpdated = new();
 
-        private ReactiveCommand _onArtefactsUpdated = new();
- 
+        private CompositeDisposable _sessionDisposable = new();
+        
         public GameSession(IEnumerable<Unit> partyCompanions, [InjectOptional] IEnumerable<Artefact> artefacts)
         {
             _partyCompanions = partyCompanions.ToList();
 
             _artefacts = artefacts != null ? artefacts.ToList() : new();
+            
+            foreach (var partyCompanion in _partyCompanions)
+            {
+                partyCompanion.OnUpdatedData.Subscribe(_ => _onUnitUpdated?.Execute(partyCompanion)).AddTo(_sessionDisposable);
+            }
         }
 
         public void UpdateArtefacts(List<Artefact> artefacts)
@@ -50,8 +59,6 @@ namespace BKA.System
             }
 
             _onArtefactsUpdated?.Execute();
-            
-            Debug.Log($"UpdatedArtefacts: {_artefacts.Count}");
         }
 
         public void AddArtefact(Artefact artefact)
@@ -66,6 +73,13 @@ namespace BKA.System
             _artefacts.Remove(artefact);
 
             _onArtefactsUpdated?.Execute();
+        }
+
+        public void Dispose()
+        {
+            _onArtefactsUpdated?.Dispose();
+            _onUnitUpdated?.Dispose();
+            _sessionDisposable?.Dispose();
         }
     }
 }

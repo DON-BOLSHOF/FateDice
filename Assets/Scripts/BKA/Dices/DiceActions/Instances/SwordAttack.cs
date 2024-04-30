@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BKA.Dices.DiceActions
 {
-    [CreateAssetMenu(fileName = "DiceAttribute/SwordAttack", menuName = "Additional/DiceAttribute/SwordAttack")]
+    [CreateAssetMenu(fileName = "DiceAttribute/SwordAttack", menuName = "Defs/DiceAttribute/SwordAttack")]
     public class SwordAttack : DiceActionData
     { 
         [field:SerializeField] public override string ID { get; protected set; }

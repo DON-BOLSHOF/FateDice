@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using BKA.System;
-using BKA.Units;
-using BKA.WorldMapDirectory.Artefacts;
 using Cysharp.Threading.Tasks;
 
-namespace BKA
+namespace BKA.Buffs
 {
     public class ArtefactPool
     {

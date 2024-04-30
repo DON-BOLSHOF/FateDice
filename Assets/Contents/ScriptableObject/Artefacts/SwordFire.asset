@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SwordFire
   m_EditorClassIdentifier: 
   _id: SwordFire
-  _artefactStatus: 1
+  _buffStatus: 1
   _view: {fileID: 21300000, guid: 426c1c8f908c2084da01c4e5c3793ee4, type: 3}
   _diceActions:
   - Index: 1

@@ -1,6 +1,6 @@
 ﻿using System;
+using BKA.Buffs;
 using BKA.Dices.DiceActions;
-using BKA.WorldMapDirectory.Artefacts;
 using UniRx;
 
 namespace BKA.Units
@@ -9,7 +9,7 @@ namespace BKA.Units
     {
         public sealed override UnitDefinition Definition { get; protected set; }
         public sealed override DiceActionData[] DiceActions { get; protected set; }
-        protected sealed override ReactiveProperty<int> _health { get; } = new();
+        public sealed override Class Class { get; }
 
         public HellMage(DefinitionPool definitionPool)
         {
@@ -19,6 +19,10 @@ namespace BKA.Units
             Array.Copy(Definition.DiceActions, DiceActions, Definition.DiceActions.Length);
             
             _health.Value = Definition.Health;
+            Class = new Class(new Specialization(Definition.BaseSpecializationDefinition));
+            Class.OnDecorated?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
+          
+            UpdateData();
         }
     }
 }

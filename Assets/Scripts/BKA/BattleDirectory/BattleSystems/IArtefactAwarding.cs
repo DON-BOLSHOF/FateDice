@@ -1,4 +1,4 @@
-﻿using BKA.WorldMapDirectory.Artefacts;
+﻿using BKA.Buffs;
 
 namespace BKA.BattleDirectory.BattleSystems
 {

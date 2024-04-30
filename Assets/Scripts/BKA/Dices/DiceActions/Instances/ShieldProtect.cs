@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BKA.Dices.DiceActions
 {
-    [CreateAssetMenu(fileName = "DiceAttribute/ShieldProtect", menuName = "Additional/DiceAttribute/ShieldProtect")]
+    [CreateAssetMenu(fileName = "DiceAttribute/ShieldProtect", menuName = "Defs/DiceAttribute/ShieldProtect")]
     public class ShieldProtect : DiceActionData
     {
         [field:SerializeField] public override string ID { get; protected set; }

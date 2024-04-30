@@ -1,4 +1,4 @@
-﻿using BKA.WorldMapDirectory.Artefacts;
+﻿using BKA.Buffs;
 using UnityEngine;
 using Zenject;
 

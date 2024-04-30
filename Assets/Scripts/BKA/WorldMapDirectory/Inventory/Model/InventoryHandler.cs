@@ -24,6 +24,8 @@ namespace BKA.WorldMapDirectory.Inventory
                 _gameSession.UpdateArtefacts(artefacts)).AddTo(this);
 
             _gameSession.OnArtefactsUpdated.Subscribe(_ => _inventoryPanel.UpdateArtefacts(_gameSession.Artefacts)).AddTo(this);
+
+            _gameSession.OnUnitUpdated.Subscribe(unit => _inventoryPanel.UpdateLocalData(unit)).AddTo(this);
         }
     }
 }

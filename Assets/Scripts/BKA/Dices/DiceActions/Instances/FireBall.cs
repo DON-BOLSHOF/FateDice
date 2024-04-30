@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BKA.Dices.DiceActions
 {
-    [CreateAssetMenu(fileName = "DiceAttribute/FireBall", menuName = "Additional/DiceAttribute/FireBall")]
+    [CreateAssetMenu(fileName = "DiceAttribute/FireBall", menuName = "Defs/DiceAttribute/FireBall")]
     public class FireBall : DiceActionData
     {
         [field:SerializeField] public override string ID { get; protected set; }

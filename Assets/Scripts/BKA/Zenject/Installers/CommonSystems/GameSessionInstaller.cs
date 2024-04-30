@@ -9,7 +9,7 @@ namespace BKA.Zenject.Installers.CommonSystems
     {
         public override void InstallBindings()
         {
-            Container.Bind<GameSession>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameSession>().AsSingle();
         }
     }
 }

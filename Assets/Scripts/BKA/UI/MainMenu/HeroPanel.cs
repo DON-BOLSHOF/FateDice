@@ -1,6 +1,6 @@
 ﻿using System;
+using BKA.Buffs;
 using BKA.Units;
-using BKA.WorldMapDirectory.Artefacts;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;

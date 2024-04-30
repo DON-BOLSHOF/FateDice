@@ -1,5 +1,5 @@
 ﻿using System;
-using BKA.WorldMapDirectory.Artefacts;
+using BKA.Buffs;
 using Zenject;
 
 namespace BKA.BattleDirectory.BattleSystems

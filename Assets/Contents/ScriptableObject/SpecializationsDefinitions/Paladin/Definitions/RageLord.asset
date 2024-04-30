@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8ef8d9fe0341e4b13724607092d2f4, type: 3}
+  m_Name: RageLord
+  m_EditorClassIdentifier: 
+  _buffStatus: 1
+  _view: {fileID: 21300000, guid: 178e9c025ef60ca418dddc3002ea4e1b, type: 3}
+  _diceActions:
+  - Index: 3
+    DiceAction: {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
+  - Index: 5
+    DiceAction: {fileID: 11400000, guid: 36291331459381d4cb9e9a0ed5d47158, type: 2}

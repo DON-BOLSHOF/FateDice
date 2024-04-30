@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BKA.Dices.DiceActions
 {
-    [CreateAssetMenu(fileName = "DiceAttribute/InActivity", menuName = "Additional/DiceAttribute/InActivity")]
+    [CreateAssetMenu(fileName = "DiceAttribute/InActivity", menuName = "Defs/DiceAttribute/InActivity")]
     public class InActivity : DiceActionData
     {
         [field:SerializeField] public override string ID { get; protected set; }

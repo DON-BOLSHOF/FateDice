@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BKA.Dices.DiceActions
 {
-    [CreateAssetMenu(fileName = "DiceAttribute/NightPulse", menuName = "Additional/DiceAttribute/NightPulse")]
+    [CreateAssetMenu(fileName = "DiceAttribute/NightPulse", menuName = "Defs/DiceAttribute/NightPulse")]
     public class NightPulse : DiceActionData
     {
         [field:SerializeField] public override string ID { get; protected set; }

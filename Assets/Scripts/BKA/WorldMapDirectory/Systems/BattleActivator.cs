@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BKA.Buffs;
 using BKA.System;
-using BKA.WorldMapDirectory.Artefacts;
 using UniRx;
 using Unit = BKA.Units.Unit;
 

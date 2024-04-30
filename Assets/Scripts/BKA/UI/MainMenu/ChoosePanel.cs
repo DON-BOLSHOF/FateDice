@@ -1,7 +1,7 @@
 ﻿using System.Linq;
+using BKA.Buffs;
 using BKA.System;
 using BKA.Units;
-using BKA.WorldMapDirectory.Artefacts;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;

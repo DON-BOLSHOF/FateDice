@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using BKA.Buffs;
 using BKA.System;
 using BKA.TestUploadData;
 using BKA.Units;
-using BKA.WorldMapDirectory.Artefacts;
 using Zenject;
 
 namespace BKA.BattleDirectory.BattleSystems

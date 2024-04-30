@@ -1,4 +1,5 @@
-﻿using BKA.System;
+﻿using BKA.Buffs;
+using BKA.System;
 using UnityEngine;
 using Zenject;
 
@@ -25,12 +26,6 @@ namespace BKA.BootsTraps
             }
 
             _levelManager.LoadLevel("MainMenu");
-
-            /*_levelManager.LoadLevel("BattleScene", (container) =>
-            {
-                container.Bind<Unit[]>().WithId("Party").FromInstance(new Unit[]{new DemonPaladin(_definitionPool), new DemonPaladin(_definitionPool)}).AsCached();
-                container.Bind<Unit[]>().WithId("Enemies").FromInstance(new Unit[]{new DemonPaladin(_definitionPool)}).AsCached();
-            });*/
         }
     }
 }

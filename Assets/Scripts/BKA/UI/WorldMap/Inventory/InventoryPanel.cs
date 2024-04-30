@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BKA.Buffs;
 using BKA.UI.WorldMap;
 using BKA.UI.WorldMap.Inventory;
-using BKA.WorldMapDirectory.Artefacts;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,9 +41,10 @@ namespace BKA.UI.Inventory
                 heroInventoryWidget.OnSelected.Subscribe(_ => _selectedWidget.Value = heroInventoryWidget).AddTo(this);
             }
 
+            /*
             _heroArtefactWidget.OnUpdatedActions.Subscribe(
                 _ => _sweep.UpdateData(_selectedWidget.Value.Hero.DiceActions)
-            ).AddTo(this);
+            ).AddTo(this);*/
 
             _itemHolder.OnUpdatedData.Subscribe(_ => _onUpdatedInventory.Execute(_itemHolder.GetArtefacts()))
                 .AddTo(this);
@@ -100,6 +101,14 @@ namespace BKA.UI.Inventory
                 _itemHolder.ClearArtefact(localArtefact);
             }
 
+        }
+
+        public void UpdateLocalData(Unit unit)
+        {
+            if(!unit.Equals(_selectedWidget.Value.Hero))
+                return;
+            
+            _sweep.UpdateData(_selectedWidget.Value.Hero.DiceActions);
         }
 
         private void ChangeSelectedHero(HeroInventoryWidget heroInventoryWidget)
