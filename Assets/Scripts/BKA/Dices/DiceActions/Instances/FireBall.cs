@@ -7,20 +7,23 @@ namespace BKA.Dices.DiceActions
     [CreateAssetMenu(fileName = "DiceAttribute/FireBall", menuName = "Defs/DiceAttribute/FireBall")]
     public class FireBall : DiceActionData
     {
-        [field:SerializeField] public override string ID { get; protected set; }
-        [field:SerializeField] public override DiceAttributeFocus DiceAttributeFocus { get; protected set; }
-        [field:SerializeField] public override Sprite ActionView { get; protected set; }
-        public override Action<UnitBattleBehaviour> Act => Fire;
-        public override Action<UnitBattleBehaviour> Undo => UndoFire;
-        
-        private void Fire(UnitBattleBehaviour battleBehaviour)
+        [field: SerializeField] public override DiceAttributeFocus DiceAttributeFocus { get; protected set; }
+        [field: SerializeField] public override Sprite ActionView { get; protected set; }
+        [field: SerializeField] public override int BaseActValue { get; protected set; }
+
+        public override DiceActionMainAttribute DiceActionMainAttribute { get; protected set; } =
+            DiceActionMainAttribute.Intelligent;
+        public override Action<UnitBattleBehaviour, ActionModificator> Act => Fire;
+        public override Action<UnitBattleBehaviour, ActionModificator> Undo => UndoFire;
+
+        private void Fire(UnitBattleBehaviour battleBehaviour, ActionModificator modificator)
         {
-            battleBehaviour.Unit.ModifyHealth(-3);
+            battleBehaviour.Unit.ModifyHealth(-(BaseActValue + modificator.GetModificatorValue()));
         }
-        
-        private void UndoFire(UnitBattleBehaviour battleBehaviour)
+
+        private void UndoFire(UnitBattleBehaviour battleBehaviour, ActionModificator modificator)
         {
-            battleBehaviour.Unit.ModifyHealth(3);
+            battleBehaviour.Unit.ModifyHealth(BaseActValue +modificator.GetModificatorValue());
         }
     }
 }

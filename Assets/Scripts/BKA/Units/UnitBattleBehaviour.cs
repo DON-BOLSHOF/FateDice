@@ -12,9 +12,9 @@ namespace BKA.Units
         public DiceObject DiceObject { get; }
         public ReactiveCommand OnDead { get; } = new();
         public DiceAction DiceAction => _diceAction;
-        
+
         private DiceAction _diceAction;
-        
+
         private CompositeDisposable _disposable = new();
 
         public readonly ReactiveProperty<bool> IsReadyToAct = new(false);
@@ -26,16 +26,19 @@ namespace BKA.Units
             DiceObject = dice;
 
             Unit.Health.Where(value => value <= 0).Subscribe(_ => OnDead?.Execute()).AddTo(_disposable);
-            
-            dice.UpdateActions(unit.DiceActions.Select(data => new DiceAction(data)).ToArray());
-            
+
+            dice.UpdateActions(unit.DiceActions.Select(data =>
+                new DiceAction(data,
+                    new CharacteristicActionProvider(unit.Class.Characteristics, data.DiceActionMainAttribute)
+                        .GetModificator())).ToArray());
+
             DiceObject.OnDiceReadyToAct.Subscribe(PrepareToAct).AddTo(_disposable);
             DiceObject.OnDiceUnReadyToAct.Subscribe(_ => UnPrepareToAct()).AddTo(_disposable);
         }
 
         private void PrepareToAct(DiceAction actionData)
         {
-            _diceAction= actionData;
+            _diceAction = actionData;
             IsReadyToAct.Value = true;
             IsActed.Value = false;
         }
@@ -57,7 +60,7 @@ namespace BKA.Units
         public void UndoAct()
         {
             _diceAction.Undo();
-            
+
             IsActed.Value = false;
             IsReadyToAct.Value = true;
         }

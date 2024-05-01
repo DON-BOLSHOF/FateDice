@@ -12,20 +12,23 @@ namespace BKA.Units
         public float XPPercentage => _xp.Value / (float)_xpThreashold;
         public IReadOnlyReactiveProperty<bool> OnReadyToLevelUp => _onReadyToLevelUp;
         public IObservable<UniRx.Unit> OnLevelUpped => _onLevelUpped;
+        public Characteristics Characteristics => _characteristics;
 
         private ISpecializationProvider _specializationProvider;
+        private Characteristics _characteristics;
 
         private ReactiveProperty<int> _xp { get; } = new();
         private ReactiveProperty<bool> _onReadyToLevelUp = new();
         private ReactiveCommand _onLevelUpped = new();
 
         private int _xpThreashold = 200;
-
+        
         private CompositeDisposable _classDisposable = new();
 
-        public Class(Specialization baseSpecialization)
+        public Class(Specialization baseSpecialization, Characteristics characteristics)
         {
             _specializationProvider = new BaseSpecialization(baseSpecialization);
+            _characteristics = characteristics;
 
             _xp.Subscribe(_ => _onReadyToLevelUp.Value = _xp.Value >= _xpThreashold).AddTo(_classDisposable);
         }

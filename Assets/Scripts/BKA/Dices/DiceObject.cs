@@ -76,18 +76,18 @@ namespace BKA.Dices
             OnDiceUnReadyToAct?.Execute();
         }
 
-        public void UpdateActions(DiceAction[] diceAttributes)
+        public void UpdateActions(DiceAction[] diceAction)
         {
-            if (diceAttributes.Length != FixedActionsAmount)
+            if (diceAction.Length != FixedActionsAmount)
             {
                 throw new ArgumentException("Actions amount is not designed for dice's condition");
             }
 
-            DiceActions = diceAttributes;
+            DiceActions = diceAction;
 
             for (var i = 0; i < _diceEdges.Length; i++)
             {
-                _diceEdges[i].UpdateAction(diceAttributes[i].DiceActionData);
+                _diceEdges[i].UpdateAction(diceAction[i]);
             }
         }
 

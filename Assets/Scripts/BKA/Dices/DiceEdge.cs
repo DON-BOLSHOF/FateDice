@@ -1,13 +1,16 @@
 using BKA.Dices.DiceActions;
+using TMPro;
 using UnityEngine;
-using NotImplementedException = System.NotImplementedException;
 
 namespace BKA.Dices
 {
     public class DiceEdge : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _edgeView;
-        
+
+        [SerializeField] private Transform _modificatorBackground;
+        [SerializeField] private TextMeshProUGUI _modificatorValue;
+
         public bool CheckNotCrossEnvironment()
         {
             return !CheckCrossEnvironment();
@@ -38,9 +41,21 @@ namespace BKA.Dices
             return leftRay || rightRay || middleRay || upRay || downRay;
         }
 
-        public void UpdateAction(DiceActionData diceAttribute)
+        public void UpdateAction(DiceAction action)
         {
-            _edgeView.sprite = diceAttribute.ActionView;
+            _edgeView.sprite = action.DiceActionData.ActionView;
+            var modificator = action.ActionModificatorValue;
+            if (modificator > 0)
+            {
+                _modificatorValue.text = modificator.ToString();
+                _modificatorValue.gameObject.SetActive(true);
+                _modificatorBackground.gameObject.SetActive(true);
+            }
+            else
+            {
+                _modificatorBackground.gameObject.SetActive(false);
+                _modificatorValue.gameObject.SetActive(false);
+            }
         }
     }
 }

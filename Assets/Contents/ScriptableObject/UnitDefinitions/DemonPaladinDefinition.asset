@@ -19,7 +19,7 @@ MonoBehaviour:
     \u043E\u0442\u044B\u0441\u043A\u0430\u043B \u0432 \u0441\u0435\u0431\u0435 \u0441\u0432\u0435\u0442
     \u0432\u0435\u0440\u044B."
   <UnitIcon>k__BackingField: {fileID: 21300000, guid: 930d62d7bed22094a9da122f97270e0c, type: 3}
-  <DiceActions>k__BackingField:
+  <BaseDiceActions>k__BackingField:
   - {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
   - {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
   - {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
@@ -27,5 +27,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   <FixedActionsValue>k__BackingField: 6
-  <Health>k__BackingField: 5
+  <BaseHealth>k__BackingField: 5
   <BaseSpecializationDefinition>k__BackingField: {fileID: 11400000, guid: 98b081d9debfa2b44b39f8fc630e7555, type: 2}
+  <BaseCharacteristics>k__BackingField:
+    _agility: 3
+    _strength: 4
+    _intelligent: 2

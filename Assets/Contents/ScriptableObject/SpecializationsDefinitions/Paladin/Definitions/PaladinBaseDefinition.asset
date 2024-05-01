@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8ef8d9fe0341e4b13724607092d2f4, type: 3}
   m_Name: PaladinBaseDefinition
   m_EditorClassIdentifier: 
-  _buffStatus: 0
+  _statusOfBuff: 0
   _view: {fileID: 0}
-  _diceActions:
-  - Index: 0
-    DiceAction: {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
+  _diceActions: []
+  _characteristics:
+    _agility: 0
+    _strength: 0
+    _intelligent: 0

@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: SwordFire
   m_EditorClassIdentifier: 
   _id: SwordFire
-  _buffStatus: 1
+  _statusOfBuff: 1
   _view: {fileID: 21300000, guid: 426c1c8f908c2084da01c4e5c3793ee4, type: 3}
   _diceActions:
   - Index: 1
     DiceAction: {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
+  _characteristics:
+    _agility: 0
+    _strength: 0
+    _intelligent: 0

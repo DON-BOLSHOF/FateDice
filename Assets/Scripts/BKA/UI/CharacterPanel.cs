@@ -1,4 +1,5 @@
 ﻿using System;
+using BKA.UI.WorldMap;
 using BKA.Units;
 using BKA.Utils;
 using TMPro;
@@ -12,9 +13,9 @@ namespace BKA.UI
     public class CharacterPanel : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private Image _portrait;
-        [SerializeField] private Image _attribute;
         [SerializeField] private TextMeshProUGUI _name;
         [SerializeField] private HealthWidget _healthWidget;
+        [SerializeField] private AttributeWidget _attributeWidget;
 
         public ReactiveCommand<UnitBattleBehaviour> OnPanelClicked = new();
         public UnitBattleBehaviour UnitBattleBehaviour => _unitBattleBehaviour;
@@ -28,11 +29,11 @@ namespace BKA.UI
             _name.text = unitBehaviour.Unit.Definition.ID;
 
             unitBehaviour.DiceObject.OnDiceReadyToAct.Subscribe(diceAction =>
-            {
-                _attribute.sprite = diceAction.DiceActionData.ActionView;
-            }).AddTo(this);
+                _attributeWidget.ModifyAttribute(diceAction.DiceActionData.ActionView,
+                    diceAction.ActionModificatorValue)
+            ).AddTo(this);
 
-            unitBehaviour.DiceObject.OnDiceUnReadyToAct.Subscribe(_ => { _attribute.sprite = null; }).AddTo(this);
+            unitBehaviour.DiceObject.OnDiceUnReadyToAct.Subscribe(_ => { _attributeWidget.ClearData(); }).AddTo(this);
 
             unitBehaviour.Unit.Health.Subscribe(value => _healthWidget.SetHealth(value)).AddTo(this);
 
@@ -51,7 +52,7 @@ namespace BKA.UI
 
         public Vector3 GetAttributePositionInWorldSpace()
         {
-            return UIToWorldConverter.Convert(_attribute.GetComponent<RectTransform>()) + new Vector3(0, 0.5f, 0);
+            return UIToWorldConverter.Convert(_attributeWidget.GetComponent<RectTransform>()) + new Vector3(0, 0.5f, 0);
         }
     }
 }

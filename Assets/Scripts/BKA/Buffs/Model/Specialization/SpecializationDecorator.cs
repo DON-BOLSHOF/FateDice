@@ -30,16 +30,26 @@ namespace BKA.Buffs
 
         private IBuff GetSpecializationInternal()
         {
-            var instance = new CommonBuff(_specialization.BuffStatus, _specialization.DiceActionPairs);
-
             var specialization = _wrappedEntity.GetBuff();
+            
+            var instance = new CommonBuff(_specialization.StatusOfBuff | specialization.StatusOfBuff, _specialization.DiceActionPairs,
+                _specialization.Characteristics);
 
-            if ((specialization.BuffStatus & BuffStatus.Actions) == 0) return instance;
-
-            foreach (var diceActionPair in from diceActionPair in specialization.DiceActionPairs let index = _specialization.DiceActionPairs.FindIndex(pair =>
-                         pair.Index == diceActionPair.Index) where index <= 0 select diceActionPair)
+            if ((specialization.StatusOfBuff & BuffStatus.Characteristics) != 0)
             {
-                instance.DiceActionPairs.Add(diceActionPair);
+                instance.Characteristics.ModifyCharacteristics(specialization.Characteristics);
+            }
+
+            if ((specialization.StatusOfBuff & BuffStatus.Actions) != 0)
+            {
+                foreach (var diceActionPair in from diceActionPair in specialization.DiceActionPairs
+                         let index = _specialization.DiceActionPairs.FindIndex(pair =>
+                             pair.Index == diceActionPair.Index)
+                         where index <= 0
+                         select diceActionPair)
+                {
+                    instance.DiceActionPairs.Add(diceActionPair);
+                }
             }
 
             return instance;

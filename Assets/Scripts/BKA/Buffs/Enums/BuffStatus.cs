@@ -5,8 +5,8 @@ namespace BKA.Buffs
     [Flags]
     public enum BuffStatus
     {
-        None,
-        Actions,
-        Characteristics
+        None = 0,
+        Actions = 1,
+        Characteristics = 2
     }
 }

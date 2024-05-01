@@ -8,7 +8,7 @@ using Unit = BKA.Units.Unit;
 namespace BKA.UI.WorldMap
 {
     [RequireComponent(typeof(Button))]
-    public class HeroInventoryWidget : MonoBehaviour
+    public class HeroWorldMapWidget : MonoBehaviour
     {
         [SerializeField] private Transform _view;
         [SerializeField] private HealthWidget _healthWidget;
@@ -35,6 +35,11 @@ namespace BKA.UI.WorldMap
 
             _icon.sprite = unit.Definition.UnitIcon;
             _healthWidget.SetHealth(unit.Health.Value);
+        }
+
+        public void UpdateLocalData()
+        {
+            _healthWidget.SetHealth(_hero.Health.Value);
         }
 
         public void PutForward()

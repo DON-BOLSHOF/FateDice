@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64b24fc662d7405881fdb6d2686c512a, type: 3}
   m_Name: DiceAttribute_FireBall
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: FireBall
   <DiceAttributeFocus>k__BackingField: 1
   <ActionView>k__BackingField: {fileID: 21300000, guid: d0c631aa922302a4d91e9c7b46af3f2c, type: 3}
+  <BaseActValue>k__BackingField: 3

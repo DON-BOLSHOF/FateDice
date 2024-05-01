@@ -1,72 +1,44 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using BKA.Dices.DiceActions;
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
+using BKA.Units;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BKA.UI.WorldMap
 {
     public class Sweep : MonoBehaviour
     {
-        [SerializeField] private Image[] _actions;
+        [SerializeField] private SweepAttribute[] _sweepAttributes;
 
-        private DiceActionData[] _diceActions;
-
-        private CancellationTokenSource _sweepSource = new();
-
-        public void UpdateData(DiceActionData[] actions)
+        public void UpdateData(Unit unit)
         {
-            _diceActions = actions;
+            var characteristics = unit.Class.Characteristics;
 
-            for (var i = 0; i < _actions.Length; i++)
+            for (var i = 0; i < _sweepAttributes.Length; i++)
             {
-                _actions[i].sprite = actions[i].ActionView;
+                var modificator = new CharacteristicActionProvider(characteristics,
+                                          unit.DiceActions[i].DiceActionMainAttribute).GetModificator().GetModificatorValue()
+                                  + unit.DiceActions[i].BaseActValue; //Полная хуйня, хоть и идея правильная но выведи в отдельную структуру это все
+
+                _sweepAttributes[i].UpdateData(unit.DiceActions[i].ActionView, modificator);
             }
         }
 
         public void MakeHint(List<DiceActionPair> specializationDiceActionPairs)
         {
             DeactivateHint();
-            _sweepSource = new();
-
             foreach (var specializationDiceActionPair in specializationDiceActionPairs)
             {
-                _actions[specializationDiceActionPair.Index].sprite =
-                    specializationDiceActionPair.DiceAction.ActionView;
+                _sweepAttributes[specializationDiceActionPair.Index]
+                    .MakeHint(specializationDiceActionPair.DiceAction.ActionView);
             }
-
-            ActivateHint(specializationDiceActionPairs.Select(pair => pair.Index).ToArray(), _sweepSource.Token).Forget();
         }
 
         public void DeactivateHint()
         {
-            _sweepSource?.Cancel();
-
-            for (var i = 0; i < _actions.Length; i++)
+            foreach (var sweepAttribute in _sweepAttributes)
             {
-                _actions[i].sprite = _diceActions[i].ActionView;
-                _actions[i].color = Color.white;
+                sweepAttribute.DeactivateHint();
             }
-        }
-
-        private async UniTaskVoid ActivateHint(int[] indexes, CancellationToken token)
-        {
-            while (!token.IsCancellationRequested)
-            {
-                var uniTasks = Enumerable.Select(indexes, t => _actions[t].DOColor(Color.blue, 1).ToUniTask(cancellationToken: token)).ToList();
-                await UniTask.WhenAll(uniTasks);
-                uniTasks.Clear();
-                uniTasks.AddRange(Enumerable.Select(indexes, t => _actions[t].DOColor(Color.cyan, 1).ToUniTask(cancellationToken: token)));
-                await UniTask.WhenAll(uniTasks);
-            }
-        }
-
-        private void OnDestroy()
-        {
-            _sweepSource?.Cancel();
         }
     }
 }

@@ -12,10 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8ef8d9fe0341e4b13724607092d2f4, type: 3}
   m_Name: OathBreaker
   m_EditorClassIdentifier: 
-  _buffStatus: 1
+  _statusOfBuff: 3
   _view: {fileID: 21300000, guid: bd97bf4019b8b6e418d6308167d63907, type: 3}
   _diceActions:
   - Index: 4
     DiceAction: {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
   - Index: 5
     DiceAction: {fileID: 11400000, guid: 91ff22984379a224380dae3587c621e0, type: 2}
+  _characteristics:
+    _agility: 3
+    _strength: -2
+    _intelligent: 0

@@ -6,22 +6,25 @@ namespace BKA.Dices.DiceActions
 {
     [CreateAssetMenu(fileName = "DiceAttribute/SwordAttack", menuName = "Defs/DiceAttribute/SwordAttack")]
     public class SwordAttack : DiceActionData
-    { 
-        [field:SerializeField] public override string ID { get; protected set; }
-        [field:SerializeField] public override DiceAttributeFocus DiceAttributeFocus { get; protected set; }
-        [field:SerializeField] public override Sprite ActionView { get; protected set; }
+    {
+        [field: SerializeField] public override DiceAttributeFocus DiceAttributeFocus { get; protected set; }
+        [field: SerializeField] public override Sprite ActionView { get; protected set; }
+        [field: SerializeField] public override int BaseActValue { get; protected set; }
 
-        public override Action<UnitBattleBehaviour> Act => Attack;
-        public override Action<UnitBattleBehaviour> Undo => UndoAttack;
+        public override DiceActionMainAttribute DiceActionMainAttribute { get; protected set; } =
+            DiceActionMainAttribute.Agility;
 
-        private void Attack(UnitBattleBehaviour unitBehaviour)
+        public override Action<UnitBattleBehaviour, ActionModificator> Act => Attack;
+        public override Action<UnitBattleBehaviour, ActionModificator> Undo => UndoAttack;
+
+        private void Attack(UnitBattleBehaviour battleBehaviour, ActionModificator modificator)
         {
-            unitBehaviour.Unit.ModifyHealth(-4);
+            battleBehaviour.Unit.ModifyHealth(-(BaseActValue + modificator.GetModificatorValue()));
         }
 
-        private void UndoAttack(UnitBattleBehaviour unitBehaviour)
+        private void UndoAttack(UnitBattleBehaviour battleBehaviour, ActionModificator modificator)
         {
-            unitBehaviour.Unit.ModifyHealth(4);
+            battleBehaviour.Unit.ModifyHealth((BaseActValue + modificator.GetModificatorValue()));
         }
     }
 }

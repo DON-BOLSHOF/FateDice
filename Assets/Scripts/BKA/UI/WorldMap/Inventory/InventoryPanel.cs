@@ -17,7 +17,7 @@ namespace BKA.UI.Inventory
 
         [SerializeField] private Transform _view;
 
-        [SerializeField] private HeroInventoryWidget[] _heroInventoryWidgets;
+        [SerializeField] private HeroWorldMapWidget[] _heroWorldMapWidgets;
 
         [SerializeField] private Sweep _sweep;
 
@@ -27,7 +27,7 @@ namespace BKA.UI.Inventory
 
         public IObservable<List<Artefact>> OnUpdatedInventory => _onUpdatedInventory;
 
-        private ReactiveProperty<HeroInventoryWidget> _selectedWidget = new();
+        private ReactiveProperty<HeroWorldMapWidget> _selectedWidget = new();
         private ReactiveCommand<List<Artefact>> _onUpdatedInventory = new();
 
         private void Start()
@@ -36,22 +36,17 @@ namespace BKA.UI.Inventory
 
             _selectedWidget.Skip(1).Subscribe(ChangeSelectedHero).AddTo(this);
 
-            foreach (var heroInventoryWidget in _heroInventoryWidgets)
+            foreach (var heroInventoryWidget in _heroWorldMapWidgets)
             {
                 heroInventoryWidget.OnSelected.Subscribe(_ => _selectedWidget.Value = heroInventoryWidget).AddTo(this);
             }
-
-            /*
-            _heroArtefactWidget.OnUpdatedActions.Subscribe(
-                _ => _sweep.UpdateData(_selectedWidget.Value.Hero.DiceActions)
-            ).AddTo(this);*/
 
             _itemHolder.OnUpdatedData.Subscribe(_ => _onUpdatedInventory.Execute(_itemHolder.GetArtefacts()))
                 .AddTo(this);
             _heroArtefactWidget.OnUpdatedData.Subscribe(_ => _onUpdatedInventory.Execute(_itemHolder.GetArtefacts()))
                 .AddTo(this);
 
-            _selectedWidget.Value = _heroInventoryWidgets[0];
+            _selectedWidget.Value = _heroWorldMapWidgets[0];
         }
 
         public void Activate()
@@ -61,20 +56,20 @@ namespace BKA.UI.Inventory
 
         public void Fullfill(List<Unit> gameSessionParty, List<Artefact> partyArtefacts)
         {
-            if (_heroInventoryWidgets.Length < gameSessionParty.Count)
+            if (_heroWorldMapWidgets.Length < gameSessionParty.Count)
                 throw new ArgumentException("Слишком много в партии игрока персонажей");
 
             var i = 0;
 
             for (i = 0; i < gameSessionParty.Count; i++)
             {
-                _heroInventoryWidgets[i].UpdateData(gameSessionParty[i]);
-                _heroInventoryWidgets[i].gameObject.SetActive(true);
+                _heroWorldMapWidgets[i].UpdateData(gameSessionParty[i]);
+                _heroWorldMapWidgets[i].gameObject.SetActive(true);
             }
 
-            for (; i < _heroInventoryWidgets.Length; i++)
+            for (; i < _heroWorldMapWidgets.Length; i++)
             {
-                _heroInventoryWidgets[i].gameObject.SetActive(false);
+                _heroWorldMapWidgets[i].gameObject.SetActive(false);
             }
 
             _itemHolder.SetArtefacts(partyArtefacts);
@@ -83,7 +78,7 @@ namespace BKA.UI.Inventory
         public void UpdateArtefacts(List<Artefact> gameSessionArtefacts)
         {
             var localArtefacts = _itemHolder.GetArtefacts();
-            
+
             foreach (var artefact in gameSessionArtefacts)
             {
                 if (localArtefacts.Find(artef => artef.Equals(artefact)))
@@ -100,24 +95,24 @@ namespace BKA.UI.Inventory
             {
                 _itemHolder.ClearArtefact(localArtefact);
             }
-
         }
 
         public void UpdateLocalData(Unit unit)
         {
-            if(!unit.Equals(_selectedWidget.Value.Hero))
-                return;
-            
-            _sweep.UpdateData(_selectedWidget.Value.Hero.DiceActions);
+            var heroWorldMapWidget = _heroWorldMapWidgets.First(widget => widget.Hero.Equals(unit));
+            heroWorldMapWidget.UpdateLocalData();
+
+            if (unit.Equals(_selectedWidget.Value.Hero))
+                _sweep.UpdateData(_selectedWidget.Value.Hero);
         }
 
-        private void ChangeSelectedHero(HeroInventoryWidget heroInventoryWidget)
+        private void ChangeSelectedHero(HeroWorldMapWidget heroWorldMapWidget)
         {
-            _sweep.UpdateData(heroInventoryWidget.Hero.DiceActions);
-            _heroArtefactWidget.SetHero(heroInventoryWidget.Hero);
-            heroInventoryWidget.PutForward();
+            _sweep.UpdateData(heroWorldMapWidget.Hero);
+            _heroArtefactWidget.SetHero(heroWorldMapWidget.Hero);
+            heroWorldMapWidget.PutForward();
 
-            foreach (var inventoryWidget in _heroInventoryWidgets.Where(value => !heroInventoryWidget.Equals(value)))
+            foreach (var inventoryWidget in _heroWorldMapWidgets.Where(value => !heroWorldMapWidget.Equals(value)))
             {
                 inventoryWidget.PutBase();
             }
