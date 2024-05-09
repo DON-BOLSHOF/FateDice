@@ -23,7 +23,8 @@ namespace BKA.WorldMapDirectory.Class
 
             _classButton.OnClassButtonClicked.Subscribe(_ => _classPanel.Activate()).AddTo(this);
             _classPanel.OnChooseSpecialization.Subscribe(ModifyClass).AddTo(this);
-            _gameSession.OnUnitUpdated.Subscribe(unit => _classPanel.UpdateLocalData(unit)).AddTo(this);
+            _gameSession.OnUnitDataUpdated.Subscribe(unit => _classPanel.UpdateLocalData(unit)).AddTo(this);
+            _gameSession.OnUnitHolderUpdated.Subscribe(_ => _classPanel.UpdateHeroesHolder(_gameSession.Party)).AddTo(this);
         }
 
         private void ModifyClass((Unit, Specialization) valueTuple)

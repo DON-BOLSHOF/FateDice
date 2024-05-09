@@ -23,9 +23,10 @@ namespace BKA.WorldMapDirectory.Inventory
             _inventoryPanel.OnUpdatedInventory.Subscribe(artefacts =>
                 _gameSession.UpdateArtefacts(artefacts)).AddTo(this);
 
-            _gameSession.OnArtefactsUpdated.Subscribe(_ => _inventoryPanel.UpdateArtefacts(_gameSession.Artefacts)).AddTo(this);
+            _gameSession.OnArtefactsHolderUpdated.Subscribe(_ => _inventoryPanel.UpdateArtefacts(_gameSession.Artefacts)).AddTo(this);
+            _gameSession.OnUnitHolderUpdated.Subscribe(_ => _inventoryPanel.UpdateHeroesHolder(_gameSession.Party)).AddTo(this);
 
-            _gameSession.OnUnitUpdated.Subscribe(unit => _inventoryPanel.UpdateLocalData(unit)).AddTo(this);
+            _gameSession.OnUnitDataUpdated.Subscribe(unit => _inventoryPanel.UpdateLocalData(unit)).AddTo(this);
         }
     }
 }

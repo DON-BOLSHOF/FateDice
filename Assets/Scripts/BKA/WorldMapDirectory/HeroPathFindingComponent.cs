@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
@@ -20,6 +21,12 @@ namespace BKA.WorldMapDirectory
         {
             _agent.updateRotation = false;
             _agent.updateUpAxis = false;
+        }
+
+        [Button]
+        public void Stop()
+        {
+            _agent.SetDestination(transform.position);
         }
 
         private void Update()

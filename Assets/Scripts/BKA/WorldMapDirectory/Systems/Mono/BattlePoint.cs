@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using BKA.Units;
 using UniRx;
 using UnityEngine;
-using Zenject;
-using Unit = BKA.Units.Unit;
 
 namespace BKA.WorldMapDirectory.Systems
 {
@@ -21,12 +18,10 @@ namespace BKA.WorldMapDirectory.Systems
         [SerializeField] private UnitDefinition[] _unitDefinitions;
         [SerializeField] private int _battleXPValue;
 
-        [Inject] private UnitFactory _unitFactory;
-
-        public IObservable<(IEnumerable<Unit>, int)> OnBattleStart => _onBattleStart;
+        public IObservable<(IEnumerable<UnitDefinition>, int)> OnBattleStart => _onBattleStart;
         public BattlePointData BattlePointData => _battlePointData;
 
-        private readonly ReactiveCommand<(IEnumerable<Unit>, int)> _onBattleStart = new();
+        private readonly ReactiveCommand<(IEnumerable<UnitDefinition>, int)> _onBattleStart = new();
 
         private InteractableObject _interactableObject;
 
@@ -61,7 +56,7 @@ namespace BKA.WorldMapDirectory.Systems
         private void StartBattle()
         {
             _battlePointData.IsBattleBegan = true;
-            _onBattleStart?.Execute((_unitDefinitions.Select(definition => _unitFactory.UploadUnit(definition)), _battleXPValue));
+            _onBattleStart?.Execute((_unitDefinitions, _battleXPValue));
         }
     }
 }

@@ -17,7 +17,7 @@ namespace BKA.UI.Inventory
 
         [SerializeField] private Transform _view;
 
-        [SerializeField] private HeroWorldMapWidget[] _heroWorldMapWidgets;
+        [SerializeField] private List<HeroWorldMapWidget> _heroWorldMapWidgets;
 
         [SerializeField] private Sweep _sweep;
 
@@ -56,7 +56,7 @@ namespace BKA.UI.Inventory
 
         public void Fullfill(List<Unit> gameSessionParty, List<Artefact> partyArtefacts)
         {
-            if (_heroWorldMapWidgets.Length < gameSessionParty.Count)
+            if (_heroWorldMapWidgets.Count < gameSessionParty.Count)
                 throw new ArgumentException("Слишком много в партии игрока персонажей");
 
             var i = 0;
@@ -67,7 +67,7 @@ namespace BKA.UI.Inventory
                 _heroWorldMapWidgets[i].gameObject.SetActive(true);
             }
 
-            for (; i < _heroWorldMapWidgets.Length; i++)
+            for (; i < _heroWorldMapWidgets.Count; i++)
             {
                 _heroWorldMapWidgets[i].gameObject.SetActive(false);
             }
@@ -94,6 +94,37 @@ namespace BKA.UI.Inventory
             foreach (var localArtefact in localArtefacts)
             {
                 _itemHolder.ClearArtefact(localArtefact);
+            }
+        }
+
+        public void UpdateHeroesHolder(List<Unit> gameSessionParty)
+        {
+            if (_heroWorldMapWidgets.Count < gameSessionParty.Count)
+                throw new ArgumentException("Слишком много в партии игрока персонажей");
+
+            var i = 0;
+
+            for (i = 0; i < gameSessionParty.Count; i++)
+            {
+                if (_heroWorldMapWidgets[i].Hero == null)
+                {
+                    _heroWorldMapWidgets[i].UpdateData(gameSessionParty[i]);
+                    _heroWorldMapWidgets[i].gameObject.SetActive(true);
+                }
+                else if (_heroWorldMapWidgets[i].Hero != gameSessionParty[i])
+                {
+                    _heroWorldMapWidgets[i].UpdateData(null);
+                    _heroWorldMapWidgets[i].gameObject.SetActive(false);
+                    
+                    _heroWorldMapWidgets.Insert(_heroWorldMapWidgets.Count, _heroWorldMapWidgets[i]);
+                    _heroWorldMapWidgets.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            for (; i < _heroWorldMapWidgets.Count; i++)
+            {
+                _heroWorldMapWidgets[i].gameObject.SetActive(false);
             }
         }
 

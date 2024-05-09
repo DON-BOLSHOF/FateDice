@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BKA.Buffs;
+using BKA.System.ExtraDirectory;
+using BKA.System.Holders.Model;
+using BKA.Zenject.Signals;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -9,76 +12,42 @@ using Unit = BKA.Units.Unit;
 
 namespace BKA.System
 {
-    public class GameSession : IDisposable
+    public class GameSession : IInitializable, IDisposable
     {
-        private List<Unit> _partyCompanions;
-        private List<Artefact> _artefacts;
+        public List<Unit> Party => _unitsHolder.Units;
+        public List<Artefact> Artefacts => _artefactHolder.Artefacts;
 
-        public List<Unit> Party => _partyCompanions;
-        public List<Artefact> Artefacts => _artefacts;
+        public IObservable<UniRx.Unit> OnArtefactsHolderUpdated => _artefactHolder.OnArtefactsUpdated; 
+        public IObservable<UniRx.Unit> OnUnitHolderUpdated => _unitsHolder.OnUnitHolderUpdated;
+        public IObservable<Unit> OnUnitDataUpdated => _unitsHolder.OnUnitDataUpdated;
 
-        public IObservable<UniRx.Unit> OnArtefactsUpdated => _onArtefactsUpdated;//Вынеси
-        public IObservable<Unit> OnUnitUpdated => _onUnitUpdated;
-        
-        private readonly ReactiveCommand _onArtefactsUpdated = new();
-        private readonly ReactiveCommand<Unit> _onUnitUpdated = new();
+        private UnitsHolder _unitsHolder;
+        private ArtefactHolder _artefactHolder;
+        private SignalBus _signalBus;
 
         private CompositeDisposable _sessionDisposable = new();
-        
-        public GameSession(IEnumerable<Unit> partyCompanions, [InjectOptional] IEnumerable<Artefact> artefacts)
-        {
-            _partyCompanions = partyCompanions.ToList();
 
-            _artefacts = artefacts != null ? artefacts.ToList() : new();
-            
-            foreach (var partyCompanion in _partyCompanions)
-            {
-                partyCompanion.OnUpdatedData.Subscribe(_ => _onUnitUpdated?.Execute(partyCompanion)).AddTo(_sessionDisposable);
-            }
+        public GameSession(IEnumerable<Unit> partyCompanions, [InjectOptional] IEnumerable<Artefact> artefacts,
+            SignalBus signalBus)
+        {
+            _unitsHolder = new UnitsHolder(partyCompanions);
+            _artefactHolder = new ArtefactHolder(artefacts ?? new List<Artefact>());
+            _signalBus = signalBus;
         }
 
-        public void UpdateArtefacts(List<Artefact> artefacts)
+        public void Initialize()
         {
-            var localArtefacts = new List<Artefact>(_artefacts);
-            
-            foreach (var artefact in artefacts)
-            {
-                if (localArtefacts.Find(artef => artef.Equals(artefact)))
-                {
-                    localArtefacts.Remove(artefact);
-                }
-                else
-                {
-                    _artefacts.Add(artefact);
-                }
-            }
-
-            foreach (var localArtefact in localArtefacts)
-            {
-                _artefacts.Remove(localArtefact);
-            }
-
-            _onArtefactsUpdated?.Execute();
+            _signalBus.Subscribe<TakeArtefactSignal>(artefactSignal => _artefactHolder.Add(artefactSignal.Artefact));
+            _signalBus.Subscribe<UpdateNewHeroSignal>(heroSignal => _unitsHolder.Add(heroSignal.Hero));
         }
 
-        public void AddArtefact(Artefact artefact)
+        public void UpdateArtefacts(List<Artefact> artefacts)//Сомнительно
         {
-            _artefacts.Add(artefact);
-
-            _onArtefactsUpdated?.Execute();
-        }
-
-        public void RemoveArtefact(Artefact artefact)
-        {
-            _artefacts.Remove(artefact);
-
-            _onArtefactsUpdated?.Execute();
+            _artefactHolder.UpdateArtefacts(artefacts);
         }
 
         public void Dispose()
         {
-            _onArtefactsUpdated?.Dispose();
-            _onUnitUpdated?.Dispose();
             _sessionDisposable?.Dispose();
         }
     }
