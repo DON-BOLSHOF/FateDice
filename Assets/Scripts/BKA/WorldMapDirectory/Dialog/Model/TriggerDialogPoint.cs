@@ -12,6 +12,7 @@ namespace BKA.UI.WorldMap.Dialog
         public bool IsDialogTriggered;
     }
 
+    [RequireComponent(typeof(Collider2D))]
     public class TriggerDialogPoint : MonoBehaviour, IDialogPoint, IDisposable
     {
         [SerializeField] private CharacterPhraseProvider[] _characterPhrases;

@@ -21,6 +21,10 @@ namespace Zenject.WorldMap
             Container.DeclareSignal<UploadNewHeroSignal>();
             
             Container.DeclareSignal<UpdateNewHeroSignal>();
+
+            Container.DeclareSignal<ExtraodinaryDialogActivate>();
+
+            Container.DeclareSignal<GiveXPSignal>();
         }
     }
 }

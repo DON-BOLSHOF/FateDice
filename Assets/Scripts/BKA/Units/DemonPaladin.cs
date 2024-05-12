@@ -26,7 +26,7 @@ namespace BKA.Units
             Class = new Class(new Specialization(Definition.BaseSpecializationDefinition), Definition.BaseCharacteristics.Clone());
             UpdateData();
 
-            Class.OnLevelUpped?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
+            Class.OnClassModified?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
         }
     }
 }

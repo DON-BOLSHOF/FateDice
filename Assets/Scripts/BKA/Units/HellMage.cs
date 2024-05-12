@@ -24,7 +24,7 @@ namespace BKA.Units
             _health.Value = Definition.BaseHealth;
             
             Class = new Class(new Specialization(Definition.BaseSpecializationDefinition), Definition.BaseCharacteristics.Clone());
-            Class.OnLevelUpped?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
+            Class.OnClassModified?.Subscribe(_ => UpdateData()).AddTo(_unitDisposable);
           
             UpdateData();
         }

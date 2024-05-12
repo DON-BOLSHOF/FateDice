@@ -9,8 +9,10 @@ using Zenject;
 
 namespace BKA.UI.WorldMap.Dialog
 {
-    public class DialogHandler : IDisposable
+    public class DialogHandler : IDialogHandler, IDisposable
     {
+        public IObservable<Unit> OnDialogEnded => _onDialogEnded;
+        
         private CharacterPhraseProvider[] _currentPhrases;
         private IDialogPanel _dialogPanel;
 
@@ -20,6 +22,7 @@ namespace BKA.UI.WorldMap.Dialog
 
         private Dictionary<Type,Signal> _dialogSideData = new();
 
+        private ReactiveCommand _onDialogEnded = new();
         private CompositeDisposable _handlerDisposable = new();
 
         private SignalBus _signalBus;
@@ -37,11 +40,18 @@ namespace BKA.UI.WorldMap.Dialog
                 dialogPoint.OnActivatedDialog.Subscribe(_ => ActivateDialog(dialogPoint.CharacterPhraseProviders))
                     .AddTo(_handlerDisposable);
             }
+            
+            _signalBus.Subscribe<ExtraodinaryDialogActivate>(signal => ForceActivateDialog(signal.CharacterPhraseProviders));
 
             _dialogPanel.OnInputNextTurn.Subscribe(_ => NextPhrase()).AddTo(_handlerDisposable);
             _dialogPanel.OnCharSpawned
                 .Subscribe(_ => _signalBus.Fire(new SFXClipSignal { AudioClip = charSpawnedClip }))
                 .AddTo(_handlerDisposable);
+        }
+
+        public void ForceActivateDialog(CharacterPhraseProvider[] phraseProviders)
+        {
+            ActivateDialog(phraseProviders);
         }
 
         private void ActivateDialog(CharacterPhraseProvider[] dialogPointCharacterPhrases)
@@ -94,6 +104,8 @@ namespace BKA.UI.WorldMap.Dialog
             }
 
             _dialogPanel.DeactivatePanel();
+
+            _onDialogEnded?.Execute();
 
             _signalBus.Fire(new BlockInputSignal { IsBlocked = false });
         }

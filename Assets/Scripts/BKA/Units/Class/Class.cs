@@ -11,7 +11,7 @@ namespace BKA.Units
 
         public float XPPercentage => _xp.Value / (float)_xpThreashold;
         public IReadOnlyReactiveProperty<bool> OnReadyToLevelUp => _onReadyToLevelUp;
-        public IObservable<UniRx.Unit> OnLevelUpped => _onLevelUpped;
+        public IObservable<UniRx.Unit> OnClassModified => _onClassModified;
         public Characteristics Characteristics => _characteristics;
 
         private ISpecializationProvider _specializationProvider;
@@ -19,7 +19,7 @@ namespace BKA.Units
 
         private ReactiveProperty<int> _xp { get; } = new();
         private ReactiveProperty<bool> _onReadyToLevelUp = new();
-        private ReactiveCommand _onLevelUpped = new();
+        private ReactiveCommand _onClassModified = new();
 
         private int _xpThreashold = 200;
         
@@ -43,7 +43,7 @@ namespace BKA.Units
             _xp.Value -= _xpThreashold;
             _xpThreashold *= 2;
 
-            _onLevelUpped?.Execute();
+            _onClassModified?.Execute();
         }
 
         public void ModifyXP(int value)
@@ -52,6 +52,8 @@ namespace BKA.Units
 
             if (_xp.Value >= _xpThreashold)
                 _onReadyToLevelUp.Value = true;
+
+            _onClassModified?.Execute();
         }
 
         public List<Specialization> GetDecoratedSpecializations()
@@ -62,7 +64,7 @@ namespace BKA.Units
         public void Dispose()
         {
             _onReadyToLevelUp?.Dispose();
-            _onLevelUpped?.Dispose();
+            _onClassModified?.Dispose();
             _classDisposable?.Dispose();
             _xp?.Dispose();
         }

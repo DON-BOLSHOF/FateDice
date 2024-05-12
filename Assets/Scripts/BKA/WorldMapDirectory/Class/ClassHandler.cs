@@ -8,7 +8,7 @@ using UnityEngine;
 using Zenject;
 using Unit = BKA.Units.Unit;
 
-namespace BKA.WorldMapDirectory.Class
+namespace BKA.WorldMapDirectory
 {
     public class ClassHandler : MonoBehaviour
     {
