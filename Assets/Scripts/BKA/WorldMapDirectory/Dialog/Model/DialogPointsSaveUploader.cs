@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BKA.System.UploadData;
-using BKA.WorldMapDirectory.Systems;
+using BKA.WorldMapDirectory.Dialog.Model;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -13,28 +13,28 @@ namespace BKA.UI.WorldMap.Dialog
         public List<DialogPointData> DialogPointDatas;
     }
     
-    public class TriggerDialogPointsSaveUploader  : ISaveUploader, IDisposable
+    public class DialogPointsSaveUploader  : ISaveUploader, IDisposable
     {
-        private TriggerDialogPoint[] _triggerDialogPoints;
+        private DialogPoint[] _dialogPoints;
         
         private LocalDialogPointsData _localDialogData = new();
-        private const string _SAVE_CODE = "TRIGGER_DIALOG_POINTS_DATA";
+        private const string _SAVE_CODE = "DIALOG_POINTS_DATA";
 
-        public TriggerDialogPointsSaveUploader(TriggerDialogPoint[] triggerDialogPoints)
+        public DialogPointsSaveUploader(DialogPoint[] dialogPoints)
         {
-            _triggerDialogPoints = triggerDialogPoints;
+            _dialogPoints = dialogPoints;
         }
         
         public async UniTask UploadSaves()
         {
             if (TryGetSaves())
             {
-                if (_localDialogData.DialogPointDatas.Count != _triggerDialogPoints.Length)
+                if (_localDialogData.DialogPointDatas.Count != _dialogPoints.Length)
                     throw new ApplicationException("Ошибка локального сохранения");
 
-                for (var i = 0; i < _triggerDialogPoints.Length; i++)
+                for (var i = 0; i < _dialogPoints.Length; i++)
                 {
-                    _triggerDialogPoints[i].DynamicInit(_localDialogData.DialogPointDatas[i]);
+                    _dialogPoints[i].DynamicInit(_localDialogData.DialogPointDatas[i]);
                 }
 
                 await UniTask.Delay(TimeSpan.FromMilliseconds(15));
@@ -47,7 +47,7 @@ namespace BKA.UI.WorldMap.Dialog
 
         public void Dispose()
         {
-            _localDialogData.DialogPointDatas = _triggerDialogPoints.Select(dialogPoint => dialogPoint.DialogPointData).ToList();
+            _localDialogData.DialogPointDatas = _dialogPoints.Select(dialogPoint => dialogPoint.DialogPointData).ToList();
 
             var save = JsonUtility.ToJson(_localDialogData);
             PlayerPrefs.SetString(_SAVE_CODE, save);

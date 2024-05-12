@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace BKA.WorldMapDirectory.Quest
 {
-    public class TriggerDialogQuestElement : QuestElement
+    public class DialogQuestElement : QuestElement
     {
         [SerializeField] private Transform _hintObject;
         [SerializeField] private string _questElementHint;
-        [SerializeField] private TriggerDialogPoint _triggerDialogPoint;
+        [SerializeField] private DialogPoint _dialogPoint;
 
         public IObservable<(CharacterPhraseProvider[],Action)> OnActivateDialog => _onActivateDialog;
         public override string QuestElementHint => _questElementHint;
@@ -18,16 +18,16 @@ namespace BKA.WorldMapDirectory.Quest
 
         private void Start()
         {
-            _triggerDialogPoint.gameObject.SetActive(false);
-            _triggerDialogPoint.OnActivatedDialog.Subscribe(_ =>
+            _dialogPoint.gameObject.SetActive(false);
+            _dialogPoint.OnActivatedDialog.Subscribe(_ =>
             {
-                _onActivateDialog?.Execute((_triggerDialogPoint.CharacterPhraseProviders,OnDialogEnded));
+                _onActivateDialog?.Execute((_dialogPoint.CharacterPhraseProviders,OnDialogEnded));
             }).AddTo(this);
         }
 
         public override void Activate()
         {
-            _triggerDialogPoint.gameObject.SetActive(true);
+            _dialogPoint.gameObject.SetActive(true);
             _hintObject.gameObject.SetActive(true);
         }
 

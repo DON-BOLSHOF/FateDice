@@ -34,7 +34,8 @@ namespace BKA.System
 
         public void Initialize()
         {
-            _signalBus.Subscribe<TakeArtefactSignal>(artefactSignal => _artefactHolder.Add(artefactSignal.Artefact));
+            _signalBus.Subscribe<GiveArtefactSignal>(artefactSignal => _artefactHolder.Add(artefactSignal.Artefact));
+            _signalBus.Subscribe<TakeArtefactSignal>(artefactSignal => _artefactHolder.Remove(artefactSignal.Artefact));
             _signalBus.Subscribe<UpdateNewHeroSignal>(heroSignal => _unitsHolder.Add(heroSignal.Hero));
         }
 

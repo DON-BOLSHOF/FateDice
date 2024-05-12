@@ -10,7 +10,7 @@ using Zenject;
 
 namespace BKA.WorldMapDirectory.Systems
 {
-    public class BattleHandler : IDisposable
+    public class BattleHandler : IBattleHandler, IDisposable
     {
         private SignalBus _signalBus;
         private IBattleStarter _battleStarter;
@@ -26,23 +26,24 @@ namespace BKA.WorldMapDirectory.Systems
             _unitFactory = unitFactory;
             _battleStarter = battleStarter;
 
-            _signalBus.Subscribe<ExtraordinaryBattleSignal>(signal => StartBattle((signal.Enemies, signal.Xp)));
+            _signalBus.Subscribe<ExtraordinaryBattleSignal>(signal => StartBattle(signal.Enemies, signal.Xp));
 
             foreach (var battlePoint in battlePoints.Where(value => !value.BattlePointData.IsBattleBegan))
             {
-                battlePoint.OnBattleStart.Where(_ => synchronizer.IsSynchrolized.Value).Subscribe(StartBattle)
+                battlePoint.OnBattleStart.Where(_ => synchronizer.IsSynchrolized.Value)
+                    .Subscribe(turple => StartBattle(turple.Item1, turple.Item2))
                     .AddTo(_handlerDisposable);
             }
         }
 
-        private void StartBattle((IEnumerable<UnitDefinition> Enemies, int Xp) tuple)
+        private void StartBattle(IEnumerable<UnitDefinition> enemies, int xp)
         {
-            _signalBus.Fire(new BlockInputSignal{IsBlocked = true});
-            
+            _signalBus.Fire(new BlockInputSignal { IsBlocked = true });
+
             _battleStarter
                 .StartBattle(
-                    tuple.Enemies.Select(enemyDefenition => _unitFactory.UploadUnit(enemyDefenition)).ToArray(),
-                    tuple.Xp)
+                    enemies.Select(enemyDefenition => _unitFactory.UploadUnit(enemyDefenition)).ToArray(),
+                    xp)
                 .Forget();
         }
 

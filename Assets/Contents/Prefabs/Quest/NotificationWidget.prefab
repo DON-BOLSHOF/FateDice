@@ -68,8 +68,8 @@ MonoBehaviour:
   - {fileID: 6761637371452260747}
   _popUpTimerTime: 2
   _popUpIntervalTime: 0.07
-  _descriptionText: {fileID: 1587792675448126948}
-  _requestText: {fileID: 6761637371452260747}
+  _descriptionText: {fileID: 6761637371452260747}
+  _requestText: {fileID: 1587792675448126948}
 --- !u!1 &4985093243875888511
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,8 +287,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1eba735b3c0423d4c80a4e011464f616, type: 2}
-  m_sharedMaterial: {fileID: -4960640869224523192, guid: 1eba735b3c0423d4c80a4e011464f616, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ee886caa12e689140816ab73534cc711, type: 2}
+  m_sharedMaterial: {fileID: 9187543429500723924, guid: ee886caa12e689140816ab73534cc711, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -312,8 +312,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 16
+  m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -419,10 +419,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A"
+  m_text: "\u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1eba735b3c0423d4c80a4e011464f616, type: 2}
-  m_sharedMaterial: {fileID: -4960640869224523192, guid: 1eba735b3c0423d4c80a4e011464f616, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ee886caa12e689140816ab73534cc711, type: 2}
+  m_sharedMaterial: {fileID: 9187543429500723924, guid: ee886caa12e689140816ab73534cc711, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -446,8 +446,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -26,7 +26,7 @@ namespace BKA.UI.WorldMap.Inventory
 
             _onUpdatedData?.Execute();
             
-            ActivateBlockRaycast(true);
+            ActivateBlockRaycast(artefact.StateOfArtefact == ArtefactState.Buff);
         }
 
         public virtual void ClearData()

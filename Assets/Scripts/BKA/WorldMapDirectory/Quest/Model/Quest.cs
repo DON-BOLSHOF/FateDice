@@ -1,10 +1,17 @@
 ﻿using System;
 using UniRx;
-using UnityEngine;
 using Notification = BKA.UI.WorldMap.Notification;
 
 namespace BKA.WorldMapDirectory.Quest
 {
+    [Serializable]
+    public class QuestData
+    {
+        public string QuestTitle;
+        public int XpFOrQuestCompleted;
+        public int CurrentElement;
+    }
+
     public class Quest : INotifingObject, IDisposable
     {
         public readonly string QuestTitle;
@@ -12,7 +19,7 @@ namespace BKA.WorldMapDirectory.Quest
         public readonly int XpForQuestCompleted;
 
         public IObservable<Notification> OnSentNotification => _onQuestSentNotification;
-        
+
         private readonly QuestElement[] _questElements;
         private readonly ReactiveCommand _onQuestCompleted = new();
         private readonly ReactiveCommand<Notification> _onQuestSentNotification = new();
@@ -21,7 +28,7 @@ namespace BKA.WorldMapDirectory.Quest
 
         private int _currentElement;
 
-        public Quest( string questTitle, QuestElement[] questElements, int xpForQuestCompleted)
+        public Quest(string questTitle, QuestElement[] questElements, int xpForQuestCompleted)
         {
             QuestTitle = questTitle;
             _questElements = questElements;
@@ -33,9 +40,27 @@ namespace BKA.WorldMapDirectory.Quest
             }
         }
 
-        public void ActivateQuest()
+        public void StartUpQuest()
         {
-            ActivateNextElement();
+            _currentElement = 0;
+            
+            _onQuestSentNotification?.Execute(new Notification(_questElements[_currentElement].QuestElementHint,
+                QuestTitle));
+            _questElements[_currentElement].Activate();
+        }
+
+        public void ForceMoveSteps(int step)
+        {
+            _currentElement = step;
+            _questElements[_currentElement].Activate();
+        }
+
+        public QuestData GetSerializableData()
+        {
+            return new QuestData
+            {
+                QuestTitle = QuestTitle, XpFOrQuestCompleted = XpForQuestCompleted, CurrentElement = _currentElement
+            };
         }
 
         public void Dispose()
@@ -46,10 +71,13 @@ namespace BKA.WorldMapDirectory.Quest
 
         private void ActivateNextElement()
         {
+            _currentElement++;
+            
             if (_currentElement < _questElements.Length)
             {
-                _onQuestSentNotification?.Execute(new Notification(_questElements[_currentElement].QuestElementHint, QuestTitle));
-                _questElements[_currentElement++].Activate();
+                _onQuestSentNotification?.Execute(new Notification(_questElements[_currentElement].QuestElementHint,
+                    QuestTitle));
+                _questElements[_currentElement].Activate();
             }
             else
             {

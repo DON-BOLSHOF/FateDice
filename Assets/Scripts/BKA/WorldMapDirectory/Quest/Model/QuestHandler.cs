@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BKA.UI.WorldMap.Quest.Interfaces;
 using BKA.Zenject.Signals;
 using Cysharp.Threading.Tasks;
@@ -8,11 +9,14 @@ using Zenject;
 
 namespace BKA.WorldMapDirectory.Quest
 {
-    public class QuestHandler : IDisposable
+    public class QuestHandler : IQuestHandler,IDisposable
     {
+        public IEnumerable<Quest> ActivatedQuests => _activatedQuest;
+        
         private List<Quest> _activatedQuest = new();
 
         private IQuestPanel _questPanel;
+        private QuestHolder[] _questHolders;
 
         private INotificationHandler _notificationHandler;
 
@@ -24,10 +28,28 @@ namespace BKA.WorldMapDirectory.Quest
             _questPanel = questPanel;
             _signalBus = signalBus;
             _notificationHandler = notificationHandler;
+            _questHolders = questHolder;
             
-            foreach (var holder in questHolder)
+            foreach (var holder in _questHolders)
             {
                 holder.OnTryQuestActivate.Subscribe(_ => TryActivateQuest(holder).Forget()).AddTo(_handlerDisposable);
+            }
+        }
+
+        public void UploadActivatedQuests(IEnumerable<QuestData> questsData)
+        {
+            foreach (var questData in questsData)
+            {
+                var holder = _questHolders.First(holder => holder.QuestTitle.Equals(questData.QuestTitle));
+                var quest = holder.Quest;
+                
+                _activatedQuest.Add(quest);
+                
+                _notificationHandler.LoadNotificationObject(quest);
+
+                quest.OnQuestCompleted.Subscribe(_ => OnQuestCompleted(quest)).AddTo(_handlerDisposable);
+                
+                quest.ForceMoveSteps(questData.CurrentElement);
             }
         }
 
@@ -57,7 +79,7 @@ namespace BKA.WorldMapDirectory.Quest
                 _notificationHandler.LoadNotificationObject(quest);
 
                 quest.OnQuestCompleted.Subscribe(_ => OnQuestCompleted(quest)).AddTo(_handlerDisposable);
-                quest.ActivateQuest();
+                quest.StartUpQuest();
                 
                 questHolder.Deactivate();
             }

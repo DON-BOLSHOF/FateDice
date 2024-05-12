@@ -23,7 +23,6 @@ namespace BKA.WorldMapDirectory
             _agent.updateUpAxis = false;
         }
 
-        [Button]
         public void Stop()
         {
             _agent.SetDestination(transform.position);

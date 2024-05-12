@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UniRx;
 using Unit = BKA.Units.Unit;
 
@@ -7,8 +6,6 @@ namespace BKA.UI.WorldMap.Inventory
 {
     public class HeroArtefactWidget : ItemHolder
     {
-        public IObservable<UniRx.Unit> OnUpdatedActions => _onUpdatedActions;
-
         private ReactiveCommand _onUpdatedActions = new();
         private Unit _unit;
 

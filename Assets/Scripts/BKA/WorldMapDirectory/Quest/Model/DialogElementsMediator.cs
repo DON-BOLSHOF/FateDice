@@ -13,7 +13,7 @@ namespace BKA.WorldMapDirectory.Quest
         
         private CompositeDisposable _mediatorDisposable = new();
         
-        public DialogElementsMediator(IEnumerable<TriggerDialogQuestElement> triggerDialogQuestElements,
+        public DialogElementsMediator(IEnumerable<DialogQuestElement> triggerDialogQuestElements,
             IDialogHandler dialogHandler)
         {
             _dialogHandler = dialogHandler;

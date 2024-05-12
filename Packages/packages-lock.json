@@ -12,7 +12,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "f8a1aedbf0bc7c4aebe0f52300b002912690ce1a"
+      "hash": "dd2842a593ef27ad6fa60d953208346404517743"
     },
     "com.unity.2d.animation": {
       "version": "9.0.4",
@@ -279,7 +279,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.0.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {

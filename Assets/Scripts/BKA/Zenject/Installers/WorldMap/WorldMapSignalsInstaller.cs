@@ -12,6 +12,7 @@ namespace Zenject.WorldMap
             
             Container.DeclareSignal<BlockInputSignal>();
 
+            Container.DeclareSignal<GiveArtefactSignal>();
             Container.DeclareSignal<TakeArtefactSignal>();
 
             Container.DeclareSignal<SFXClipSignal>();

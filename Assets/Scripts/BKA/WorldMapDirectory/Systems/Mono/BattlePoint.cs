@@ -12,8 +12,7 @@ namespace BKA.WorldMapDirectory.Systems
         public bool IsBattleBegan;
     }
     
-    [RequireComponent(typeof(InteractableObject))]
-    public class BattlePoint : MonoBehaviour, IDisposable
+    public abstract class BattlePoint : MonoBehaviour, IDisposable
     {
         [SerializeField] private UnitDefinition[] _unitDefinitions;
         [SerializeField] private int _battleXPValue;
@@ -21,20 +20,10 @@ namespace BKA.WorldMapDirectory.Systems
         public IObservable<(IEnumerable<UnitDefinition>, int)> OnBattleStart => _onBattleStart;
         public BattlePointData BattlePointData => _battlePointData;
 
-        private readonly ReactiveCommand<(IEnumerable<UnitDefinition>, int)> _onBattleStart = new();
-
-        private InteractableObject _interactableObject;
+        protected readonly ReactiveCommand<(IEnumerable<UnitDefinition>, int)> _onBattleStart = new();
+        protected CompositeDisposable _pointDisposable = new();
 
         private BattlePointData _battlePointData = new();
-
-        private CompositeDisposable _pointDisposable = new();
-
-        private void Start()
-        {
-            _interactableObject = GetComponent<InteractableObject>();
-            
-            _interactableObject.OnInteracted.Subscribe(_ => StartBattle()).AddTo(_pointDisposable);
-        }
 
         public void DynamicInit(BattlePointData battlePointData)
         {
@@ -47,13 +36,9 @@ namespace BKA.WorldMapDirectory.Systems
             }
         }
 
-        public void Dispose()
-        {
-            _onBattleStart?.Dispose();
-            _pointDisposable?.Dispose();
-        }
+        public abstract void Dispose();
 
-        private void StartBattle()
+        protected void StartBattle()
         {
             _battlePointData.IsBattleBegan = true;
             _onBattleStart?.Execute((_unitDefinitions, _battleXPValue));

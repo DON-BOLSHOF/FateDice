@@ -1,19 +1,12 @@
 ﻿using System;
-using BKA.Player;
 using BKA.WorldMapDirectory.Dialog.Interfaces;
+using BKA.WorldMapDirectory.Dialog.Model;
 using UniRx;
 using UnityEngine;
 
 namespace BKA.UI.WorldMap.Dialog
 {
-    [Serializable]
-    public class DialogPointData
-    {
-        public bool IsDialogTriggered;
-    }
-
-    [RequireComponent(typeof(Collider2D))]
-    public class TriggerDialogPoint : MonoBehaviour, IDialogPoint, IDisposable
+    public abstract class DialogPoint : MonoBehaviour, IDialogPoint, IDisposable
     {
         [SerializeField] private CharacterPhraseProvider[] _characterPhrases;
 
@@ -25,7 +18,7 @@ namespace BKA.UI.WorldMap.Dialog
         private readonly ReactiveCommand _onActivatedDialog = new();
         private DialogPointData _dialogPointData = new();
 
-        private void Start()
+        protected virtual void Start()
         {
             foreach (var characterPhraseProvider in _characterPhrases)
             {
@@ -49,19 +42,11 @@ namespace BKA.UI.WorldMap.Dialog
             _onActivatedDialog?.Dispose();
         }
 
-        private void ActivateDialog()
+        protected void ActivateDialog()
         {
             _dialogPointData.IsDialogTriggered = true;
             _onActivatedDialog?.Execute();
             gameObject.SetActive(false);
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.TryGetComponent<HeroComponent>(out var heroComponent))
-            {
-                ActivateDialog();
-            }
         }
     }
 }

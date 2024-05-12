@@ -1665,8 +1665,6 @@ MonoBehaviour:
   _heroArtefacts:
   - {fileID: 11400000, guid: 9c2ba05d6cded204d9afa6d76bc36760, type: 2}
   - {fileID: 11400000, guid: bce616d3b37f25b44ae09a336d09ea4f, type: 2}
-  - {fileID: 11400000, guid: 9c2ba05d6cded204d9afa6d76bc36760, type: 2}
-  - {fileID: 11400000, guid: bce616d3b37f25b44ae09a336d09ea4f, type: 2}
   _panelButton: {fileID: 1413759501}
   _pedestal: {fileID: 373418083}
 --- !u!114 &1413759503

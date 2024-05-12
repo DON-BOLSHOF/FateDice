@@ -50,6 +50,7 @@ namespace BKA.WorldMapDirectory.Systems
         {
             _onInteracted?.Dispose();
             _hint.gameObject.SetActive(false);
+            enabled = false;
         }
     }
 }

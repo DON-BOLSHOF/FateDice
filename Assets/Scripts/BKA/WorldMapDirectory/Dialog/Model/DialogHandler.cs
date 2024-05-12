@@ -12,7 +12,7 @@ namespace BKA.UI.WorldMap.Dialog
     public class DialogHandler : IDialogHandler, IDisposable
     {
         public IObservable<Unit> OnDialogEnded => _onDialogEnded;
-        
+
         private CharacterPhraseProvider[] _currentPhrases;
         private IDialogPanel _dialogPanel;
 
@@ -20,7 +20,7 @@ namespace BKA.UI.WorldMap.Dialog
 
         private int _currentPhrase;
 
-        private Dictionary<Type,Signal> _dialogSideData = new();
+        private Dictionary<Type, Signal> _dialogSideData = new();
 
         private ReactiveCommand _onDialogEnded = new();
         private CompositeDisposable _handlerDisposable = new();
@@ -40,8 +40,9 @@ namespace BKA.UI.WorldMap.Dialog
                 dialogPoint.OnActivatedDialog.Subscribe(_ => ActivateDialog(dialogPoint.CharacterPhraseProviders))
                     .AddTo(_handlerDisposable);
             }
-            
-            _signalBus.Subscribe<ExtraodinaryDialogActivate>(signal => ForceActivateDialog(signal.CharacterPhraseProviders));
+
+            _signalBus.Subscribe<ExtraodinaryDialogActivate>(signal =>
+                ForceActivateDialog(signal.CharacterPhraseProviders));
 
             _dialogPanel.OnInputNextTurn.Subscribe(_ => NextPhrase()).AddTo(_handlerDisposable);
             _dialogPanel.OnCharSpawned
@@ -75,15 +76,26 @@ namespace BKA.UI.WorldMap.Dialog
                 {
                     case CharacterPhraseState.ArtefactHolder:
                         var artefactInsertion = (ArtefactPhraseInsertion)_currentPhrases[_currentPhrase].GetInsertion();
-                        _dialogSideData.Add(typeof(TakeArtefactSignal),new TakeArtefactSignal { Artefact = artefactInsertion.Artefact });
+                        switch (artefactInsertion.ArtefactPhraseInsertionState)
+                        {
+                            case ArtefactPhraseInsertionState.Give:
+                                _dialogSideData.Add(typeof(GiveArtefactSignal), new GiveArtefactSignal { Artefact = artefactInsertion.Artefact });
+                                break;
+                            case ArtefactPhraseInsertionState.Take:
+                                _dialogSideData.Add(typeof(TakeArtefactSignal), new TakeArtefactSignal { Artefact = artefactInsertion.Artefact });
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                         break;
                     case CharacterPhraseState.HeroHolder:
                         var heroInsertion = (HeroPhraseInsertion)_currentPhrases[_currentPhrase].GetInsertion();
-                        _dialogSideData.Add(typeof(UploadNewHeroSignal),new UploadNewHeroSignal { HeroDefinition = heroInsertion.HeroDefinition });
+                        _dialogSideData.Add(typeof(UploadNewHeroSignal),
+                            new UploadNewHeroSignal { HeroDefinition = heroInsertion.HeroDefinition });
                         break;
                     case CharacterPhraseState.BattleHolder:
                         var battleIntersection = (BattlePhraseInsertion)_currentPhrases[_currentPhrase].GetInsertion();
-                        _dialogSideData.Add(typeof(ExtraordinaryBattleSignal),new ExtraordinaryBattleSignal
+                        _dialogSideData.Add(typeof(ExtraordinaryBattleSignal), new ExtraordinaryBattleSignal
                             { Enemies = battleIntersection.UnitDefinitions, Xp = battleIntersection.XP });
                         break;
                 }
