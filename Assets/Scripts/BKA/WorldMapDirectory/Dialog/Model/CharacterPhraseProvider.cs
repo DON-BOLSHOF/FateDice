@@ -1,4 +1,5 @@
 ﻿using System;
+using BKA.Units;
 using BKA.WorldMapDirectory.Dialog.Interfaces;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace BKA.UI.WorldMap.Dialog
         private BattlePhraseInsertion _battleInsertion;
 
         public CharacterPhraseState CharacterPhraseState => _characterPhraseState;
+        public PhraseActor PhraseActor => _characterPhrase.Actor;
         public CharacterPhrase CharacterPhrase => _characterPhrase;
 
         public void Initialize()
@@ -50,6 +52,11 @@ namespace BKA.UI.WorldMap.Dialog
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+        
+        public void DynamicSetHeroPhrase(UnitDefinition unitDefinition)//Не должно быть здесь, создать отдельную сущность.
+        {
+            _characterPhrase.DynamicSetHeroPhrase(unitDefinition);
         }
 
         public IPhraseInsertion GetInsertion()

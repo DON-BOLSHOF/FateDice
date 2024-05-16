@@ -19,31 +19,34 @@ namespace BKA.BattleDirectory.BattleSystems
 
         [Inject] private IUpdateXPPanel _updateXpPanel;
 
-        public async void ManageWin(List<UnitBattleBehaviour> partyPack)
+        [Inject] private MainHeroHolder _mainHeroHolder;
+
+        public async void ManageWin(Unit[] partyPack)
         {
-            var persentageFrom = partyPack.Select(unitBehaviour => unitBehaviour.Unit.Class.XPPercentage).ToArray();
+            var persentageFrom = partyPack.Select(unit => unit.Class.XPPercentage).ToArray();
             
-            foreach (var unitBattleBehaviour in partyPack)
+            foreach (var unit in partyPack)
             {
-                unitBattleBehaviour.Unit.Class.ModifyXP(_xpAwarding.XPAward/partyPack.Count);
+                unit.Class.ModifyXP(_xpAwarding.XPAward/partyPack.Length);
             }
             
-            var persentageTo = partyPack.Select(unitBehaviour => unitBehaviour.Unit.Class.XPPercentage).ToArray();
+            var persentageTo = partyPack.Select(unit => unit.Class.XPPercentage).ToArray();
             
-            _updateXpPanel.ActivatePanel(partyPack.Select(unitBehaviour => unitBehaviour.Unit).ToArray(), persentageFrom, persentageTo);
+            _updateXpPanel.ActivatePanel(partyPack, persentageFrom, persentageTo);
             await _updateXpPanel.OnCompleted.ToUniTask(useFirstValue: true);
             
             LoadLevel(partyPack);
         }
         
-        private void LoadLevel(List<UnitBattleBehaviour> partyPack)
+        private void LoadLevel(Unit[] partyPack)
         {
             _levelManager.LoadLevel("WorldMap", container =>
             {
-                foreach (var unitBattleBehaviour in partyPack)
+                container.Bind<Unit>().WithId("MainHero").FromInstance(_mainHeroHolder.MainHero).AsSingle();
+                
+                foreach (var unit in partyPack)
                 {
-                    container.Bind<Unit>().FromInstance(unitBattleBehaviour.Unit)
-                        .AsCached();
+                    container.Bind<Unit>().FromInstance(unit).AsCached();
                 }
                 
                 foreach (var awardingArtefact in _artefactAwarding.Artefacts)

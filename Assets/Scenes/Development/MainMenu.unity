@@ -299,6 +299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _heroDefinition: {fileID: 11400000, guid: 47f18d4f1eeecb44abf3bb778303c258, type: 2}
+  _heroBaseCompanionsDefinitions: []
   _heroArtefacts:
   - {fileID: 11400000, guid: 9c2ba05d6cded204d9afa6d76bc36760, type: 2}
   _panelButton: {fileID: 104261910}
@@ -477,6 +478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _heroDefinition: {fileID: 11400000, guid: cc30627fd971bb54ebcf6009d7797c55, type: 2}
+  _heroBaseCompanionsDefinitions: []
   _heroArtefacts:
   - {fileID: 11400000, guid: bce616d3b37f25b44ae09a336d09ea4f, type: 2}
   _panelButton: {fileID: 142624244}
@@ -1662,6 +1664,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _heroDefinition: {fileID: 11400000, guid: 47f18d4f1eeecb44abf3bb778303c258, type: 2}
+  _heroBaseCompanionsDefinitions:
+  - {fileID: 11400000, guid: cc30627fd971bb54ebcf6009d7797c55, type: 2}
   _heroArtefacts:
   - {fileID: 11400000, guid: 9c2ba05d6cded204d9afa6d76bc36760, type: 2}
   - {fileID: 11400000, guid: bce616d3b37f25b44ae09a336d09ea4f, type: 2}

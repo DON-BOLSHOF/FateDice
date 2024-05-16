@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BKA.Buffs;
 using BKA.System;
 using BKA.Units;
@@ -30,7 +31,7 @@ namespace BKA.UI.MainMenu
 
             ChangeSelectedHero(_heroPanels[0]);
 
-            _startButton.OnClickAsObservable().Subscribe(_ => StartBattle()).AddTo(this);
+            _startButton.OnClickAsObservable().Subscribe(_ => StartGame()).AddTo(this);
         }
 
         private void ChangeSelectedHero(HeroPanel heroPanel)
@@ -45,15 +46,23 @@ namespace BKA.UI.MainMenu
             _selectedPanel = heroPanel;
         }
 
-        private void StartBattle()
+        private void StartGame()
         {
             _levelManager.LoadLevel("WorldMap",
                 (container) =>
                 {
-                    container.Bind<Unit>().FromInstance(_unitFactory.UploadUnit(_selectedPanel.HeroDefinition))
-                        .AsCached();
-                    container.Bind<Unit>().FromInstance(_unitFactory.UploadUnit(_heroPanels[0].HeroDefinition))
-                        .AsCached();
+                    var mainHero = _unitFactory.UploadUnit(_selectedPanel.HeroDefinition);
+
+                    container.Bind<Unit>().WithId("MainHero").FromInstance(mainHero).AsSingle();
+
+                    var heroPack = new List<Unit> { mainHero };
+                    heroPack.AddRange(_selectedPanel.HeroBaseCompanionsDefinitions.Select(definition =>
+                            _unitFactory.UploadUnit(definition)));
+
+                    foreach (var unit in heroPack)
+                    {
+                        container.Bind<Unit>().FromInstance(unit).AsCached();
+                    } 
                     
                     foreach (var selectedPanelHeroArtefact in _selectedPanel.HeroArtefacts)
                     {

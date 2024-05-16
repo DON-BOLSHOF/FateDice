@@ -89,11 +89,11 @@ namespace BKA.UI.WorldMap.Dialog
 
             switch (_currentPhrase.PhraseActorPosition)
             {
-                case FraseActorPosition.Left:
+                case PhraseActorPosition.Left:
                     _leftActor.transform.localScale = new Vector3(1.25f, 1.25f, 1);
                     _rightActor.transform.localScale = Vector3.one;
                     break;
-                case FraseActorPosition.Right:
+                case PhraseActorPosition.Right:
                     _rightActor.transform.localScale = new Vector3(1.25f, 1.25f, 1);
                     _leftActor.transform.localScale = Vector3.one;
                     break;
@@ -144,15 +144,15 @@ namespace BKA.UI.WorldMap.Dialog
 
             switch (characterPhrase.PhraseActorPosition)
             {
-                case FraseActorPosition.Left:
-                    _leftActor.SetData(characterPhrase.Actor);
+                case PhraseActorPosition.Left:
+                    _leftActor.SetData(characterPhrase.ActorView);
                     tasks.Add(_leftActor.transform.DOScale(new Vector3(1.25f, 1.25f, 1), _speed * 4)
                         .ToUniTask(cancellationToken: panelSourceToken));
                     tasks.Add(_rightActor.transform.DOScale(Vector3.one, 1)
                         .ToUniTask(cancellationToken: panelSourceToken));
                     break;
-                case FraseActorPosition.Right:
-                    _rightActor.SetData(characterPhrase.Actor);
+                case PhraseActorPosition.Right:
+                    _rightActor.SetData(characterPhrase.ActorView);
                     tasks.Add(_rightActor.transform.DOScale(new Vector3(1.25f, 1.25f, 1), _speed * 4)
                         .ToUniTask(cancellationToken: panelSourceToken));
                     tasks.Add(_leftActor.transform.DOScale(Vector3.one, 1)

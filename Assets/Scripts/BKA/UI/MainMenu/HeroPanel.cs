@@ -11,12 +11,14 @@ namespace BKA.UI.MainMenu
     public class HeroPanel : MonoBehaviour
     {
         [SerializeField] private UnitDefinition _heroDefinition;
+        [SerializeField] private UnitDefinition[] _heroBaseCompanionsDefinitions;
         [SerializeField] private Artefact[] _heroArtefacts;
         
         [SerializeField] private Button _panelButton;
         [SerializeField] private Image _pedestal;
 
         public UnitDefinition HeroDefinition => _heroDefinition;
+        public UnitDefinition[] HeroBaseCompanionsDefinitions => _heroBaseCompanionsDefinitions;
         public Artefact[] HeroArtefacts => _heroArtefacts;
         public IObservable<Unit> OnHeroPanelClicked => _onHeroPanelClicked;
 

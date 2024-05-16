@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using BKA.BattleDirectory.BattleSystems;
 using BKA.BattleDirectory.PlayerInput;
@@ -12,6 +13,7 @@ using UniRx;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
+using Unit = BKA.Units.Unit;
 
 namespace BKA.BattleDirectory.BattleHandlers
 {
@@ -37,10 +39,10 @@ namespace BKA.BattleDirectory.BattleHandlers
         [Inject] private ReadinessToBattleObservable _readinessObservable;
 
         public ReadOnlyReactiveProperty<bool> IsReadyAbsolutely => _isReady.ToReadOnlyReactiveProperty();
-        public IObservable<(FightEndStatus, List<UnitBattleBehaviour>)> OnFightEnd => _onFightEnd;
+        public IObservable<(Unit[], Unit[])> OnFightEnd => _onFightEnd;
 
         private readonly ReactiveProperty<bool> _isReady = new(true);
-        private readonly ReactiveCommand<(FightEndStatus, List<UnitBattleBehaviour>)> _onFightEnd = new();
+        private readonly ReactiveCommand<(Unit[], Unit[])> _onFightEnd = new();
 
         private CancellationTokenSource _handlerSource;
         private CompositeDisposable _handlerDisposable = new();
@@ -206,9 +208,8 @@ namespace BKA.BattleDirectory.BattleHandlers
 
             _handlerSource.Cancel();
 
-            var fightEndStatus = _firstPack.Count <= 0 ? FightEndStatus.EnemyWin : FightEndStatus.PartyWin;
-
-            _onFightEnd?.Execute((fightEndStatus, _firstPack));
+            _onFightEnd?.Execute((_firstPack.Select(battleBehaviour => battleBehaviour.Unit).ToArray(),
+                _secondPack.Select(battleBehaviour => battleBehaviour.Unit).ToArray()));
         }
 
         public void Dispose()

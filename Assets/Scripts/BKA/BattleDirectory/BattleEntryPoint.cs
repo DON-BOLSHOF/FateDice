@@ -44,7 +44,7 @@ namespace BKA.BattleDirectory
                 var uploader = GetComponentInChildren<BattleEmergencyUploader>();
 
                 var data = await uploader.UploadNeededData();
-
+                
                 _party = data.party;
                 _enemy = data.enemy;
             }

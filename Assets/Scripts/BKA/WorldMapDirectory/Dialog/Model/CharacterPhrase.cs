@@ -1,10 +1,19 @@
 ﻿using System;
+using BKA.Units;
 using BKA.WorldMapDirectory.Dialog.Interfaces;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BKA.UI.WorldMap.Dialog
 {
-    public enum FraseActorPosition
+    public enum PhraseActor
+    {
+        AnotherPerson,
+        Hero
+    }
+    
+    public enum PhraseActorPosition
     {
         Left,
         Right
@@ -13,15 +22,29 @@ namespace BKA.UI.WorldMap.Dialog
     [Serializable]
     public class CharacterPhrase
     {
-        [SerializeField] private string _actorName;
+        [SerializeField, ShowIf("_phraseActor", PhraseActor.AnotherPerson)] 
+        private string _actorName;
+       
         [SerializeField] private string _phrase;
-        [SerializeField] private Sprite _actor;
-        [SerializeField] private FraseActorPosition phraseActorPosition;
+       
+        [SerializeField, ShowIf("_phraseActor", PhraseActor.AnotherPerson)]
+        private Sprite _actorView;
+
+        [SerializeField] private PhraseActor _phraseActor;
+        
+        [SerializeField] private PhraseActorPosition _phraseActorPosition;
 
         public string ActorName => _actorName;
         public string Phrase => _phrase;
-        public Sprite Actor => _actor;
-        public FraseActorPosition PhraseActorPosition => phraseActorPosition;
+        public Sprite ActorView => _actorView;
+        public PhraseActorPosition PhraseActorPosition => _phraseActorPosition;
+        public PhraseActor Actor => _phraseActor;
+        
+        public void DynamicSetHeroPhrase(UnitDefinition unitDefinition)//Не должно быть здесь, создать отдельную сущность.
+        {
+            _actorName = unitDefinition.ID;
+            _actorView = unitDefinition.UnitIcon;
+        }
 
         public void DynamicInsertion(IPhraseInsertion phraseInsertion)
         {

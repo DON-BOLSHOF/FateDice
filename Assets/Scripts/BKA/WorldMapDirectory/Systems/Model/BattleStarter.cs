@@ -35,6 +35,7 @@ namespace BKA.WorldMapDirectory.Systems
 
             _levelManager.LoadLevel("BattleScene", (container) =>
             {
+                container.Bind<Unit>().WithId("MainHero").FromInstance(_gameSession.MainHero).AsSingle();
                 container.Bind<Unit[]>().WithId("Party").FromInstance(_gameSession.Party.ToArray()).AsCached();
                 container.Bind<Unit[]>().WithId("Enemies").FromInstance(enemies.ToArray()).AsCached();
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using BKA.BattleDirectory.BattleSystems;
 using BKA.Dices.DiceActions;
 using BKA.System.Exceptions;
 using BKA.UI;
@@ -10,6 +11,7 @@ using Cysharp.Threading.Tasks;
 using Sirenix.Utilities;
 using UniRx;
 using UnityEngine;
+using Zenject;
 
 namespace BKA.BattleDirectory.PlayerInput
 {
@@ -18,6 +20,8 @@ namespace BKA.BattleDirectory.PlayerInput
         [SerializeField] private PartyCharacterPanel[] _partyCharacterPanels;
 
         [SerializeField] private CharacterPanel[] _enemyCharacterPanels;
+
+        [Inject] private TurnSystem _turnSystem;// Полный пиздец потом какую-то другую проверку сделать, КОСТЫЛЬ
 
         private bool _isMakeTurn;
 
@@ -69,7 +73,7 @@ namespace BKA.BattleDirectory.PlayerInput
             await UniTask.WaitUntil(() => party.Count(unit =>
                 unit.IsActed.Value) == party.Count, cancellationToken: token).WithPostCancellation(() =>
             {
-                while (_actedUnits.Count > 0)
+                while (_actedUnits.Count > 0 && _turnSystem.TurnState.Value == TurnState.PartyTurn)
                 {
                     var actedUnit = _actedUnits.Pop();
                     actedUnit.UndoAct();

@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using BKA.System;
 using BKA.UI.WorldMap.Dialog.Interfaces;
+using BKA.Units;
 using BKA.WorldMapDirectory.Dialog.Interfaces;
 using BKA.Zenject.Signals;
 using UniRx;
 using UnityEngine;
 using Zenject;
+using Unit = UniRx.Unit;
 
 namespace BKA.UI.WorldMap.Dialog
 {
@@ -22,17 +26,21 @@ namespace BKA.UI.WorldMap.Dialog
 
         private Dictionary<Type, Signal> _dialogSideData = new();
 
+        private UnitDefinition _mainHeroDefinition;
+        
         private ReactiveCommand _onDialogEnded = new();
         private CompositeDisposable _handlerDisposable = new();
-
+        
         private SignalBus _signalBus;
 
-        public DialogHandler(IEnumerable<IDialogPoint> dialogPoints, IDialogPanel dialogPanel, SignalBus signalBus,
+        public DialogHandler(IEnumerable<IDialogPoint> dialogPoints, IDialogPanel dialogPanel, GameSession gameSession, SignalBus signalBus,
             AudioClip charSpawnedClip)
         {
             _dialogPanel = dialogPanel;
             _dialogPoints = dialogPoints;
 
+            _mainHeroDefinition = gameSession.MainHero.Definition;
+            
             _signalBus = signalBus;
 
             foreach (var dialogPoint in _dialogPoints)
@@ -55,12 +63,17 @@ namespace BKA.UI.WorldMap.Dialog
             ActivateDialog(phraseProviders);
         }
 
-        private void ActivateDialog(CharacterPhraseProvider[] dialogPointCharacterPhrases)
+        private void ActivateDialog(CharacterPhraseProvider[] characterPhrases)
         {
             _signalBus.Fire(new BlockInputSignal { IsBlocked = true });
+            
+            foreach (var characterPhrase in characterPhrases.Where(phrase => phrase.PhraseActor == PhraseActor.Hero))
+            {
+                characterPhrase.DynamicSetHeroPhrase(_mainHeroDefinition); //Потенциально нормально, но замени энум на полноценный класс
+            }
 
             _dialogPanel.ActivatePanel();
-            _currentPhrases = dialogPointCharacterPhrases;
+            _currentPhrases = characterPhrases;
             _currentPhrase = 0;
 
             _dialogSideData.Clear();
