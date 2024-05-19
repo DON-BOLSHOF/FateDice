@@ -32,7 +32,7 @@ namespace BKA.BattleDirectory.BattleHandlers
             _isDicesReadyToReroll.Where(value => !value).Subscribe(_ =>
                     WaitReadiness(_activeDices, _handlerSource.Token).Forget()).AddTo(this);
 
-            _rerollWidget.DynamicInit(_remainRerolls, _totalRerolls);
+            _rerollWidget.DynamicInit(_remainRerolls);
 
             _rerollWidget.OnRerolled.Subscribe(_ => Reroll()).AddTo(this);
         }

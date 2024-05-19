@@ -1,5 +1,7 @@
 ﻿using BKA.Buffs;
 using BKA.System;
+using BKA.UI;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -7,6 +9,8 @@ namespace BKA.BootsTraps
 {
     public class BootsTrap : MonoBehaviour
     {
+        //[SerializeField] private DisclaimerPanel _disclaimerPanel;
+        
         [Inject] private DefinitionPool _definitionPool;
 
         [Inject] private ArtefactPool _artefactPool;
@@ -17,6 +21,8 @@ namespace BKA.BootsTraps
 
         public async void Start()
         {
+            //_disclaimerPanel.OnEnded.Subscribe(_ => LoadLevel()).AddTo(this);
+            
             if (_stateObserver.BootsTrapState.Value != BootsTrapState.Loaded)
             {
                 await _definitionPool.UploadBaseDefinitions();
@@ -24,7 +30,12 @@ namespace BKA.BootsTraps
 
                 _stateObserver.Visit(this);
             }
+            
+            LoadLevel();
+        }
 
+        private void LoadLevel()
+        {
             _levelManager.LoadLevel("MainMenu");
         }
     }

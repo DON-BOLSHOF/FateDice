@@ -1495,6 +1495,10 @@ PrefabInstance:
       propertyPath: _healthWidget
       value: 
       objectReference: {fileID: 1240751157118904422}
+    - target: {fileID: 8904347891270152195, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
+      propertyPath: _characterPanelAnimator
+      value: 
+      objectReference: {fileID: 3355352901201540714}
     - target: {fileID: 8940405829468895878, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1567,6 +1571,11 @@ MonoBehaviour:
 --- !u!224 &2485710850720757864 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4569609800583848422, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
+  m_PrefabInstance: {fileID: 2095729903352338830}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3355352901201540714 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3712404881199034340, guid: 7142d82983f92f04e9a3f060f23b934a, type: 3}
   m_PrefabInstance: {fileID: 2095729903352338830}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6676043790610620462 stripped

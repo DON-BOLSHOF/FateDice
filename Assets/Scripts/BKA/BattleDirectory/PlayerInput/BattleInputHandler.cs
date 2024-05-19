@@ -47,6 +47,14 @@ namespace BKA.BattleDirectory.PlayerInput
                 enemyCharacterPanel.OnPanelClicked.Subscribe(OnUnitBehaviourClicked).AddTo(this);
             }
 
+            _turnSystem.TurnState.Where(value => value == TurnState.EnemyTurn).Subscribe(_ =>
+            {
+                foreach (var partyCharacterPanel in _partyCharacterPanels)
+                {
+                    partyCharacterPanel.SetUnActing();
+                }
+            }).AddTo(this);
+
             _turningUnit.Skip(1).Subscribe(value =>
             {
                 var characterPanel = _partyCharacterPanels.First(panel => panel.UnitBattleBehaviour == value);
@@ -73,12 +81,12 @@ namespace BKA.BattleDirectory.PlayerInput
             await UniTask.WaitUntil(() => party.Count(unit =>
                 unit.IsActed.Value) == party.Count, cancellationToken: token).WithPostCancellation(() =>
             {
-                while (_actedUnits.Count > 0 && _turnSystem.TurnState.Value == TurnState.PartyTurn)
+                if (_turningUnit.Value != null)
                 {
-                    var actedUnit = _actedUnits.Pop();
-                    actedUnit.UndoAct();
+                    var characterPanel = _partyCharacterPanels.First(panel => panel.UnitBattleBehaviour == _turningUnit.Value);
+                    characterPanel.SetUnActing();
                 }
-
+                
                 _isMakeTurn = false;
             });
 

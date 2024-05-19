@@ -3,6 +3,7 @@ using System.Linq;
 using BKA.Dices;
 using BKA.Dices.DiceActions;
 using UniRx;
+using UnityEngine;
 
 namespace BKA.Units
 {
@@ -11,6 +12,8 @@ namespace BKA.Units
         public Unit Unit { get; }
         public DiceObject DiceObject { get; }
         public ReactiveCommand OnDead { get; } = new();
+        public ReactiveCommand OnDamaged { get; } = new();
+        public ReactiveCommand OnHealed { get; } = new();
         public DiceAction DiceAction => _diceAction;
 
         private DiceAction _diceAction;
@@ -26,6 +29,24 @@ namespace BKA.Units
             DiceObject = dice;
 
             Unit.Health.Where(value => value <= 0).Subscribe(_ => OnDead?.Execute()).AddTo(_disposable);
+
+            var localHealth = Unit.Health.Value;
+            Unit.Health.Subscribe(newValue =>
+            {
+                if (newValue < localHealth)
+                {
+                    OnDamaged?.Execute();
+                    Debug.Log("Damaged");
+                }
+                
+                if (newValue > localHealth)
+                {
+                    OnHealed?.Execute();
+                    Debug.Log("Healed");
+                }
+                
+                localHealth = newValue;
+            }).AddTo(_disposable);
 
             dice.UpdateActions(unit.DiceActions.Select(data =>
                 new DiceAction(data,

@@ -3,6 +3,7 @@ using System.Linq;
 using BKA.Buffs;
 using BKA.System;
 using BKA.Units;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,8 @@ namespace BKA.UI.MainMenu
         [SerializeField] private Button _startButton;
 
         [SerializeField] private HeroPanel[] _heroPanels;
+
+        [SerializeField] private TextMeshProUGUI _descriptionText;
 
         [Inject] private LevelManager _levelManager;
         [Inject] private UnitFactory _unitFactory;
@@ -42,6 +45,7 @@ namespace BKA.UI.MainMenu
             }
 
             heroPanel.SelectPanel();
+            _descriptionText.text = heroPanel.HeroDefinition.UnitDescription;
 
             _selectedPanel = heroPanel;
         }

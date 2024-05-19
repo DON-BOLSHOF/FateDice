@@ -15,7 +15,7 @@ namespace BKA.Units
 
         public DemonPaladin(DefinitionPool definitionPool)
         {
-            Definition = definitionPool.GetFromPool("DemonPaladin");
+            Definition = definitionPool.GetFromPool("Феликс");
 
             DiceActions = new DiceActionData[Definition.BaseDiceActions.Length];
             Array.Copy(Definition.BaseDiceActions, DiceActions, Definition.BaseDiceActions.Length);

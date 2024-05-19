@@ -9,11 +9,10 @@ namespace BKA.UI
         
         [SerializeField] private Transform _view;
         
-        private Vector3 _viewBasePosition;
+        private static readonly int Acting = Animator.StringToHash("Acting");
 
         protected void Start()
         {
-            _viewBasePosition = _view.localPosition;
             _characterStateWidget.OnClicked.Subscribe(_ =>
             {
                 _unitBattleBehaviour.DiceObject.UnSelectDice();
@@ -22,12 +21,12 @@ namespace BKA.UI
         
         public void SetActing()
         {
-            _view.localPosition += new Vector3(50f, 0, 0);
+            _characterPanelAnimator.SetBool(Acting, true);
         }
 
         public void SetUnActing()
         {
-            _view.localPosition = _viewBasePosition;
+            _characterPanelAnimator.SetBool(Acting, false);
         }
     }
 }

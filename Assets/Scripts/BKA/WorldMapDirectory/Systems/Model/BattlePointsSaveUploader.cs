@@ -23,8 +23,16 @@ namespace BKA.WorldMapDirectory.Systems
         {
             _battlePoints = battlePoints.ToArray();
         }
-        
-        public async UniTask UploadSaves()
+
+        public void UploadBaseSaves()
+        {
+            foreach (var battlePoint in _battlePoints)
+            {
+                battlePoint.DynamicInit(new BattlePointData{IsBattleBegan = false});
+            }
+        }
+
+        public async UniTask UploadLocalSaves()
         {
             if (TryGetSaves())
             {

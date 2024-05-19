@@ -8,17 +8,24 @@ namespace BKA.WorldMapDirectory.Systems
     public class HeroPositionSaveUploader : ISaveUploader, IDisposable
     {
         private HeroPositionComponent _heroPositionComponent;
-
+        
         private Vector3 _localPosition;
+        private Vector3 _basePosition;
         
         private const string _SAVE_CODE = "HERO_POSITION_DATA";
 
         public HeroPositionSaveUploader(HeroPositionComponent positionComponent)
         {
             _heroPositionComponent = positionComponent;
+            _basePosition = positionComponent.transform.position;
         }
 
-        public async UniTask UploadSaves()
+        public void UploadBaseSaves()
+        {
+            _heroPositionComponent.DynamicInit(_basePosition);
+        }
+
+        public async UniTask UploadLocalSaves()
         {
             if (TryGetSaves())
             {

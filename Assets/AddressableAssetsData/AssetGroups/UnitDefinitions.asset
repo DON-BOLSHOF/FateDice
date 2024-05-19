@@ -23,6 +23,16 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cc30627fd971bb54ebcf6009d7797c55
+    m_Address: FireMageDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a1a61eb362349c4c9d06fdc0bbf1aec
+    m_Address: RatDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f510c329c6312344f95645007d539c3b
     m_Address: HellMageDefinition
     m_ReadOnly: 0
     m_SerializedLabels: []

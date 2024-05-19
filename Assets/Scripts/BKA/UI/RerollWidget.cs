@@ -9,18 +9,16 @@ namespace BKA.UI
     public class RerollWidget : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _remainRerolls;
-        [SerializeField] private TextMeshProUGUI _totalRerolls;
         
         public ReactiveCommand OnRerolled = new();
 
         private Button _rerollButton;
 
-        public void DynamicInit(IReadOnlyReactiveProperty<int> currentRerolls, int totalRerolls)
+        public void DynamicInit(IReadOnlyReactiveProperty<int> currentRerolls)
         {
             currentRerolls.Subscribe(UpdateRerolls).AddTo(this);
             
             _remainRerolls.text = currentRerolls.Value.ToString();
-            _totalRerolls.text = totalRerolls.ToString();
         }
 
         private void Start()

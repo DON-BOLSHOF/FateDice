@@ -23,11 +23,15 @@ namespace BKA.System.UploadData
             switch (systemStage)
             {
                 case SystemStage.NewGame:
+                    foreach (var saveUploader in saveUploaders)
+                    {
+                        saveUploader.UploadBaseSaves();
+                    }
                     break;
                 case SystemStage.LocalChanges:
                     foreach (var saveUploader in saveUploaders)
                     {
-                        await saveUploader.UploadSaves();
+                        await saveUploader.UploadLocalSaves();
                     }
                     break;
                 default:

@@ -4,6 +4,7 @@ namespace BKA.System.UploadData
 {
     public interface ISaveUploader
     {
-        UniTask UploadSaves();
+        UniTask UploadLocalSaves();
+        void UploadBaseSaves();
     }
 }

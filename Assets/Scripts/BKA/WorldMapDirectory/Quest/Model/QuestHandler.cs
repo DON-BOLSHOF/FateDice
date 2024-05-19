@@ -81,7 +81,7 @@ namespace BKA.WorldMapDirectory.Quest
                 quest.OnQuestCompleted.Subscribe(_ => OnQuestCompleted(quest)).AddTo(_handlerDisposable);
                 quest.StartUpQuest();
                 
-                questHolder.Deactivate();
+                questHolder.StartUpQuest();
             }
             _signalBus.Fire( new BlockInputSignal{IsBlocked = false});
         }

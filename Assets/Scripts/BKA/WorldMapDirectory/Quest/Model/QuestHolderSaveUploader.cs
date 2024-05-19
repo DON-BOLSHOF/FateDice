@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using BKA.System.UploadData;
-using BKA.UI.WorldMap.Dialog;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -24,8 +23,16 @@ namespace BKA.WorldMapDirectory.Quest
         {
             _questHolders = questHolders;
         }
-        
-        public async UniTask UploadSaves()
+
+        public void UploadBaseSaves()
+        {
+            foreach (var questHolder in _questHolders)
+            {
+                questHolder.DynamicInit(new QuestHolderData{IsTaken = false});
+            }
+        }
+
+        public async UniTask UploadLocalSaves()
         {
             if (TryGetSaves())
             {

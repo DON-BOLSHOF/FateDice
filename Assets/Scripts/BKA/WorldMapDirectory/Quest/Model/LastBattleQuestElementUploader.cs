@@ -34,7 +34,12 @@ namespace BKA.TestUploadData.Installers
             }
         }
 
-        public async UniTask UploadSaves()
+        public void UploadBaseSaves()
+        {
+            //Допилить
+        }
+
+        public async UniTask UploadLocalSaves()
         {
             if (TryGetSaves())
             {

@@ -17,10 +17,14 @@ namespace BKA.UI
         [SerializeField] private HealthWidget _healthWidget;
         [SerializeField] private AttributeWidget _attributeWidget;
 
+        [SerializeField] protected Animator _characterPanelAnimator;
+
         public ReactiveCommand<UnitBattleBehaviour> OnPanelClicked = new();
         public UnitBattleBehaviour UnitBattleBehaviour => _unitBattleBehaviour;
 
         protected UnitBattleBehaviour _unitBattleBehaviour;
+        private static readonly int Damaged = Animator.StringToHash("Damaged");
+        private static readonly int Healed = Animator.StringToHash("Healed");
 
         public void Fulfill(UnitBattleBehaviour unitBehaviour)
         {
@@ -36,6 +40,9 @@ namespace BKA.UI
             unitBehaviour.DiceObject.OnDiceUnReadyToAct.Subscribe(_ => { _attributeWidget.ClearData(); }).AddTo(this);
 
             unitBehaviour.Unit.Health.Subscribe(value => _healthWidget.SetHealth(value)).AddTo(this);
+
+            unitBehaviour.OnDamaged.Subscribe(_ => _characterPanelAnimator.SetTrigger(Damaged)).AddTo(this);
+            unitBehaviour.OnHealed.Subscribe(_ => _characterPanelAnimator.SetTrigger(Healed)).AddTo(this);
 
             unitBehaviour.IsReadyToAct.Subscribe(isReady =>
             {

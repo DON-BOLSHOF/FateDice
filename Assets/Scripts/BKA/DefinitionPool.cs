@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BKA.System;
 using BKA.Units;
 using Cysharp.Threading.Tasks;
-using Zenject;
 
 namespace BKA
 {
@@ -20,7 +19,11 @@ namespace BKA
             var definition = await temp.Load("DemonPaladinDefinition");
             _unitDefinitions.Add(definition); 
             definition = await temp.Load("HellMageDefinition");
-            _unitDefinitions.Add(definition); 
+            _unitDefinitions.Add(definition);
+            definition = await temp.Load("FireMageDefinition");
+            _unitDefinitions.Add(definition);
+            definition = await temp.Load("RatDefinition");
+            _unitDefinitions.Add(definition);
         }
 
         public void Dispose()

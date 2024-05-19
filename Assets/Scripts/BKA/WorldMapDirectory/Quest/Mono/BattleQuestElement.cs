@@ -7,7 +7,7 @@ using Zenject;
 
 namespace BKA.WorldMapDirectory.Quest
 {
-    public class BattleQuestElement : QuestElement
+    public class BattleQuestElement : QuestElement, IDisposable
     {
         [SerializeField] private Transform _hintObject;
         [SerializeField] private string _questHint;
@@ -50,6 +50,14 @@ namespace BKA.WorldMapDirectory.Quest
         {
             _onElementCompleted?.Execute();
             _hintObject.gameObject.SetActive(false);
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            _battlePoint.gameObject.SetActive(false);
+            _battlePoint.Dispose();
+            _onBattleActivated?.Dispose();
         }
     }
 }

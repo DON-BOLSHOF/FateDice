@@ -467,7 +467,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ee886caa12e689140816ab73534cc711, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 1844307190389467461}
   - component: {fileID: 7287375436044963040}
   - component: {fileID: 8904347891270152195}
+  - component: {fileID: 3712404881199034340}
   m_Layer: 5
   m_Name: CharacterPanel
   m_TagString: Untagged
@@ -688,6 +689,28 @@ MonoBehaviour:
   _name: {fileID: 0}
   _healthWidget: {fileID: 877515440513937896}
   _attributeWidget: {fileID: 0}
+  _characterPanelAnimator: {fileID: 3712404881199034340}
+--- !u!95 &3712404881199034340
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8405195606525853088}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c1e17ca2389598b4ca599d533c812073, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2849208298938941081
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 ﻿using System;
-using BKA.WorldMapDirectory.Systems;
 using UniRx;
 using UnityEngine;
 
@@ -10,57 +9,54 @@ namespace BKA.WorldMapDirectory.Quest
     {
         public bool IsTaken;
     }
-    
-    [RequireComponent(typeof(InteractableObject))]
-    public class QuestHolder : MonoBehaviour
+
+    public abstract class QuestHolder : MonoBehaviour
     {
         [SerializeField] private string _questTitle;
         [SerializeField] private QuestElement[] _questElementsSequence;
         [SerializeField] private int _xpForQuest;
         [SerializeField] private QuestInterlude _questInterlude;
 
-        public Quest Quest => _quest ?? new Quest(_questTitle,_questElementsSequence, _xpForQuest);
+        public Quest Quest => _quest ?? new Quest(_questTitle, _questElementsSequence, _xpForQuest);
         public QuestHolderData QuestHolderData => _questHolderData;
         public QuestInterlude QuestInterlude => _questInterlude;
         public IObservable<Unit> OnTryQuestActivate => _onTryQuestActivate;
-        
+
         public string QuestTitle => _questTitle;
 
         private Quest _quest;
 
-        private QuestHolderData _questHolderData = new();
+        private QuestHolderData _questHolderData;
 
         private ReactiveCommand _onTryQuestActivate = new();
-        private InteractableObject _interactableObject;
-        
-        private void Start()
-        {
-            _quest ??= new Quest(_questTitle,_questElementsSequence, _xpForQuest);
-            
-            _interactableObject = GetComponent<InteractableObject>();
 
-            _interactableObject.OnInteracted.Subscribe(_ =>
-            {
-                _questHolderData.IsTaken = true;
-                _onTryQuestActivate.Execute();
-            }).AddTo(this);
+        protected virtual void Start()
+        {
+            _quest ??= new Quest(_questTitle, _questElementsSequence, _xpForQuest);
         }
 
-        public void Deactivate()
+        public virtual void StartUpQuest()
         {
             enabled = false;
-            _interactableObject.Dispose();
+            _questHolderData.IsTaken = true;
         }
 
         public void DynamicInit(QuestHolderData questHolderData)
         {
             _questHolderData = questHolderData;
-            
-            if (_questHolderData.IsTaken)
-            {
-                enabled = false;
-                GetComponent<InteractableObject>().Dispose();
-            }
+
+            if (!_questHolderData.IsTaken)
+                Activate();
+            else
+                Deactivate();
+        }
+
+        protected abstract void Activate();
+        protected abstract void Deactivate();
+
+        protected void TryActivateQuest()
+        {
+            _onTryQuestActivate.Execute();
         }
     }
 }

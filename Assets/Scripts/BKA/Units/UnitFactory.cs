@@ -11,8 +11,10 @@ namespace BKA.Units
         {
             return unitDefinition.ID switch // Переделай ибо полная залупа
             {
-                "DemonPaladin" => new DemonPaladin(_definitionPool),
-                "HellMage" => new HellMage(_definitionPool),
+                "Феликс" => new DemonPaladin(_definitionPool),
+                "Вельва" => new FireMage(_definitionPool),
+                "Эдара" => new HellMage(_definitionPool),
+                "Крыса" => new Rat(_definitionPool),
                 _ => throw new ArgumentException("UnitFactory не поддерживает этот тип")
             };
         }

@@ -24,8 +24,16 @@ namespace BKA.UI.WorldMap.Dialog
         {
             _dialogPoints = dialogPoints;
         }
-        
-        public async UniTask UploadSaves()
+
+        public void UploadBaseSaves()
+        {
+            foreach (var dialogPoint in _dialogPoints)
+            {
+                dialogPoint.DynamicInit(new DialogPointData{IsDialogTriggered = false});
+            }
+        }
+
+        public async UniTask UploadLocalSaves()
         {
             if (TryGetSaves())
             {

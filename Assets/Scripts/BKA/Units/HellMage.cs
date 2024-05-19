@@ -15,7 +15,7 @@ namespace BKA.Units
 
         public HellMage(DefinitionPool definitionPool)
         {
-            Definition = definitionPool.GetFromPool("HellMage");
+            Definition = definitionPool.GetFromPool("Эдара");
             
             DiceActions = new DiceActionData[Definition.BaseDiceActions.Length];
             Array.Copy(Definition.BaseDiceActions, DiceActions, Definition.BaseDiceActions.Length);
