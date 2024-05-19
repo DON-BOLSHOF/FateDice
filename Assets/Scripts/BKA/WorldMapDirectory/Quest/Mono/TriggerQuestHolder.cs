@@ -1,6 +1,5 @@
 ﻿using BKA.Player;
 using UnityEngine;
-using NotImplementedException = System.NotImplementedException;
 
 namespace BKA.WorldMapDirectory.Quest
 {
