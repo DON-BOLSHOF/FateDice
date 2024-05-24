@@ -18,21 +18,24 @@ namespace BKA.WorldMapDirectory.Quest
         public IObservable<Unit> OnQuestCompleted => _onQuestCompleted;
         public readonly int XpForQuestCompleted;
 
+        public readonly bool IsMainQuest;
+
         public IObservable<Notification> OnSentNotification => _onQuestSentNotification;
 
         private readonly QuestElement[] _questElements;
         private readonly ReactiveCommand _onQuestCompleted = new();
         private readonly ReactiveCommand<Notification> _onQuestSentNotification = new();
-
+        
         private readonly CompositeDisposable _questDisposable = new();
 
         private int _currentElement;
 
-        public Quest(string questTitle, QuestElement[] questElements, int xpForQuestCompleted)
+        public Quest(string questTitle, QuestElement[] questElements, int xpForQuestCompleted, bool isMainQuest)
         {
             QuestTitle = questTitle;
             _questElements = questElements;
             XpForQuestCompleted = xpForQuestCompleted;
+            IsMainQuest = isMainQuest;
 
             foreach (var questElement in _questElements)
             {

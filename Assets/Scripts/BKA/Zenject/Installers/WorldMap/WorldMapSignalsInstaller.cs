@@ -13,6 +13,7 @@ namespace Zenject.WorldMap
             Container.DeclareSignal<BlockInputSignal>();
 
             Container.DeclareSignal<GiveArtefactSignal>();
+            
             Container.DeclareSignal<TakeArtefactSignal>();
 
             Container.DeclareSignal<SFXClipSignal>();
@@ -26,6 +27,8 @@ namespace Zenject.WorldMap
             Container.DeclareSignal<ExtraodinaryDialogActivate>();
 
             Container.DeclareSignal<GiveXPSignal>();
+
+            Container.DeclareSignal<MainQuestEndSignal>();
         }
     }
 }

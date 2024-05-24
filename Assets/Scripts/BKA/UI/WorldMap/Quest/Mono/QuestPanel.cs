@@ -38,14 +38,14 @@ namespace BKA.UI.WorldMap.Quest.Mono
             }).AddTo(this);
         }
 
-        public void ActivatePanel(QuestInterlude interlude)
+        public void ActivatePanel(QuestInterlude interlude, bool isMainQuest)
         {
             _questName.text = interlude.QuestName;
             _description.text = interlude.Description;
 
             _activateButtonText.text = interlude.ActivationButtonDescription;
             
-            _refusalButton.gameObject.SetActive(interlude.IsAdditionalQuest);
+            _refusalButton.gameObject.SetActive(isMainQuest);
 
             _view.gameObject.SetActive(true);
         }

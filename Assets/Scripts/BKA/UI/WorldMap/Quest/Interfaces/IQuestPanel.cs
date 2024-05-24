@@ -8,6 +8,6 @@ namespace BKA.UI.WorldMap.Quest.Interfaces
     {
         IObservable<bool> OnActivateQuest { get; }
 
-        void ActivatePanel(QuestInterlude interlude);
+        void ActivatePanel(QuestInterlude interlude, bool isMainQuest);
     }
 }

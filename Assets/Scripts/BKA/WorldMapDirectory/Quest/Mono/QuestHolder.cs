@@ -16,13 +16,16 @@ namespace BKA.WorldMapDirectory.Quest
         [SerializeField] private QuestElement[] _questElementsSequence;
         [SerializeField] private int _xpForQuest;
         [SerializeField] private QuestInterlude _questInterlude;
+        [SerializeField] private bool _isMainQuest;
 
-        public Quest Quest => _quest ?? new Quest(_questTitle, _questElementsSequence, _xpForQuest);
+        public Quest Quest => _quest ?? new Quest(_questTitle, _questElementsSequence, _xpForQuest, _isMainQuest);
         public QuestHolderData QuestHolderData => _questHolderData;
         public QuestInterlude QuestInterlude => _questInterlude;
         public IObservable<Unit> OnTryQuestActivate => _onTryQuestActivate;
 
         public string QuestTitle => _questTitle;
+
+        public bool IsMainQuest => _isMainQuest;
 
         private Quest _quest;
 
@@ -32,7 +35,7 @@ namespace BKA.WorldMapDirectory.Quest
 
         protected virtual void Start()
         {
-            _quest ??= new Quest(_questTitle, _questElementsSequence, _xpForQuest);
+            _quest ??= new Quest(_questTitle, _questElementsSequence, _xpForQuest, _isMainQuest);
         }
 
         public virtual void StartUpQuest()

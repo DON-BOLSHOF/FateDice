@@ -9,10 +9,10 @@ using Zenject;
 
 namespace BKA.WorldMapDirectory.Quest
 {
-    public class QuestHandler : IQuestHandler,IDisposable
+    public class QuestHandler : IQuestHandler, IDisposable
     {
         public IEnumerable<Quest> ActivatedQuests => _activatedQuest;
-        
+
         private List<Quest> _activatedQuest = new();
 
         private IQuestPanel _questPanel;
@@ -23,13 +23,14 @@ namespace BKA.WorldMapDirectory.Quest
         private SignalBus _signalBus;
         private CompositeDisposable _handlerDisposable = new();
 
-        public QuestHandler(QuestHolder[] questHolder, IQuestPanel questPanel, INotificationHandler notificationHandler,SignalBus signalBus)
+        public QuestHandler(QuestHolder[] questHolder, IQuestPanel questPanel, INotificationHandler notificationHandler,
+            SignalBus signalBus)
         {
             _questPanel = questPanel;
             _signalBus = signalBus;
             _notificationHandler = notificationHandler;
             _questHolders = questHolder;
-            
+
             foreach (var holder in _questHolders)
             {
                 holder.OnTryQuestActivate.Subscribe(_ => TryActivateQuest(holder).Forget()).AddTo(_handlerDisposable);
@@ -42,13 +43,13 @@ namespace BKA.WorldMapDirectory.Quest
             {
                 var holder = _questHolders.First(holder => holder.QuestTitle.Equals(questData.QuestTitle));
                 var quest = holder.Quest;
-                
+
                 _activatedQuest.Add(quest);
-                
+
                 _notificationHandler.LoadNotificationObject(quest);
 
                 quest.OnQuestCompleted.Subscribe(_ => OnQuestCompleted(quest)).AddTo(_handlerDisposable);
-                
+
                 quest.ForceMoveSteps(questData.CurrentElement);
             }
         }
@@ -65,9 +66,9 @@ namespace BKA.WorldMapDirectory.Quest
 
         private async UniTaskVoid TryActivateQuest(QuestHolder questHolder)
         {
-            _signalBus.Fire( new BlockInputSignal{IsBlocked = true});
-            
-            _questPanel.ActivatePanel(questHolder.QuestInterlude);
+            _signalBus.Fire(new BlockInputSignal { IsBlocked = true });
+
+            _questPanel.ActivatePanel(questHolder.QuestInterlude, questHolder.IsMainQuest);
 
             var isActivated = await _questPanel.OnActivateQuest.ToUniTask(useFirstValue: true);
 
@@ -75,23 +76,31 @@ namespace BKA.WorldMapDirectory.Quest
             {
                 var quest = questHolder.Quest;
                 _activatedQuest.Add(quest);
-                
+
                 _notificationHandler.LoadNotificationObject(quest);
 
                 quest.OnQuestCompleted.Subscribe(_ => OnQuestCompleted(quest)).AddTo(_handlerDisposable);
                 quest.StartUpQuest();
-                
+
                 questHolder.StartUpQuest();
             }
-            _signalBus.Fire( new BlockInputSignal{IsBlocked = false});
+
+            _signalBus.Fire(new BlockInputSignal { IsBlocked = false });
         }
 
         private void OnQuestCompleted(Quest quest)
         {
-            _signalBus.Fire(new GiveXPSignal{XP = quest.XpForQuestCompleted});
-            
+            if (quest.IsMainQuest)
+            {
+                _signalBus.Fire(new MainQuestEndSignal());
+            }
+            else
+            {
+                _signalBus.Fire(new GiveXPSignal { XP = quest.XpForQuestCompleted });
+            }
+
             _notificationHandler.RemoveNotificationObject(quest);
-            
+
             _activatedQuest.Remove(quest);
             quest.Dispose();
         }
