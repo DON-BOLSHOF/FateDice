@@ -15,3 +15,7 @@ MonoBehaviour:
   _sequences:
   - {fileID: 11400000, guid: 3907d86d70485184d816ab316ee95785, type: 2}
   - {fileID: 11400000, guid: 380287fcb5ea03147a51933dc5425d49, type: 2}
+  - {fileID: 11400000, guid: 952f81ffbb915424bb4efb073d7ab7b4, type: 2}
+  - {fileID: 11400000, guid: db2245741e2c20942acc0a85afe7758d, type: 2}
+  - {fileID: 11400000, guid: efb489b63f4e9c24b87829da3288007b, type: 2}
+  - {fileID: 11400000, guid: 25f72a529f150e94fbe9c5ff2356e3a1, type: 2}

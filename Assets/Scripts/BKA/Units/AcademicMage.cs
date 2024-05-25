@@ -5,7 +5,7 @@ using UniRx;
 
 namespace BKA.Units
 {
-    public class FireMage : Unit
+    public class AcademicMage : Unit
     {
         public sealed override UnitDefinition Definition { get; protected set; }
         public sealed override DiceActionData[] DiceActions { get; protected set; }
@@ -13,7 +13,7 @@ namespace BKA.Units
         protected sealed override int _maximumHealth { get; set; }
         protected sealed override ReactiveProperty<int> _health { get; } = new();
 
-        public FireMage(DefinitionPool definitionPool)
+        public AcademicMage(DefinitionPool definitionPool)
         {
             Definition = definitionPool.GetFromPool("Вельва");
             

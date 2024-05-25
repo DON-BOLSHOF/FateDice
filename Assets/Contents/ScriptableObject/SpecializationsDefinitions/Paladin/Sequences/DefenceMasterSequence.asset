@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587951d8ccb84b0e8b784d65f6cd5de6, type: 3}
+  m_Name: DefenceMasterSequence
+  m_EditorClassIdentifier: 
+  _currentSpecialization: {fileID: 11400000, guid: a738dfc7d8a075a4cb4514c83984607d, type: 2}
+  _toSpecializations:
+  - {fileID: 11400000, guid: 27f77af94cf9d8642a4201f8e739080d, type: 2}
+  - {fileID: 11400000, guid: 109c479e30e2884418ec83f366dede5a, type: 2}

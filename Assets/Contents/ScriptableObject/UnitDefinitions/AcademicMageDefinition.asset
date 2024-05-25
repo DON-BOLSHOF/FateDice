@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e7b05fb2f8d4759a4e5a283ecfe10a7, type: 3}
-  m_Name: FireMageDefinition
+  m_Name: AcademicMageDefinition
   m_EditorClassIdentifier: 
   <ID>k__BackingField: "\u0412\u0435\u043B\u044C\u0432\u0430"
-  <UnitDescription>k__BackingField: " \u041E\u0433\u043D\u0435\u043D\u043D\u0430\u044F
-    \u0434\u0435\u0432\u0430, \u0440\u0435\u0448\u0438\u0432\u0448\u0430\u044F \u043D\u0430
-    \u0441\u0432\u043E\u044E \u0433\u043E\u043B\u043E\u0432\u0443 \u043D\u0430\u0439\u0442\u0438
-    \u043F\u0440\u0438\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0439. <br> \u0421\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u0443\u0435\u0442\u0441\u044F
+  <UnitDescription>k__BackingField: "\u0423\u0447\u0435\u043D\u0430\u044F \u0434\u0435\u0432\u0430,
+    \u0440\u0435\u0448\u0438\u0432\u0448\u0430\u044F \u043D\u0430 \u0441\u0432\u043E\u044E
+    \u0433\u043E\u043B\u043E\u0432\u0443 \u043D\u0430\u0439\u0442\u0438 \u043F\u0440\u0438\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0439.
+    <br> \u0421\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u0443\u0435\u0442\u0441\u044F
     \u043D\u0430 \u043C\u0430\u0433\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u0430\u0442\u0430\u043A\u0430\u0445"
   <UnitIcon>k__BackingField: {fileID: 21300000, guid: 12c8d1ce223d609469477aa7d2831a36, type: 3}
   <BaseDiceActions>k__BackingField:
-  - {fileID: 11400000, guid: 36291331459381d4cb9e9a0ed5d47158, type: 2}
+  - {fileID: 11400000, guid: 9fc04f8d96498b6469f4c4002256f2e5, type: 2}
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
-  - {fileID: 11400000, guid: 47efb1ac9b791e44dbc81e249b35c758, type: 2}
-  - {fileID: 11400000, guid: 47efb1ac9b791e44dbc81e249b35c758, type: 2}
+  - {fileID: 11400000, guid: 86c504ba4022db541963fafe23f7f860, type: 2}
+  - {fileID: 11400000, guid: 86c504ba4022db541963fafe23f7f860, type: 2}
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   <FixedActionsValue>k__BackingField: 6

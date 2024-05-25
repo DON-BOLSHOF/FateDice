@@ -20,7 +20,7 @@ namespace BKA
             _unitDefinitions.Add(definition); 
             definition = await temp.Load("HellMageDefinition");
             _unitDefinitions.Add(definition);
-            definition = await temp.Load("FireMageDefinition");
+            definition = await temp.Load("AcademicMageDefinition");
             _unitDefinitions.Add(definition);
             definition = await temp.Load("RatDefinition");
             _unitDefinitions.Add(definition);

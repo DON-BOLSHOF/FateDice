@@ -23,7 +23,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cc30627fd971bb54ebcf6009d7797c55
-    m_Address: FireMageDefinition
+    m_Address: AcademicMageDefinition
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

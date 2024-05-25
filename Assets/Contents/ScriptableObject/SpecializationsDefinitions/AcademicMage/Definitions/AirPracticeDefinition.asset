@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e8ef8d9fe0341e4b13724607092d2f4, type: 3}
-  m_Name: DefenceMaster
+  m_Name: AirPracticeDefinition
   m_EditorClassIdentifier: 
   _statusOfBuff: 3
-  _view: {fileID: 21300000, guid: d112c5fafc8ade44fabaa24cb4ee0ec9, type: 3}
+  _view: {fileID: 21300000, guid: 3422ff13b0ea3a7488dc11668bd8a4f1, type: 3}
   _diceActions:
-  - Index: 5
-    DiceAction: {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
+  - Index: 0
+    DiceAction: {fileID: 11400000, guid: 7e0116daa3f0dde45abb6ed17e6521e1, type: 2}
+  - Index: 1
+    DiceAction: {fileID: 11400000, guid: 7e0116daa3f0dde45abb6ed17e6521e1, type: 2}
   _characteristics:
     _agility: 0
-    _strength: 4
-    _intelligent: 0
+    _strength: 0
+    _intelligent: 1

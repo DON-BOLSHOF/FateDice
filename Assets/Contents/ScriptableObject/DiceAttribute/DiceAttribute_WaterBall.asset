@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7d26d980b0d4d8a8bf50cdd699e2e6c, type: 3}
-  m_Name: DiceAttribute_Heal
+  m_Script: {fileID: 11500000, guid: acb7e529004c476cb2d2ce6765b2d28a, type: 3}
+  m_Name: DiceAttribute_WaterBall
   m_EditorClassIdentifier: 
-  <DiceAttributeFocus>k__BackingField: 2
-  <ActionView>k__BackingField: {fileID: 21300000, guid: f93b86f3a06ac1940ad09cce88862e50, type: 3}
-  <BaseActValue>k__BackingField: 2
+  <DiceAttributeFocus>k__BackingField: 1
+  <ActionView>k__BackingField: {fileID: 21300000, guid: 62dfaab93d1b2824abc4716e38064140, type: 3}
+  <BaseActValue>k__BackingField: 3
