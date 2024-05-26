@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ID>k__BackingField: "\u042D\u0434\u0430\u0440\u0430"
   <UnitDescription>k__BackingField: "\u0418\u0441\u043A\u0443\u0441\u043D\u0430\u044F
-    \u0434\u044C\u044F\u0432\u043E\u043B\u0438\u0446\u0430"
+    \u0434\u044C\u044F\u0432\u043E\u043B\u0438\u0446\u0430, \u0440\u0435\u0448\u0438\u0432\u0448\u0430\u044F
+    \u043F\u043E\u043C\u043E\u0447\u044C \u0433\u0435\u0440\u043E\u044E."
   <UnitIcon>k__BackingField: {fileID: 21300000, guid: dea5ad81380959d47accaff8cf1f6f61, type: 3}
   <BaseDiceActions>k__BackingField:
-  - {fileID: 11400000, guid: 36291331459381d4cb9e9a0ed5d47158, type: 2}
+  - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   - {fileID: 11400000, guid: 8beb468069ece81478475d6f7b786d86, type: 2}
   - {fileID: 11400000, guid: 47efb1ac9b791e44dbc81e249b35c758, type: 2}
   - {fileID: 11400000, guid: 47efb1ac9b791e44dbc81e249b35c758, type: 2}
@@ -29,4 +30,4 @@ MonoBehaviour:
   <BaseCharacteristics>k__BackingField:
     _agility: 3
     _strength: 1
-    _intelligent: 7
+    _intelligent: 4

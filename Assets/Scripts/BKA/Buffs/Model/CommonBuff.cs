@@ -13,8 +13,8 @@ namespace BKA.Buffs.Model
         public CommonBuff(BuffStatus buffStatus, List<DiceActionPair> diceActionPairs, Characteristics characteristics)
         {
             StatusOfBuff = buffStatus;
-            DiceActionPairs = diceActionPairs;
-            Characteristics = characteristics;
+            DiceActionPairs = new List<DiceActionPair>(diceActionPairs);
+            Characteristics = new Characteristics(characteristics.Agility, characteristics.Strength, characteristics.Intelligent);
         }
     }
 }

@@ -14,18 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _statusOfBuff: 2
   _view: {fileID: 21300000, guid: ffd96ec20ba6aa44d8e981198a305d4c, type: 3}
-  _diceActions:
-  - Index: 5
-    DiceAction: {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
-  - Index: 5
-    DiceAction: {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
-  - Index: 5
-    DiceAction: {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
-  - Index: 5
-    DiceAction: {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
-  - Index: 5
-    DiceAction: {fileID: 11400000, guid: f2ac964cf5003204db052d61ff1d9080, type: 2}
+  _diceActions: []
   _characteristics:
     _agility: 0
-    _strength: 26
+    _strength: 6
     _intelligent: 0

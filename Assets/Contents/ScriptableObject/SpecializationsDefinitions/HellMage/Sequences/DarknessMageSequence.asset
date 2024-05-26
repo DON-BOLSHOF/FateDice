@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587951d8ccb84b0e8b784d65f6cd5de6, type: 3}
+  m_Name: DarknessMageSequence
+  m_EditorClassIdentifier: 
+  _currentSpecialization: {fileID: 11400000, guid: 2dea95c24d3042c479e4244d81e6e1f5, type: 2}
+  _toSpecializations:
+  - {fileID: 11400000, guid: de0e2ee66d7b5e348b2bf86846fcb48e, type: 2}

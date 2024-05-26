@@ -339,8 +339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _heroDefinition: {fileID: 11400000, guid: 47f18d4f1eeecb44abf3bb778303c258, type: 2}
   _heroBaseCompanionsDefinitions: []
-  _heroArtefacts:
-  - {fileID: 11400000, guid: bce616d3b37f25b44ae09a336d09ea4f, type: 2}
+  _heroArtefacts: []
   _panelButton: {fileID: 142624244}
   _pedestal: {fileID: 524175448}
 --- !u!1 &173674836
@@ -1136,8 +1135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _heroDefinition: {fileID: 11400000, guid: cc30627fd971bb54ebcf6009d7797c55, type: 2}
   _heroBaseCompanionsDefinitions: []
-  _heroArtefacts:
-  - {fileID: 11400000, guid: bce616d3b37f25b44ae09a336d09ea4f, type: 2}
+  _heroArtefacts: []
   _panelButton: {fileID: 581438748}
   _pedestal: {fileID: 429625129}
 --- !u!114 &581438750

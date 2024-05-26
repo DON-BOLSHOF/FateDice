@@ -1,5 +1,5 @@
 ﻿using System;
-using UniRx.Triggers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
@@ -12,6 +12,7 @@ namespace BKA.UI.WorldMap
     {
         [SerializeField] private Transform _view;
         [SerializeField] private HealthWidget _healthWidget;
+        [SerializeField] private TextMeshProUGUI _heroId;
         [SerializeField] private Image _icon;
 
         public IObservable<UniRx.Unit> OnSelected => _onSelected;
@@ -33,6 +34,7 @@ namespace BKA.UI.WorldMap
         {
             _hero = unit;
 
+            _heroId.text = unit.Definition.ID;
             _icon.sprite = unit.Definition.UnitIcon;
             _healthWidget.SetHealth(unit.Health.Value);
         }

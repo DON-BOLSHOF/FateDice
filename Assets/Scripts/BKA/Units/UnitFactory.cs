@@ -16,6 +16,7 @@ namespace BKA.Units
                 "Эдара" => new HellMage(_definitionPool),
                 "Крыса" => new Rat(_definitionPool),
                 "Волк" => new Wolf(_definitionPool),
+                "Призрак Годрика"  => new GodricScientiest(_definitionPool),
                 _ => throw new ArgumentException("UnitFactory не поддерживает этот тип")
             };
         }

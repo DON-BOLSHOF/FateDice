@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <DiceAttributeFocus>k__BackingField: 1
   <ActionView>k__BackingField: {fileID: 21300000, guid: 708098e791eeb5f4f8728dca060c87b9, type: 3}
-  <BaseActValue>k__BackingField: 6
+  <BaseActValue>k__BackingField: 4

@@ -26,6 +26,8 @@ namespace BKA
             _unitDefinitions.Add(definition);
             definition = await temp.Load("WolfDefinition");
             _unitDefinitions.Add(definition);
+            definition = await temp.Load("GodricDefinition");
+            _unitDefinitions.Add(definition);
         }
 
         public void Dispose()
