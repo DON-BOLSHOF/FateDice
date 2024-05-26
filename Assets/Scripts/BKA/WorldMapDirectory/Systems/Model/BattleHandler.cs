@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BKA.System;
+using BKA.System.Synchronization.Interfaces;
 using BKA.Units;
 using BKA.WorldMapDirectory.Systems.Interfaces;
 using BKA.Zenject.Signals;
@@ -20,7 +20,7 @@ namespace BKA.WorldMapDirectory.Systems
 
         public BattleHandler(IBattleStarter battleStarter, IEnumerable<BattlePoint> battlePoints,
             UnitFactory unitFactory,
-            ISynchronizer synchronizer, SignalBus signalBus)
+            IWorldMapSynchronizer synchronizer, SignalBus signalBus)
         {
             _signalBus = signalBus;
             _unitFactory = unitFactory;

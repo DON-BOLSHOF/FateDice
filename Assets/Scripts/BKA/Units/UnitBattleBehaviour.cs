@@ -36,13 +36,11 @@ namespace BKA.Units
                 if (newValue < localHealth)
                 {
                     OnDamaged?.Execute();
-                    Debug.Log("Damaged");
                 }
                 
                 if (newValue > localHealth)
                 {
                     OnHealed?.Execute();
-                    Debug.Log("Healed");
                 }
                 
                 localHealth = newValue;

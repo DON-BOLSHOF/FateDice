@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using BKA.System.Synchronization.Interfaces;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -6,7 +7,7 @@ namespace BKA.System.UploadData.Mono
 {
     public class LoadBar : MonoBehaviour
     {
-        [Inject] private ISynchronizer _synchronizer;
+        [Inject] private IWorldMapSynchronizer _synchronizer;
 
         private void Start()
         {
