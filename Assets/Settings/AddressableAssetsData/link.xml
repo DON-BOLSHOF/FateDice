@@ -1,0 +1,41 @@
+<linker>
+  <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="BKA.Buffs.Artefact" preserve="all" />
+    <type fullname="BKA.Buffs.SpecializationDefinition" preserve="all" />
+    <type fullname="BKA.Buffs.SpecializationSequence" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.AirBall" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.AirMultiBalls" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.AirStun" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.FireBall" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.FireMultiAttack" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.GhostSpiderByte" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.HealSpell" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.InActivity" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.NightPulse" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.RatByte" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.SwordAttack" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.WaterBall" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.WaterBlast" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.WolfRoar" preserve="all" />
+    <type fullname="BKA.Dices.DiceActions.WolfStrike" preserve="all" />
+    <type fullname="BKA.Units.UnitDefinition" preserve="all" />
+    <type fullname="BKA.Units.Characteristics" preserve="nothing" serialized="true" />
+    <type fullname="BKA.Dices.DiceActions.DiceActionPair" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.LegacyResourcesProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.U2D.SpriteAtlas" preserve="all" />
+  </assembly>
+</linker>
