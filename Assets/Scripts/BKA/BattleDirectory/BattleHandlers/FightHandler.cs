@@ -173,7 +173,7 @@ namespace BKA.BattleDirectory.BattleHandlers
 
         private void UndoPlayerMove()
         {
-            if (_battleInputHandler._hasToUndo)
+            if (_battleInputHandler.HasToUndo)
             {
                 _battleInputHandler.UndoLastAct();
             }

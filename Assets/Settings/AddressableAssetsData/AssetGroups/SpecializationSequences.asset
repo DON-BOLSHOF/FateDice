@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SpecializationSequences
+  m_EditorClassIdentifier: 
+  m_GroupName: SpecializationSequences
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 849cf51ed3b39f7438bb77372ff4bdb0
+  m_SerializeEntries:
+  - m_GUID: 380287fcb5ea03147a51933dc5425d49
+    m_Address: AggressiveMasterSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3907d86d70485184d816ab316ee95785
+    m_Address: BasePaladinSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 952f81ffbb915424bb4efb073d7ab7b4
+    m_Address: DefenceMasterSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7f48bd541b22bdd43b6af4640d1704f3
+    m_Address: BaseHellMageSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f10b41150a303304f86eb9c4273bb0f1
+    m_Address: DarknessMageSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53550619bc246c44baef0426e5359c86
+    m_Address: FireMageSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 25f72a529f150e94fbe9c5ff2356e3a1
+    m_Address: AirMasterSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: db2245741e2c20942acc0a85afe7758d
+    m_Address: BaseAcademicSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efb489b63f4e9c24b87829da3288007b
+    m_Address: WaterMasterSequence
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 824df42db4d196c49a24ad642c8166a4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1f1b4a63c0475c24fb9d75b76526d319, type: 2}
+    - {fileID: 11400000, guid: d38dbfa02ac669542a91e37222d052cf, type: 2}

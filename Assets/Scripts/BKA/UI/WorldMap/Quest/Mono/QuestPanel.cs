@@ -45,7 +45,7 @@ namespace BKA.UI.WorldMap.Quest.Mono
 
             _activateButtonText.text = interlude.ActivationButtonDescription;
             
-            _refusalButton.gameObject.SetActive(isMainQuest);
+            _refusalButton.gameObject.SetActive(!isMainQuest);
 
             _view.gameObject.SetActive(true);
         }

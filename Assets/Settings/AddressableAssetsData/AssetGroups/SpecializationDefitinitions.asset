@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SpecializationDefitinitions
+  m_EditorClassIdentifier: 
+  m_GroupName: SpecializationDefitinitions
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 98ed8db25eb176b46abd463b715d1188
+  m_SerializeEntries:
+  - m_GUID: f9a40a5a34ccb47468fdb96c0a76502b
+    m_Address: AcademicMageBaseDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7f25341be05a70544879ce1dd821ffa2
+    m_Address: AirKnowleadgeDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8dff553e9e619d049a1a38e59395612b
+    m_Address: AirMasterDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11e7a805f611ec04d8f1df8a1715c0ed
+    m_Address: AirPracticeDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc06cf6599e167140b42f2f2e8a3327a
+    m_Address: WaterKnowleadgeDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0be001306947fbe4bb9cff43e54fae89
+    m_Address: WaterMasterDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f559b60e962675a4087e525cf7c5b007
+    m_Address: WaterPracticeDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2dea95c24d3042c479e4244d81e6e1f5
+    m_Address: DarknessMageDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de0e2ee66d7b5e348b2bf86846fcb48e
+    m_Address: DarknessMasterDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efd7e2789b4bcbf448d47d31f7813ef4
+    m_Address: FireMageDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d5671c48433b5bc4f8b1559d250e0428
+    m_Address: FireMasterDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ca406a584ba7ce4f981a51ab98a7632
+    m_Address: HellMageBaseDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7fc7efc1a6306f84f814e319f970c66c
+    m_Address: AgressiveMaster
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a738dfc7d8a075a4cb4514c83984607d
+    m_Address: DefenceMaster
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 27f77af94cf9d8642a4201f8e739080d
+    m_Address: HealerPaladin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c69f7f590992734980ca7b69ee8760a
+    m_Address: OathBreaker
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 98b081d9debfa2b44b39f8fc630e7555
+    m_Address: PaladinBaseDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: daa2482f47fd02f43921ae6286c27c7f
+    m_Address: RageLord
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 109c479e30e2884418ec83f366dede5a
+    m_Address: SturdyPaladin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8abcd667e72544a47a8e5c034eb9dbd4
+    m_Address: StubBaseDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 824df42db4d196c49a24ad642c8166a4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: e19487eb935d5ff4f85af949360302d5, type: 2}
+    - {fileID: 11400000, guid: 6c53ba605a4b3024f8f9e7612ce8e233, type: 2}

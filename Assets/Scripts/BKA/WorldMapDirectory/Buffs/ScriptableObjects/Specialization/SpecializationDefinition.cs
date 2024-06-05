@@ -3,7 +3,6 @@ using BKA.Dices.DiceActions;
 using BKA.Units;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BKA.Buffs
 {

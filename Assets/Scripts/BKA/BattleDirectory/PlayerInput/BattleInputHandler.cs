@@ -33,7 +33,7 @@ namespace BKA.BattleDirectory.PlayerInput
 
         private readonly Stack<UnitBattleBehaviour> _actedUnits = new();
 
-        public bool _hasToUndo => _actedUnits.Count > 0;
+        public bool HasToUndo => _actedUnits.Count > 0;
 
         private void Start()
         {

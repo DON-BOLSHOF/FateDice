@@ -17,11 +17,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Development/BattleScene.unity
     guid: fecc2a514b8ba524987c739b5aba094e
-  - enabled: 1
-    path: Assets/Scenes/Test/TestDungeon.unity
-    guid: 0ade483bfed00d846b87de6e51820175
-  - enabled: 1
-    path: Assets/Scenes/Test/Test.unity
-    guid: a9034bf772c72824f93308986e5b8cff
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: eecf70541f72aab4c8cd7770d904cb32, type: 2}
